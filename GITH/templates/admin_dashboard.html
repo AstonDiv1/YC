@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Espace admin</title>
+<style>
+  :root{
+    --bg:#0f1115;
+    --panel:#171a21;
+    --panel-2:#1d212b;
+    --border:#262b36;
+    --text:#e9ecf1;
+    --muted:#8a90a0;
+    --accent:#4f7cff;
+    --ok:#39d98a;
+    --warn:#ffb648;
+    --danger:#ff6b6b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 28px;
+    border-bottom:1px solid var(--border);
+    background:var(--panel);
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+  header h1{ font-size:1rem; margin:0; font-weight:600; }
+  header a{
+    color:var(--muted);
+    text-decoration:none;
+    font-size:.85rem;
+    border:1px solid var(--border);
+    padding:7px 12px;
+    border-radius:7px;
+  }
+  header a:hover{ color:var(--text); border-color:var(--accent); }
+
+  main{ max-width:1100px; margin:0 auto; padding:24px 20px 60px; }
+
+  .tabs{ display:flex; gap:8px; margin-bottom:18px; }
+  .tab-btn{
+    padding:8px 16px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--panel);
+    color:var(--muted);
+    cursor:pointer;
+    font-size:.88rem;
+  }
+  .tab-btn.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  select, .toolbar button{
+    background:var(--panel);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:7px 10px;
+    font-size:.85rem;
+  }
+  .toolbar button{ cursor:pointer; }
+  .toolbar button:hover{ border-color:var(--accent); }
+  .count{ color:var(--muted); font-size:.82rem; margin-left:auto; }
+
+  .empty{
+    text-align:center;
+    color:var(--muted);
+    padding:60px 20px;
+    border:1px dashed var(--border);
+    border-radius:12px;
+    font-size:.9rem;
+  }
+
+  .list{ display:flex; flex-direction:column; gap:10px; }
+  .item{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .item-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 16px;
+    cursor:pointer;
+  }
+  .item-head:hover{ background:var(--panel-2); }
+  .item-head .name{ font-weight:600; font-size:.92rem; }
+  .item-head .service{ color:var(--muted); font-size:.82rem; }
+  .item-head .date{ color:var(--muted); font-size:.78rem; margin-left:auto; white-space:nowrap; }
+
+  .badge{
+    font-size:.72rem;
+    padding:3px 9px;
+    border-radius:999px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .badge.nouveau{ background:rgba(79,124,255,.15); color:#7fa0ff; }
+  .badge.en_cours{ background:rgba(255,182,72,.15); color:var(--warn); }
+  .badge.devis_envoye{ background:rgba(139,92,246,.15); color:#a78bfa; }
+  .badge.termine{ background:rgba(57,217,138,.15); color:var(--ok); }
+  .badge.annule{ background:rgba(255,107,107,.15); color:var(--danger); }
+
+  .item-body{
+    display:none;
+    padding:0 16px 18px;
+    border-top:1px solid var(--border);
+  }
+  .item.open .item-body{ display:block; }
+  .item.open .item-head{ background:var(--panel-2); }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
+    gap:10px;
+    margin:14px 0;
+  }
+  .field{ font-size:.82rem; }
+  .field .k{ color:var(--muted); display:block; margin-bottom:2px; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; }
+  .field .v{ word-break:break-word; }
+  .field .v a{ color:var(--accent); }
+
+  .msg-box{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px;
+    font-size:.85rem;
+    line-height:1.5;
+    white-space:pre-wrap;
+    margin:6px 0 14px;
+  }
+
+  .row-actions{ display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .row-actions label{ font-size:.78rem; color:var(--muted); }
+  .saved-flag{ font-size:.78rem; color:var(--ok); opacity:0; transition:opacity .3s; }
+  .saved-flag.show{ opacity:1; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Espace admin — Demandes reçues</h1>
+  <a href="{{ url_for('admin_logout') }}">Se déconnecter</a>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="bookings">Demandes de devis</button>
+    <button class="tab-btn" data-tab="messages">Messages de contact</button>
+  </div>
+
+  <!-- ============== ONGLET DEMANDES ============== -->
+  <section id="tab-bookings">
+    <div class="toolbar">
+      <select id="filtreStatut">
+        <option value="">Tous les statuts</option>
+        <option value="nouveau">Nouveau</option>
+        <option value="en_cours">En cours</option>
+        <option value="devis_envoye">Devis envoyé</option>
+        <option value="termine">Terminé</option>
+        <option value="annule">Annulé</option>
+      </select>
+      <button id="refreshBookings">Actualiser</button>
+      <span class="count" id="bookingsCount"></span>
+    </div>
+    <div id="bookingsList" class="list"></div>
+  </section>
+
+  <!-- ============== ONGLET MESSAGES ============== -->
+  <section id="tab-messages" style="display:none;">
+    <div class="toolbar">
+      <button id="refreshMessages">Actualiser</button>
+      <span class="count" id="messagesCount"></span>
+    </div>
+    <div id="messagesList" class="list"></div>
+  </section>
+</main>
+
+<script>
+const STATUTS_LABELS = {
+  nouveau: "Nouveau",
+  en_cours: "En cours",
+  devis_envoye: "Devis envoyé",
+  termine: "Terminé",
+  annule: "Annulé",
+};
+
+function escapeHtml(str){
+  if(str === undefined || str === null) return "";
+  return String(str)
+    .replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;");
+}
+
+function formatDate(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString("fr-FR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
+  }catch(e){ return iso; }
+}
+
+// ---------------- Onglets ----------------
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-bookings").style.display = btn.dataset.tab === "bookings" ? "block" : "none";
+    document.getElementById("tab-messages").style.display = btn.dataset.tab === "messages" ? "block" : "none";
+  });
+});
+
+// ---------------- Demandes de devis ----------------
+async function chargerBookings(){
+  const statut = document.getElementById("filtreStatut").value;
+  const url = "/api/bookings" + (statut ? ("?statut=" + encodeURIComponent(statut)) : "");
+  const list = document.getElementById("bookingsList");
+  list.innerHTML = '<div class="empty">Chargement…</div>';
+
+  let data;
+  try{
+    const res = await fetch(url);
+    if(res.status === 401){ window.location.href = "/admin/login"; return; }
+    data = await res.json();
+  }catch(e){
+    list.innerHTML = '<div class="empty">Impossible de charger les demandes. Vérifie ta connexion.</div>';
+    return;
+  }
+
+  document.getElementById("bookingsCount").textContent = data.length + (data.length > 1 ? " demandes" : " demande");
+
+  if(data.length === 0){
+    list.innerHTML = '<div class="empty">Aucune demande pour le moment.</div>';
+    return;
+  }
+
+  list.innerHTML = "";
+  data.forEach(b => {
+    const contact = b.contact || {};
+    const reponses = b.reponses || {};
+    const item = document.createElement("div");
+    item.className = "item";
+
+    const reponsesHtml = Object.entries(reponses).map(([k,v]) => `
+      <div class="field">
+        <span class="k">${escapeHtml(k)}</span>
+        <span class="v">${escapeHtml(Array.isArray(v) ? v.join(", ") : v)}</span>
+      </div>
+    `).join("");
+
+    item.innerHTML = `
+      <div class="item-head">
+        <span class="badge ${b.statut}">${STATUTS_LABELS[b.statut] || b.statut}</span>
+        <div>
+          <div class="name">${escapeHtml(contact.nom || "Sans nom")}</div>
+          <div class="service">${escapeHtml(b.service)} · ${escapeHtml(b.profil || "")}</div>
+        </div>
+        <div class="date">${formatDate(b.created_at)}</div>
+      </div>
+      <div class="item-body">
+        <div class="grid">
+          <div class="field"><span class="k">Référence</span><span class="v">${escapeHtml(b.id)}</span></div>
+          <div class="field"><span class="k">E-mail</span><span class="v"><a href="mailto:${escapeHtml(contact.email)}">${escapeHtml(contact.email || "—")}</a></span></div>
+          <div class="field"><span class="k">Téléphone</span><span class="v">${escapeHtml(contact.telephone || "—")}</span></div>
+          <div class="field"><span class="k">Ville</span><span class="v">${escapeHtml(contact.ville || "—")}</span></div>
+          <div class="field"><span class="k">Fourchette de prix</span><span class="v">${escapeHtml(b.fourchette_prix || "—")}</span></div>
+          <div class="field"><span class="k">Délai estimé</span><span class="v">${escapeHtml(b.delai_estime || "—")}</span></div>
+        </div>
+        ${contact.message ? `<div class="field"><span class="k">Message du client</span></div><div class="msg-box">${escapeHtml(contact.message)}</div>` : ""}
+        ${reponsesHtml ? `<div class="field"><span class="k">Réponses au questionnaire</span></div><div class="grid">${reponsesHtml}</div>` : ""}
+        <div class="row-actions">
+          <label for="statut-${b.id}">Statut :</label>
+          <select id="statut-${b.id}" data-id="${b.id}" class="statut-select">
+            ${Object.entries(STATUTS_LABELS).map(([val,label]) =>
+              `<option value="${val}" ${val === b.statut ? "selected" : ""}>${label}</option>`
+            ).join("")}
+          </select>
+          <span class="saved-flag" id="saved-${b.id}">Enregistré ✓</span>
+        </div>
+      </div>
+    `;
+
+    item.querySelector(".item-head").addEventListener("click", () => {
+      item.classList.toggle("open");
+    });
+
+    list.appendChild(item);
+  });
+
+  // Ecouteurs pour le changement de statut (posés après insertion dans le DOM)
+  document.querySelectorAll(".statut-select").forEach(sel => {
+    sel.addEventListener("click", e => e.stopPropagation());
+    sel.addEventListener("change", async (e) => {
+      e.stopPropagation();
+      const id = sel.dataset.id;
+      const nouveauStatut = sel.value;
+      try{
+        const res = await fetch(`/api/bookings/${id}/statut`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ statut: nouveauStatut }),
+        });
+        if(!res.ok) throw new Error("échec");
+        const badge = sel.closest(".item").querySelector(".badge");
+        badge.className = "badge " + nouveauStatut;
+        badge.textContent = STATUTS_LABELS[nouveauStatut] || nouveauStatut;
+        const flag = document.getElementById("saved-" + id);
+        flag.classList.add("show");
+        setTimeout(() => flag.classList.remove("show"), 1500);
+      }catch(err){
+        alert("La mise à jour du statut a échoué. Réessaie.");
+      }
+    });
+  });
+}
+
+document.getElementById("filtreStatut").addEventListener("change", chargerBookings);
+document.getElementById("refreshBookings").addEventListener("click", chargerBookings);
+
+// ---------------- Messages de contact ----------------
+async function chargerMessages(){
+  const list = document.getElementById("messagesList");
+  list.innerHTML = '<div class="empty">Chargement…</div>';
+
+  let data;
+  try{
+    const res = await fetch("/api/messages");
+    if(res.status === 401){ window.location.href = "/admin/login"; return; }
+    data = await res.json();
+  }catch(e){
+    list.innerHTML = '<div class="empty">Impossible de charger les messages.</div>';
+    return;
+  }
+
+  document.getElementById("messagesCount").textContent = data.length + (data.length > 1 ? " messages" : " message");
+
+  if(data.length === 0){
+    list.innerHTML = '<div class="empty">Aucun message pour le moment.</div>';
+    return;
+  }
+
+  list.innerHTML = "";
+  data.forEach(m => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerHTML = `
+      <div class="item-head">
+        <div>
+          <div class="name">${escapeHtml(m.nom)}</div>
+          <div class="service">${escapeHtml(m.email)}</div>
+        </div>
+        <div class="date">${formatDate(m.created_at)}</div>
+      </div>
+      <div class="item-body">
+        <div class="msg-box">${escapeHtml(m.message)}</div>
+      </div>
+    `;
+    item.querySelector(".item-head").addEventListener("click", () => item.classList.toggle("open"));
+    list.appendChild(item);
+  });
+}
+
+document.getElementById("refreshMessages").addEventListener("click", chargerMessages);
+
+// Chargement initial
+chargerBookings();
+chargerMessages();
+</script>
+</body>
+</html>
