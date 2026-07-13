@@ -817,6 +817,135 @@ footer{
 }
 
 /* ==========================================================
+   RESPONSIVE — améliorations mobile
+   ========================================================== */
+
+/* Empêche tout débordement horizontal */
+html, body{ overflow-x: hidden; max-width: 100%; }
+img, svg, video{ max-width: 100%; height: auto; }
+
+/* Tablette */
+@media (max-width: 900px){
+  :root{ --gutter: 20px; }
+  .hero .lead{ font-size: 1.05rem; }
+  .hero-actions{ gap: 10px; }
+  .hero-meta{ gap: 6px 20px; margin-top: 32px; font-size: 0.82rem; }
+  .studio-card{ padding: 22px; }
+  .studio-card h3{ font-size: 1.45rem; }
+  .section-head h2{ max-width: none; }
+  .strip .container{ justify-content: flex-start; gap: 14px 20px; font-size: 0.72rem; }
+  .contact-form{ padding: 24px; }
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  :root{ --gutter: 16px; --header-h: 60px; }
+  body{ font-size: 15px; }
+  h1{ font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1.12; }
+  h2{ font-size: clamp(1.6rem, 6.2vw, 2.1rem); }
+  h3{ font-size: 1.2rem; }
+
+  .container{ padding: 0 var(--gutter); }
+
+  /* Header */
+  .brand{ font-size: 1rem; gap: 10px; }
+  .brand-mark{ width: 34px; height: 34px; }
+  .brand small{ display:none; }
+  .menu-toggle{ width: 38px; height: 38px; }
+  .mobile-nav{ padding: 12px var(--gutter) 20px; }
+
+  /* Boutons pleine largeur */
+  .btn{ padding: 13px 20px; font-size: 0.95rem; }
+  .hero-actions{ flex-direction: column; align-items: stretch; width: 100%; }
+  .hero-actions .btn{ width: 100%; }
+
+  /* Hero */
+  .hero{ padding: 40px 0 52px; }
+  .hero-grid{ gap: 32px; }
+  .hero .lead{ margin-top: 20px; font-size: 1rem; max-width: none; }
+  .hero-meta{ margin-top: 26px; flex-direction: column; gap: 10px; align-items: flex-start; }
+
+  /* Studio card */
+  .studio-card{ padding: 20px; border-radius: var(--radius-md); }
+  .studio-card h3{ font-size: 1.3rem; margin-top: 14px; }
+  .studio-card .row, .studio-card .foot{ font-size: 0.68rem; }
+  .studio-card .services-mini > div{ padding: 12px 0; font-size: 0.9rem; gap: 10px; }
+  .studio-card .services-mini .v{ font-size: 0.7rem; }
+
+  /* Sections */
+  .section{ padding: 56px 0; }
+  .section-head{ margin-bottom: 32px; gap: 14px; }
+  .section-head.stack{ text-align: left; justify-items: start; margin-bottom: 32px; }
+  .section-head.stack .eyebrow{ justify-content: flex-start; }
+
+  /* Piliers / services */
+  .pillar{ padding: 24px 20px; }
+  .pillar h3{ font-size: 1.2rem; }
+  .svc{ padding: 26px 22px 24px; }
+  .svc h3{ font-size: 1.3rem; }
+  .svc .index{ top: 14px; right: 16px; }
+  .svc .foot{ flex-wrap: wrap; gap: 10px; }
+  .svc .foot .btn{ width: 100%; }
+
+  /* Process (déjà 1 col via 900px) */
+  .step{ padding: 24px 0; }
+
+  /* Stats */
+  .stat{ padding: 26px 20px; }
+
+  /* Histoire */
+  .histoire{ gap: 28px; }
+  .founders{ padding: 20px; }
+  .avatar{ width: 44px; height: 44px; font-size: 1rem; }
+
+  /* FAQ */
+  .faq summary{ font-size: 1.02rem; gap: 12px; }
+  .faq details{ padding: 18px 2px; }
+
+  /* Contact */
+  .contact{ gap: 28px; }
+  .contact-item{ padding: 16px; gap: 12px; }
+  .contact-form{ padding: 20px; }
+  .contact-form h3{ font-size: 1.2rem; }
+  .form-row input, .form-row textarea, .form-row select{
+    padding: 12px 12px; font-size: 16px; /* évite le zoom auto iOS */
+  }
+
+  /* Footer */
+  footer{ padding: 52px 0 24px; }
+  .footer-grid{ gap: 28px; padding-bottom: 32px; }
+  .footer-bottom{ justify-content: flex-start; font-size: 0.78rem; }
+
+  /* Modal */
+  .overlay{ padding: 0; align-items: flex-end; }
+  .modal{
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .modal-head{ padding: 18px 18px; }
+  .modal-head h3{ font-size: 1.1rem; }
+  #modalContent{ padding: 22px 18px; }
+  .service-choice{ padding: 16px; gap: 14px; }
+  .service-choice h4{ font-size: 1.02rem; }
+  .option-item{ padding: 12px; font-size: 0.95rem; }
+  #modalContent input, #modalContent select, #modalContent textarea{
+    font-size: 16px; /* évite le zoom auto iOS */
+  }
+  .modal-nav{ flex-direction: column-reverse; gap: 10px; align-items: stretch; }
+  .modal-nav .btn{ width: 100%; }
+  .resultat h3{ font-size: 1.35rem; }
+}
+
+/* Très petits écrans */
+@media (max-width: 380px){
+  :root{ --gutter: 14px; }
+  h1{ font-size: 1.85rem; }
+  .studio-card{ padding: 16px; }
+  .svc, .pillar{ padding: 22px 18px; }
+}
+
+/* ==========================================================
    FIN
    ========================================================== */
 </style>
@@ -1698,3 +1827,4 @@ document.addEventListener('keydown', (e) => { if(e.key === 'Escape') fermerQuest
 </script>
 </body>
 </html>
+
