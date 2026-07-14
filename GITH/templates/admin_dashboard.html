@@ -4,173 +4,276 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Espace admin</title>
+<title>Espace admin — YC Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Palette alignée sur le site (ivory / ink / sapphire) */
   :root{
-    --bg:#0f1115;
-    --panel:#171a21;
-    --panel-2:#1d212b;
-    --border:#262b36;
-    --text:#e9ecf1;
-    --muted:#8a90a0;
-    --accent:#4f7cff;
-    --ok:#39d98a;
-    --warn:#ffb648;
-    --danger:#ff6b6b;
+    --ivory:#F4F1EA;
+    --paper:#FBF9F4;
+    --ink:#0B1229;
+    --ink-2:#141C36;
+    --muted:#5B6478;
+    --soft:#8B93A6;
+    --line:#E2DED2;
+    --line-strong:#D2CCBB;
+    --accent:#0F52BA;
+    --accent-ink:#0A2E6D;
+    --accent-soft:#EAF1FC;
+    --ok:#1F7A4C;
+    --warn:#B8791F;
+    --danger:#B33A2A;
+    --font-display:"Fraunces",Georgia,serif;
+    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
   }
   header{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:16px 28px;
-    border-bottom:1px solid var(--border);
-    background:var(--panel);
+    padding:18px 32px;
+    border-bottom:1px solid var(--line);
+    background:#fff;
     position:sticky;
     top:0;
     z-index:10;
   }
-  header h1{ font-size:1rem; margin:0; font-weight:600; }
-  header a{
+  header h1{
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    margin:0;
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  header .brand{ color:var(--muted); font-size:.78rem; margin-left:10px; }
+  header a.logout{
     color:var(--muted);
     text-decoration:none;
-    font-size:.85rem;
-    border:1px solid var(--border);
-    padding:7px 12px;
-    border-radius:7px;
-  }
-  header a:hover{ color:var(--text); border-color:var(--accent); }
-
-  main{ max-width:1100px; margin:0 auto; padding:24px 20px 60px; }
-
-  .tabs{ display:flex; gap:8px; margin-bottom:18px; }
-  .tab-btn{
-    padding:8px 16px;
+    font-size:.82rem;
+    border:1px solid var(--line-strong);
+    padding:8px 14px;
     border-radius:8px;
-    border:1px solid var(--border);
-    background:var(--panel);
+    transition:all .2s;
+  }
+  header a.logout:hover{ color:var(--ink); border-color:var(--ink); }
+  main{ max-width:1150px; margin:0 auto; padding:28px 24px 80px; }
+  .tabs{ display:flex; gap:6px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+  .tab-btn{
+    padding:10px 18px;
+    border:none;
+    background:transparent;
     color:var(--muted);
     cursor:pointer;
     font-size:.88rem;
+    font-weight:500;
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
+    transition:all .2s;
+    font-family:var(--font-body);
   }
-  .tab-btn.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
-
+  .tab-btn:hover{ color:var(--ink); }
+  .tab-btn.active{ color:var(--accent); border-bottom-color:var(--accent); }
   .toolbar{
     display:flex;
     gap:10px;
     align-items:center;
-    margin-bottom:16px;
+    margin-bottom:18px;
     flex-wrap:wrap;
   }
   select, .toolbar button{
-    background:var(--panel);
-    color:var(--text);
-    border:1px solid var(--border);
-    border-radius:7px;
-    padding:7px 10px;
+    background:#fff;
+    color:var(--ink);
+    border:1px solid var(--line-strong);
+    border-radius:8px;
+    padding:8px 12px;
     font-size:.85rem;
+    font-family:var(--font-body);
   }
-  .toolbar button{ cursor:pointer; }
-  .toolbar button:hover{ border-color:var(--accent); }
+  .toolbar button{ cursor:pointer; transition:all .2s; }
+  .toolbar button:hover{ border-color:var(--accent); color:var(--accent); }
   .count{ color:var(--muted); font-size:.82rem; margin-left:auto; }
-
   .empty{
     text-align:center;
     color:var(--muted);
-    padding:60px 20px;
-    border:1px dashed var(--border);
-    border-radius:12px;
+    padding:70px 20px;
+    border:1px dashed var(--line-strong);
+    border-radius:14px;
     font-size:.9rem;
+    background:#fff;
   }
-
-  .list{ display:flex; flex-direction:column; gap:10px; }
+  .list{ display:flex; flex-direction:column; gap:12px; }
   .item{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:12px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
     overflow:hidden;
+    transition:border-color .2s, box-shadow .2s;
   }
+  .item:hover{ border-color:var(--line-strong); box-shadow:0 8px 24px -18px rgba(11,18,41,.18); }
   .item-head{
     display:flex;
     align-items:center;
-    gap:14px;
-    padding:14px 16px;
+    gap:16px;
+    padding:16px 20px;
     cursor:pointer;
   }
-  .item-head:hover{ background:var(--panel-2); }
-  .item-head .name{ font-weight:600; font-size:.92rem; }
-  .item-head .service{ color:var(--muted); font-size:.82rem; }
-  .item-head .date{ color:var(--muted); font-size:.78rem; margin-left:auto; white-space:nowrap; }
-
+  .item-head .name{ font-weight:600; font-size:.95rem; color:var(--ink); }
+  .item-head .service{ color:var(--muted); font-size:.8rem; margin-top:2px; }
+  .item-head .date{ color:var(--soft); font-size:.78rem; margin-left:auto; white-space:nowrap; }
   .badge{
-    font-size:.72rem;
-    padding:3px 9px;
+    font-size:.7rem;
+    padding:4px 10px;
     border-radius:999px;
     font-weight:600;
     white-space:nowrap;
+    letter-spacing:.02em;
   }
-  .badge.nouveau{ background:rgba(79,124,255,.15); color:#7fa0ff; }
-  .badge.en_cours{ background:rgba(255,182,72,.15); color:var(--warn); }
-  .badge.devis_envoye{ background:rgba(139,92,246,.15); color:#a78bfa; }
-  .badge.termine{ background:rgba(57,217,138,.15); color:var(--ok); }
-  .badge.annule{ background:rgba(255,107,107,.15); color:var(--danger); }
-
+  .badge.nouveau{ background:var(--accent-soft); color:var(--accent-ink); }
+  .badge.en_cours{ background:#FDF3E1; color:var(--warn); }
+  .badge.devis_envoye{ background:#EFE9FB; color:#6A47C4; }
+  .badge.termine{ background:#E4F3EB; color:var(--ok); }
+  .badge.annule{ background:#FBE7E3; color:var(--danger); }
   .item-body{
     display:none;
-    padding:0 16px 18px;
-    border-top:1px solid var(--border);
+    padding:8px 22px 22px;
+    border-top:1px solid var(--line);
+    background:linear-gradient(180deg, #FDFBF7 0%, #fff 100%);
   }
   .item.open .item-body{ display:block; }
-  .item.open .item-head{ background:var(--panel-2); }
-
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
-    gap:10px;
-    margin:14px 0;
+    grid-template-columns:repeat(auto-fill, minmax(210px,1fr));
+    gap:14px;
+    margin:16px 0;
   }
-  .field{ font-size:.82rem; }
-  .field .k{ color:var(--muted); display:block; margin-bottom:2px; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; }
-  .field .v{ word-break:break-word; }
-  .field .v a{ color:var(--accent); }
-
+  .field{ font-size:.85rem; }
+  .field .k{
+    color:var(--soft);
+    display:block;
+    margin-bottom:3px;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:500;
+  }
+  .field .v{ word-break:break-word; color:var(--ink); }
+  .field .v a{ color:var(--accent); text-decoration:none; }
+  .field .v a:hover{ text-decoration:underline; }
+  .section-title{
+    font-family:var(--font-display);
+    font-size:.95rem;
+    color:var(--ink);
+    margin:18px 0 10px;
+    font-weight:600;
+  }
   .msg-box{
-    background:var(--bg);
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:12px;
-    font-size:.85rem;
-    line-height:1.5;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:.88rem;
+    line-height:1.55;
     white-space:pre-wrap;
-    margin:6px 0 14px;
+    color:var(--ink-2);
   }
-
-  .row-actions{ display:flex; align-items:center; gap:8px; margin-top:10px; }
-  .row-actions label{ font-size:.78rem; color:var(--muted); }
-  .saved-flag{ font-size:.78rem; color:var(--ok); opacity:0; transition:opacity .3s; }
+  /* -------- Zone fichiers / galerie photo -------- */
+  .files-wrap{ margin-top:6px; }
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .thumb{
+    display:block;
+    aspect-ratio:1/1;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:var(--ivory);
+    position:relative;
+    text-decoration:none;
+  }
+  .thumb img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform .3s;
+  }
+  .thumb:hover img{ transform:scale(1.04); }
+  .thumb .cap{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:6px 8px;
+    background:linear-gradient(180deg, rgba(11,18,41,0) 0%, rgba(11,18,41,.78) 100%);
+    color:#fff; font-size:.7rem;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .file-list{
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .file-row{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 12px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:.83rem;
+  }
+  .file-row .fname{ color:var(--ink); font-weight:500; flex:1; word-break:break-word; }
+  .file-row .fsize{ color:var(--soft); font-size:.75rem; }
+  .file-row a{
+    color:var(--accent); text-decoration:none;
+    padding:4px 10px; border:1px solid var(--line-strong); border-radius:6px;
+    font-size:.75rem;
+  }
+  .file-row a:hover{ border-color:var(--accent); background:var(--accent-soft); }
+  /* -------- Actions -------- */
+  .row-actions{
+    display:flex; align-items:center; gap:10px; margin-top:16px;
+    padding-top:14px; border-top:1px solid var(--line);
+  }
+  .row-actions label{ font-size:.8rem; color:var(--muted); }
+  .saved-flag{
+    font-size:.78rem; color:var(--ok); opacity:0; transition:opacity .3s;
+    font-weight:500;
+  }
   .saved-flag.show{ opacity:1; }
+  /* -------- Lightbox photo -------- */
+  .lightbox{
+    position:fixed; inset:0;
+    background:rgba(11,18,41,.85);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:100;
+    padding:30px;
+    cursor:zoom-out;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox img{
+    max-width:100%; max-height:100%;
+    border-radius:6px;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+  }
 </style>
 </head>
 <body>
-
 <header>
-  <h1>Espace admin — Demandes reçues</h1>
-  <a href="{{ url_for('admin_logout') }}">Se déconnecter</a>
+  <h1>Espace admin<span class="brand">— YC Digital</span></h1>
+  <a class="logout" href="{{ url_for('admin_logout') }}">Se déconnecter</a>
 </header>
-
 <main>
   <div class="tabs">
     <button class="tab-btn active" data-tab="bookings">Demandes de devis</button>
     <button class="tab-btn" data-tab="messages">Messages de contact</button>
   </div>
 
-  <!-- ============== ONGLET DEMANDES ============== -->
   <section id="tab-bookings">
     <div class="toolbar">
       <select id="filtreStatut">
@@ -187,7 +290,6 @@
     <div id="bookingsList" class="list"></div>
   </section>
 
-  <!-- ============== ONGLET MESSAGES ============== -->
   <section id="tab-messages" style="display:none;">
     <div class="toolbar">
       <button id="refreshMessages">Actualiser</button>
@@ -197,6 +299,8 @@
   </section>
 </main>
 
+<div class="lightbox" id="lightbox"><img alt="" id="lightboxImg"></div>
+
 <script>
 const STATUTS_LABELS = {
   nouveau: "Nouveau",
@@ -205,6 +309,8 @@ const STATUTS_LABELS = {
   termine: "Terminé",
   annule: "Annulé",
 };
+const LOGIN_URL = "{{ url_for('admin_login') }}";
+const IMAGE_MIMES = ["image/jpeg","image/png","image/webp","image/gif","image/heic","image/heif","image/avif","image/svg+xml"];
 
 function escapeHtml(str){
   if(str === undefined || str === null) return "";
@@ -212,12 +318,69 @@ function escapeHtml(str){
     .replaceAll("&","&amp;").replaceAll("<","&lt;")
     .replaceAll(">","&gt;").replaceAll('"',"&quot;");
 }
-
 function formatDate(iso){
   try{
     const d = new Date(iso);
     return d.toLocaleString("fr-FR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
   }catch(e){ return iso; }
+}
+function humanSize(bytes){
+  if(!bytes && bytes !== 0) return "";
+  if(bytes < 1024) return bytes + " o";
+  if(bytes < 1024*1024) return Math.round(bytes/1024) + " Ko";
+  return (bytes/(1024*1024)).toFixed(1) + " Mo";
+}
+function isImage(f){
+  const mt = (f.mimetype || "").toLowerCase();
+  if(IMAGE_MIMES.includes(mt)) return true;
+  const ext = (f.filename_original || "").toLowerCase().split(".").pop();
+  return ["jpg","jpeg","png","webp","gif","heic","heif","avif","svg"].includes(ext);
+}
+function fileUrl(bookingId, stored, download=false){
+  const base = `/api/bookings/${encodeURIComponent(bookingId)}/fichiers/${encodeURIComponent(stored)}`;
+  return download ? base + "?dl=1" : base;
+}
+
+// ---------------- Lightbox ----------------
+const lb = document.getElementById("lightbox");
+const lbImg = document.getElementById("lightboxImg");
+lb.addEventListener("click", () => lb.classList.remove("open"));
+document.addEventListener("keydown", (e) => { if(e.key === "Escape") lb.classList.remove("open"); });
+
+function renderFiles(booking){
+  const files = booking.fichiers || [];
+  if(files.length === 0) return "";
+  const images = files.filter(isImage);
+  const autres = files.filter(f => !isImage(f));
+
+  let html = '<div class="section-title">Fichiers joints</div><div class="files-wrap">';
+
+  if(images.length){
+    html += '<div class="gallery">';
+    images.forEach(f => {
+      const url = fileUrl(booking.id, f.filename_stored);
+      html += `
+        <a class="thumb" href="${url}" data-lightbox="1">
+          <img src="${url}" alt="${escapeHtml(f.filename_original)}" loading="lazy">
+          <span class="cap">${escapeHtml(f.filename_original)}</span>
+        </a>`;
+    });
+    html += '</div>';
+  }
+  if(autres.length){
+    html += '<div class="file-list">';
+    autres.forEach(f => {
+      html += `
+        <div class="file-row">
+          <span class="fname">${escapeHtml(f.filename_original)}</span>
+          <span class="fsize">${humanSize(f.size_bytes)}</span>
+          <a href="${fileUrl(booking.id, f.filename_stored, true)}">Télécharger</a>
+        </div>`;
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 // ---------------- Onglets ----------------
@@ -240,7 +403,7 @@ async function chargerBookings(){
   let data;
   try{
     const res = await fetch(url);
-    if(res.status === 401){ window.location.href = "/admin/login"; return; }
+    if(res.status === 401){ window.location.href = LOGIN_URL; return; }
     data = await res.json();
   }catch(e){
     list.innerHTML = '<div class="empty">Impossible de charger les demandes. Vérifie ta connexion.</div>';
@@ -248,7 +411,6 @@ async function chargerBookings(){
   }
 
   document.getElementById("bookingsCount").textContent = data.length + (data.length > 1 ? " demandes" : " demande");
-
   if(data.length === 0){
     list.innerHTML = '<div class="empty">Aucune demande pour le moment.</div>';
     return;
@@ -286,8 +448,9 @@ async function chargerBookings(){
           <div class="field"><span class="k">Fourchette de prix</span><span class="v">${escapeHtml(b.fourchette_prix || "—")}</span></div>
           <div class="field"><span class="k">Délai estimé</span><span class="v">${escapeHtml(b.delai_estime || "—")}</span></div>
         </div>
-        ${contact.message ? `<div class="field"><span class="k">Message du client</span></div><div class="msg-box">${escapeHtml(contact.message)}</div>` : ""}
-        ${reponsesHtml ? `<div class="field"><span class="k">Réponses au questionnaire</span></div><div class="grid">${reponsesHtml}</div>` : ""}
+        ${contact.message ? `<div class="section-title">Message du client</div><div class="msg-box">${escapeHtml(contact.message)}</div>` : ""}
+        ${reponsesHtml ? `<div class="section-title">Réponses au questionnaire</div><div class="grid">${reponsesHtml}</div>` : ""}
+        ${renderFiles(b)}
         <div class="row-actions">
           <label for="statut-${b.id}">Statut :</label>
           <select id="statut-${b.id}" data-id="${b.id}" class="statut-select">
@@ -299,15 +462,20 @@ async function chargerBookings(){
         </div>
       </div>
     `;
-
     item.querySelector(".item-head").addEventListener("click", () => {
       item.classList.toggle("open");
     });
-
+    // Lightbox pour les vignettes
+    item.querySelectorAll('a.thumb[data-lightbox]').forEach(a => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        lbImg.src = a.getAttribute("href");
+        lb.classList.add("open");
+      });
+    });
     list.appendChild(item);
   });
 
-  // Ecouteurs pour le changement de statut (posés après insertion dans le DOM)
   document.querySelectorAll(".statut-select").forEach(sel => {
     sel.addEventListener("click", e => e.stopPropagation());
     sel.addEventListener("change", async (e) => {
@@ -341,24 +509,20 @@ document.getElementById("refreshBookings").addEventListener("click", chargerBook
 async function chargerMessages(){
   const list = document.getElementById("messagesList");
   list.innerHTML = '<div class="empty">Chargement…</div>';
-
   let data;
   try{
     const res = await fetch("/api/messages");
-    if(res.status === 401){ window.location.href = "/admin/login"; return; }
+    if(res.status === 401){ window.location.href = LOGIN_URL; return; }
     data = await res.json();
   }catch(e){
     list.innerHTML = '<div class="empty">Impossible de charger les messages.</div>';
     return;
   }
-
   document.getElementById("messagesCount").textContent = data.length + (data.length > 1 ? " messages" : " message");
-
   if(data.length === 0){
     list.innerHTML = '<div class="empty">Aucun message pour le moment.</div>';
     return;
   }
-
   list.innerHTML = "";
   data.forEach(m => {
     const item = document.createElement("div");
@@ -379,10 +543,8 @@ async function chargerMessages(){
     list.appendChild(item);
   });
 }
-
 document.getElementById("refreshMessages").addEventListener("click", chargerMessages);
 
-// Chargement initial
 chargerBookings();
 chargerMessages();
 </script>
