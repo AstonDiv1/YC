@@ -3,7 +3,7 @@
 app.py
 ------
 Serveur Flask. Toute la logique est déléguée à logic.py : ce fichier ne fait
-que router les requêtes HTTP. C'est le seul fichier "serveur" à lancer.
+que router les requêtes HTTP.
 
 Lancement local :
     pip install -r requirements.txt
@@ -11,20 +11,16 @@ Lancement local :
 Puis ouvrir http://127.0.0.1:5000
 
 Espace admin : http://127.0.0.1:5000/admin/login
-  Identifiants par défaut si rien n'est configuré : mot de passe "change-moi"
-  (voir la section "CONFIGURATION ADMIN" ci-dessous et le README).
-
-Déploiement : ce code fonctionne tel quel sur Render, Railway, PythonAnywhere,
-un VPS avec gunicorn, etc. (gunicorn app:app)
 """
 
+import json
 import os
 import secrets
 from functools import wraps
 
 from flask import (
     Flask, render_template, request, jsonify,
-    redirect, url_for, session,
+    redirect, url_for, session, send_from_directory, abort,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -32,22 +28,17 @@ import logic
 
 app = Flask(__name__)
 
+# Taille max d'une requête (utile pour les uploads). On autorise ~110 Mo
+# côté Flask pour laisser de la marge à plusieurs fichiers de 25 Mo dans
+# une même requête multipart. La vraie limite par fichier est appliquée
+# dans logic.save_booking_file (MAX_UPLOAD_SIZE).
+app.config["MAX_CONTENT_LENGTH"] = 110 * 1024 * 1024
+
 # ---------------------------------------------------------------------------
 # CONFIGURATION ADMIN
 # ---------------------------------------------------------------------------
-# SECRET_KEY : nécessaire pour que Flask puisse signer les sessions (cookie
-# de connexion admin). En production, définis la variable d'environnement
-# SECRET_KEY avec une valeur fixe et aléatoire (ex: `python -c "import
-# secrets; print(secrets.token_hex(32))"`), sinon tout le monde sera
-# déconnecté à chaque redémarrage du serveur (ce qui n'est pas grave, mais
-# un peu pénible).
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 
-# Mot de passe de l'espace admin. Deux façons de le définir en production :
-#   - ADMIN_PASSWORD_HASH : un hash déjà généré (le plus sûr)
-#   - ADMIN_PASSWORD      : le mot de passe en clair, hashé au démarrage
-# Si aucune des deux variables n'est définie, le mot de passe par défaut
-# "change-moi" est utilisé — à changer impérativement avant la mise en ligne.
 _ADMIN_PASSWORD_HASH = os.environ.get("ADMIN_PASSWORD_HASH")
 if not _ADMIN_PASSWORD_HASH:
     _plain = os.environ.get("ADMIN_PASSWORD", "change-moi")
@@ -57,16 +48,10 @@ if not _ADMIN_PASSWORD_HASH:
               "utilisé. Définis la variable d'environnement ADMIN_PASSWORD "
               "avant de mettre le site en ligne.")
 
-# Token conservé pour un usage API/scripts (ex: automatiser une récupération
-# de données) sans passer par le formulaire de connexion. Optionnel : laisse
-# vide pour désactiver cet accès et n'autoriser que la connexion par mot de
-# passe.
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 
 
 def _is_authorized() -> bool:
-    """Autorisé si connecté via la session admin, ou si un token valide est
-    fourni (compatibilité API)."""
     if session.get("admin_logged_in"):
         return True
     token = request.args.get("token")
@@ -74,7 +59,6 @@ def _is_authorized() -> bool:
 
 
 def admin_required(view):
-    """Protège une page HTML : redirige vers /admin/login si non connecté."""
     @wraps(view)
     def wrapped(*args, **kwargs):
         if not _is_authorized():
@@ -84,7 +68,6 @@ def admin_required(view):
 
 
 def api_admin_required(view):
-    """Protège un endpoint JSON : renvoie une 401 si non autorisé."""
     @wraps(view)
     def wrapped(*args, **kwargs):
         if not _is_authorized():
@@ -113,21 +96,54 @@ def index():
 
 @app.route("/api/config")
 def api_config():
-    """Le front va chercher ici la structure du questionnaire."""
     return jsonify(logic.get_public_config())
 
 
 @app.route("/api/submit", methods=["POST"])
 def api_submit():
-    """Réception d'une demande de devis / réservation."""
-    data = request.get_json(silent=True) or {}
+    """Réception d'une demande de devis.
 
-    service = data.get("service")
-    reponses = data.get("reponses", {})
-    contact = data.get("contact", {})
+    Supporte deux formats :
+      - JSON classique (aucun fichier joint) : Content-Type application/json
+      - multipart/form-data (avec fichiers joints)  : champs `service`,
+        `reponses` (JSON stringifié), `contact` (JSON stringifié) et un
+        ou plusieurs fichiers dans le champ `fichiers`.
+    """
+    ctype = (request.content_type or "").lower()
+    # Détection robuste : on considère "multipart" dès qu'un fichier OU un champ
+    # de formulaire est présent (le header seul peut être trompeur).
+    is_multipart = (
+        ctype.startswith("multipart/")
+        or bool(request.files)
+        or bool(request.form)
+    )
+
+    if is_multipart:
+        service = (request.form.get("service") or "").strip()
+        try:
+            reponses = json.loads(request.form.get("reponses") or "{}")
+            contact = json.loads(request.form.get("contact") or "{}")
+        except (TypeError, ValueError) as exc:
+            print(f"[submit] JSON invalide dans multipart: {exc}")
+            return jsonify({"erreur": "Format des réponses invalide."}), 400
+        uploaded = request.files.getlist("fichiers")
+    else:
+        data = request.get_json(silent=True) or {}
+        service = (data.get("service") or "").strip()
+        reponses = data.get("reponses", {}) or {}
+        contact = data.get("contact", {}) or {}
+        uploaded = []
+
+    print(f"[submit] content_type={ctype!r} service={service!r} "
+          f"nb_fichiers={len(uploaded)} nom={contact.get('nom')!r}")
 
     if service not in logic.SERVICES:
-        return jsonify({"erreur": "Service inconnu."}), 400
+        print(f"[submit] REJET service inconnu : reçu={service!r} "
+              f"attendus={list(logic.SERVICES.keys())}")
+        return jsonify({
+            "erreur": f"Service inconnu ({service!r}). "
+                      f"Attendus : {', '.join(logic.SERVICES.keys())}."
+        }), 400
 
     if not contact.get("nom") or not contact.get("email"):
         return jsonify({"erreur": "Nom et e-mail sont obligatoires."}), 400
@@ -135,18 +151,23 @@ def api_submit():
     recommandation = logic.compute_recommendation(service, reponses)
     booking_id = logic.save_booking(service, reponses, contact, recommandation)
 
-    # Notification par e-mail (silencieuse si SMTP non configuré, voir
-    # logic.py section 5). Ne bloque jamais la réponse au client.
-    logic.notify_new_booking(booking_id, service, contact, recommandation)
+    fichiers_sauves = []
+    for fs in uploaded:
+        info = logic.save_booking_file(booking_id, fs)
+        if info:
+            fichiers_sauves.append(info)
+
+    logic.notify_new_booking(booking_id, service, contact, recommandation, fichiers_sauves)
 
     return jsonify({
         "booking_id": booking_id,
         "recommandation": recommandation,
+        "fichiers": fichiers_sauves,
     })
 
 
 # ---------------------------------------------------------------------------
-# API - formulaire de contact direct (section "Contact" du site)
+# API - formulaire de contact direct
 # ---------------------------------------------------------------------------
 
 @app.route("/api/contact", methods=["POST"])
@@ -166,7 +187,7 @@ def api_contact():
 
 
 # ---------------------------------------------------------------------------
-# API - données admin (protégées : session connectée OU token)
+# API - données admin
 # ---------------------------------------------------------------------------
 
 @app.route("/api/bookings")
@@ -187,6 +208,16 @@ def api_update_statut(booking_id):
     return jsonify({"ok": True})
 
 
+@app.route("/api/bookings/<booking_id>/fichiers/<path:filename>")
+@api_admin_required
+def api_download_file(booking_id, filename):
+    """Télécharge un fichier joint à une demande (admin uniquement)."""
+    path = logic.get_booking_file_path(booking_id, filename)
+    if not path:
+        abort(404)
+    return send_from_directory(path.parent, path.name, as_attachment=True)
+
+
 @app.route("/api/messages")
 @api_admin_required
 def api_messages():
@@ -194,9 +225,7 @@ def api_messages():
 
 
 # ---------------------------------------------------------------------------
-# Espace admin (interface HTML, accessible depuis n'importe où une fois le
-# site en ligne : il suffit de se rendre sur https://ton-domaine.fr/admin
-# et de se connecter avec le mot de passe admin).
+# Espace admin
 # ---------------------------------------------------------------------------
 
 @app.route("/admin")
