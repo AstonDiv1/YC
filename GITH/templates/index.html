@@ -1142,6 +1142,41 @@ a, button, .btn, summary, .option-item{
 /* ==========================================================
    FIN
    ========================================================== */
+
+/* --- Zone d'upload de fichiers dans le questionnaire --- */
+.file-upload-zone{
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  background: var(--paper);
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.file-upload-zone:hover{ border-color: var(--accent); background: var(--accent-soft); }
+.file-upload-label{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap: 12px; cursor:pointer; text-align:center; color: var(--ink);
+  padding: 8px 0;
+}
+.file-upload-label .icon{ width:32px; height:32px; color: var(--accent); }
+.file-list{ margin-top: 16px; display:flex; flex-direction:column; gap: 8px; }
+.file-list:empty{ display:none; }
+.file-item{
+  display:flex; align-items:center; gap: 12px;
+  padding: 10px 14px; background: var(--ivory); border: 1px solid var(--line);
+  border-radius: var(--radius); font-size: 0.9rem;
+}
+.file-item .icon{ width:18px; height:18px; color: var(--accent); flex-shrink:0; }
+.file-info{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.file-info strong{ font-weight:500; color: var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.file-info small{ font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+.file-remove{
+  width:28px; height:28px; border-radius:50%;
+  background: transparent; color: var(--muted); font-size: 1.4rem; line-height:1;
+  display:grid; place-items:center; transition: background .15s var(--ease), color .15s var(--ease);
+  flex-shrink:0;
+}
+.file-remove:hover{ background: var(--danger); color: var(--paper); }
+
 </style>
 </head>
 <body>
@@ -1252,19 +1287,19 @@ a, button, .btn, summary, .option-item{
         <div class="num">01</div>
         <span class="icon-pill"><span class="icon" data-icon="target"></span></span>
         <h3>Sur-mesure</h3>
-        <p>Chaque site, application ou configuration PC est conçu pour répondre précisément à votre besoin. Pas de template recyclé.</p>
+        <p>Pas de template recyclé ni de plateforme tierce : nous codons chaque projet à la main et vous livrons l'intégralité des sources. Le code vous appartient.</p>
       </div>
       <div class="pillar reveal reveal-delay-1">
         <div class="num">02</div>
         <span class="icon-pill"><span class="icon" data-icon="bolt"></span></span>
         <h3>Réactivité</h3>
-        <p>Un questionnaire clair, une réponse sous 48h, un suivi de projet transparent du premier échange à la livraison.</p>
+        <p>Un questionnaire clair, une réponse sous 48h, un suivi transparent du premier échange à la livraison.</p>
       </div>
       <div class="pillar reveal reveal-delay-2">
         <div class="num">03</div>
         <span class="icon-pill"><span class="icon" data-icon="handshake"></span></span>
         <h3>Évolutions & maintenance</h3>
-        <p>Une fois le projet livré, les évolutions, la maintenance et l'hébergement sont proposés en forfait séparé, clair et sans surprise.</p>
+        <p>Forfait séparé, clair et sans surprise. L'hébergement reste chez vous : nous vous aidons à le choisir et à le configurer.</p>
       </div>
       <div class="pillar reveal reveal-delay-3">
         <div class="num">04</div>
@@ -1333,9 +1368,8 @@ a, button, .btn, summary, .option-item{
         <ul>
           <li><span class="icon" data-icon="check"></span> Conseil composants selon usage réel</li>
           <li><span class="icon" data-icon="check"></span> Montage, câblage, installation OS</li>
-          <li><span class="icon" data-icon="check"></span> Optimisation, nettoyage, maintenance</li>
-          <li><span class="icon" data-icon="check"></span> Pack "guide seul" à partir de 50 € (montage à faire soi-même, clé Windows incluse)</li>
-          <li><span class="icon" data-icon="check"></span> Suivi personnalisé — interlocuteur joignable à tout moment</li>
+          <li><span class="icon" data-icon="check"></span> Optimisation & maintenance</li>
+          <li><span class="icon" data-icon="check"></span> Suivi personnalisé — interlocuteur joignable</li>
         </ul>
         <div class="foot">
           <span class="price">à partir de 100 €</span>
@@ -1469,15 +1503,19 @@ a, button, .btn, summary, .option-item{
       </details>
       <details>
         <summary>Est-ce que vous vous occupez de l'hébergement et de la maintenance ?</summary>
-        <p>L'hébergement est à la charge du client : nous ne proposons pas encore d'offre d'hébergement en interne (c'est prévu dans un futur proche). En revanche, nous vous accompagnons pour choisir un hébergeur adapté et nous assurons la maintenance, les mises à jour et la sécurité du projet dans la durée, sous forme d'un forfait clair, séparé du développement initial.</p>
+        <p>Nous ne gérons pas l'hébergement en interne : votre projet est hébergé chez vous, sur le prestataire de votre choix. En revanche, nous vous accompagnons pour choisir l'hébergeur le plus adapté à votre projet et à votre budget, et nous pouvons le configurer entièrement à votre place (mise en ligne, nom de domaine, certificats, e-mails…). La maintenance, les mises à jour et la sécurité du projet sont ensuite proposées en forfait clair, séparé du développement initial.</p>
       </details>
       <details>
         <summary>Je n'ai ni logo, ni identité visuelle — c'est un problème ?</summary>
-        <p>Pas du tout. Nous concevons régulièrement l'identité complète (logo, palette, typographie) en même temps que le site. C'est même souvent l'approche la plus cohérente.</p>
+        <p>La création de logo et de charte graphique n'est pas notre métier : cette partie reste à votre charge (ou à celle d'un graphiste). En revanche, nous vous accompagnons pour définir une direction visuelle cohérente (choix des couleurs, typographies, ambiance générale) et l'appliquer proprement à votre site ou application. Si vous arrivez sans rien, nous saurons vous orienter pour bâtir une identité claire avant le développement.</p>
       </details>
       <details>
         <summary>Vous déplacez-vous pour le montage PC ?</summary>
         <p>En présentiel, nous nous déplaçons uniquement sur Bordeaux et son agglomération. Partout ailleurs en France, l'accompagnement se fait à distance (choix des composants, guidage, optimisation).</p>
+      </details>
+      <details>
+        <summary>Le code du projet m'appartient-il vraiment ?</summary>
+        <p>Oui, à 100 %. Contrairement aux plateformes type Wix, Squarespace ou Shopify où votre site "loue" une infrastructure fermée, nous développons vos projets en code natif (HTML, CSS, JavaScript, Python selon les besoins). À la livraison, nous vous fournissons l'intégralité des sources : vous pouvez les héberger où vous voulez, les faire évoluer par un autre prestataire, ou les archiver. Aucun verrou technique, aucune dépendance à YC Digital.</p>
       </details>
       <details>
         <summary>Comment se passe le paiement ?</summary>
@@ -1722,10 +1760,14 @@ const FALLBACK_CONFIG = {
         { id:'nb_pages', label:'Nombre de pages estimé', type:'select', required:true,
           options:['1 à 3 pages','4 à 8 pages','9 à 15 pages','15+ pages'] },
       ] },
-    application: { label:"Création d'application", description:'Mobile ou desktop.', icone:'app',
+    application: { label:"Création d'application", description:'Android, web app, Windows.', icone:'app',
       questions:[
         { id:'plateforme', label:'Sur quelle(s) plateforme(s) ?', type:'choix_multiple', required:true,
-          options:['Android','Application web (PWA)','Desktop (Windows/Mac)'] },
+          options:['Android','Application web (PWA)','Desktop Windows'] },
+        { id:'fonctionnalites_app', label:'Quelles fonctionnalités sont nécessaires ?', type:'choix_multiple', required:false,
+          options:['Compte utilisateur / connexion','Notifications push','Paiement intégré','Géolocalisation','Mode hors-ligne','Back-office / tableau de bord admin','Chat / messagerie interne','Upload / gestion de fichiers','Génération de PDF / documents','Import / export de données (CSV, Excel)','Intégration API externe','Statistiques / tableau de bord','Multilingue','Notifications par e-mail'] },
+        { id:'existant_app', label:'Où en êtes-vous dans votre projet ?', type:'choix_unique', required:true,
+          options:['Projet entièrement nouveau, à partir de zéro',"J'ai déjà des maquettes ou une idée très précise",'Je pars d\'une idée générale à structurer avec vous'] },
       ]},
     montage_pc: { label:'Montage & optimisation PC', description:'Choix des composants, montage, upgrade.', icone:'pc',
       questions:[
@@ -1738,6 +1780,13 @@ const FALLBACK_CONFIG = {
       options:['Moins de 300 €','300 € - 800 €','800 € - 2000 €','2000 € - 5000 €','Plus de 5000 €','Je ne sais pas encore'] },
     { id:'delai', label:'Dans quel délai souhaitez-vous être livré ?', type:'choix_unique', required:true,
       options:['Urgent — dès que possible','Sous 1 à 2 semaines','Sous 2 à 3 semaines','Pas de contrainte particulière'] },
+    { id:'contexte', label:'Décrivez votre projet en quelques mots (contexte, objectif, cible)', type:'zone_texte', required:false },
+    { id:'inspirations', label:'Avez-vous des références ou sites qui vous plaisent ? (liens, exemples)', type:'zone_texte', required:false },
+    { id:'ambiance_visuelle', label:'Quelle ambiance visuelle imaginez-vous ?', type:'choix_multiple', required:false,
+      options:['Épurée / minimaliste','Chaleureuse / naturelle','Élégante / haut de gamme','Dynamique / colorée','Technique / corporate','Créative / artistique','Je ne sais pas encore — orientez-moi'] },
+    { id:'charte_existante', label:'Avez-vous déjà un logo ou une charte graphique ?', type:'choix_unique', required:false,
+      options:['Oui, tout est prêt (logo + couleurs + typos)','J\'ai seulement un logo','Non, rien pour le moment'] },
+    { id:'fichiers', label:'Ajoutez tout document utile (cahier des charges, maquettes, logo, photos, exemples…)', type:'fichiers', required:false },
   ],
   contact_fields: [
     { id:'nom', label:'Nom complet', type:'texte', required:true },
@@ -1750,7 +1799,7 @@ const FALLBACK_CONFIG = {
 };
 
 let CONFIG = null;
-let QSTATE = { service:null, step:0, reponses:{}, contact:{}, _svcForced:false };
+let QSTATE = { service:null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced:false };
 
 async function chargerConfig(){
   if(CONFIG) return CONFIG;
@@ -1773,7 +1822,7 @@ async function ouvrirQuestionnaire(serviceForce){
   await chargerConfig();
   const key = normalizeServiceKey(serviceForce);
   const validForced = key && CONFIG.services && CONFIG.services[key];
-  QSTATE = { service: validForced ? key : null, step:0, reponses:{}, contact:{}, _svcForced: !!validForced };
+  QSTATE = { service: validForced ? key : null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced: !!validForced };
   const ov = document.getElementById('overlay');
   if(!ov){ console.error('[YC] #overlay introuvable'); return; }
   ov.classList.add('actif');
@@ -1830,6 +1879,28 @@ function renderQuestion(q){
     inner += `<textarea oninput="setReponse('${q.id}', this.value)">${escapeHtml(val||'')}</textarea>`;
   } else if(type === 'nombre'){
     inner += `<input type="number" value="${escapeHtml(val||'')}" oninput="setReponse('${q.id}', this.value)">`;
+  } else if(type === 'fichiers'){
+    const files = Array.isArray(QSTATE.fichiers) ? QSTATE.fichiers : [];
+    inner += `<div class="file-upload-zone" id="fileDropZone">
+      <input type="file" id="fileInput" multiple onchange="ajouterFichiers(this.files)" style="display:none;" accept="image/*,.pdf,.doc,.docx,.txt,.zip,.psd,.ai,.fig,.sketch,.xd,.xls,.xlsx,.csv,.ppt,.pptx">
+      <label for="fileInput" class="file-upload-label">
+        <span class="icon" data-icon="upload"></span>
+        <div>
+          <strong>Cliquez pour ajouter des fichiers</strong>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">ou glissez-déposez ici — Images, PDF, docs, maquettes, ZIP… (25 Mo max par fichier)</p>
+        </div>
+      </label>
+      <div class="file-list" id="fileList">`;
+    files.forEach((f, i) => {
+      const sizeKb = Math.round((f.size||0)/1024);
+      const sizeTxt = sizeKb > 1024 ? (sizeKb/1024).toFixed(1)+' Mo' : sizeKb+' Ko';
+      inner += `<div class="file-item">
+        <span class="icon" data-icon="file"></span>
+        <div class="file-info"><strong>${escapeHtml(f.name)}</strong><small>${sizeTxt}</small></div>
+        <button type="button" class="file-remove" onclick="retirerFichier(${i})" aria-label="Retirer">×</button>
+      </div>`;
+    });
+    inner += `</div></div>`;
   } else {
     inner += `<input type="text" value="${escapeHtml(val||'')}" oninput="setReponse('${q.id}', this.value)">`;
   }
@@ -1975,10 +2046,21 @@ async function soumettre(){
     return;
   }
   try{
-    const r = await fetch('/api/submit', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ service: QSTATE.service, reponses: QSTATE.reponses, contact: QSTATE.contact })
-    });
+    let r;
+    const hasFiles = Array.isArray(QSTATE.fichiers) && QSTATE.fichiers.length > 0;
+    if(hasFiles){
+      const fd = new FormData();
+      fd.append('service', QSTATE.service);
+      fd.append('reponses', JSON.stringify(QSTATE.reponses));
+      fd.append('contact', JSON.stringify(QSTATE.contact));
+      QSTATE.fichiers.forEach(f => fd.append('fichiers', f, f.name));
+      r = await fetch('/api/submit', { method:'POST', body: fd });
+    } else {
+      r = await fetch('/api/submit', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ service: QSTATE.service, reponses: QSTATE.reponses, contact: QSTATE.contact })
+      });
+    }
     const j = await r.json().catch(()=>({}));
     if(!r.ok) throw new Error(j.erreur || ('Erreur serveur ('+r.status+')'));
     setProgress(100);
@@ -2003,6 +2085,26 @@ async function soumettre(){
     if(msg){ msg.textContent = err.message || 'Une erreur est survenue.'; msg.className='form-msg err'; msg.style.display='block'; }
   }
 }
+
+
+function ajouterFichiers(fileList){
+  if(!fileList) return;
+  const arr = Array.isArray(QSTATE.fichiers) ? QSTATE.fichiers : [];
+  const MAX = 25 * 1024 * 1024; // 25 Mo
+  for(const f of fileList){
+    if(f.size > MAX){ alert('Fichier trop volumineux (25 Mo max) : ' + f.name); continue; }
+    arr.push(f);
+  }
+  QSTATE.fichiers = arr;
+  renderStep();
+}
+function retirerFichier(i){
+  if(!Array.isArray(QSTATE.fichiers)) return;
+  QSTATE.fichiers.splice(i,1);
+  renderStep();
+}
+window.ajouterFichiers = ajouterFichiers;
+window.retirerFichier = retirerFichier;
 
 /* Expose au scope global pour les onclick="..." inline */
 window.ouvrirQuestionnaire = ouvrirQuestionnaire;
