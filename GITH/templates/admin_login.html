@@ -4,16 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Connexion admin</title>
+<title>Connexion — Espace admin YC Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0f1115;
-    --panel:#171a21;
-    --border:#262b36;
-    --text:#e9ecf1;
-    --muted:#8a90a0;
-    --accent:#4f7cff;
-    --danger:#ff6b6b;
+    --ivory:#F4F1EA;
+    --paper:#FBF9F4;
+    --ink:#0B1229;
+    --muted:#5B6478;
+    --soft:#8B93A6;
+    --line:#E2DED2;
+    --line-strong:#D2CCBB;
+    --accent:#0F52BA;
+    --accent-ink:#0A2E6D;
+    --danger:#B33A2A;
+    --font-display:"Fraunces",Georgia,serif;
+    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   }
   *{box-sizing:border-box;}
   body{
@@ -22,76 +30,108 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:var(--bg);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    color:var(--text);
+    background:
+      radial-gradient(1200px 500px at 15% -10%, rgba(15,82,186,.06), transparent 60%),
+      radial-gradient(900px 400px at 100% 110%, rgba(15,82,186,.05), transparent 60%),
+      var(--paper);
+    font-family:var(--font-body);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    padding:24px;
   }
   .card{
     width:100%;
-    max-width:360px;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:32px 28px;
-    box-shadow:0 20px 50px rgba(0,0,0,.35);
+    max-width:400px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:36px 32px 32px;
+    box-shadow:0 30px 80px -30px rgba(11,18,41,.18), 0 6px 18px -10px rgba(11,18,41,.08);
   }
-  .card h1{
-    font-size:1.15rem;
-    margin:0 0 4px;
+  .brand{
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent);
     font-weight:600;
+    margin-bottom:12px;
   }
-  .card p.sub{
-    margin:0 0 24px;
+  h1{
+    font-family:var(--font-display);
+    font-size:1.55rem;
+    margin:0 0 6px;
+    font-weight:600;
+    letter-spacing:-.015em;
+  }
+  p.sub{
+    margin:0 0 26px;
     color:var(--muted);
-    font-size:.85rem;
+    font-size:.88rem;
+    line-height:1.5;
   }
   label{
     display:block;
-    font-size:.8rem;
+    font-size:.78rem;
     color:var(--muted);
-    margin-bottom:6px;
+    margin-bottom:8px;
+    font-weight:500;
   }
   input[type="password"]{
     width:100%;
-    padding:11px 12px;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#0d0f14;
-    color:var(--text);
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid var(--line-strong);
+    background:var(--paper);
+    color:var(--ink);
     font-size:.95rem;
+    font-family:var(--font-body);
     outline:none;
+    transition:border-color .2s, background .2s;
   }
   input[type="password"]:focus{
     border-color:var(--accent);
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(15,82,186,.12);
   }
   button{
     width:100%;
-    margin-top:18px;
-    padding:11px 12px;
+    margin-top:20px;
+    padding:12px 14px;
     border:none;
-    border-radius:8px;
-    background:var(--accent);
+    border-radius:10px;
+    background:var(--ink);
     color:#fff;
-    font-size:.95rem;
+    font-size:.92rem;
     font-weight:600;
     cursor:pointer;
+    font-family:var(--font-body);
+    transition:background .2s, transform .1s;
   }
-  button:hover{ filter:brightness(1.08); }
+  button:hover{ background:var(--accent-ink); }
+  button:active{ transform:translateY(1px); }
   .erreur{
-    margin:14px 0 0;
-    padding:10px 12px;
-    border-radius:8px;
-    background:rgba(255,107,107,.12);
-    border:1px solid rgba(255,107,107,.3);
+    margin:16px 0 0;
+    padding:11px 14px;
+    border-radius:10px;
+    background:rgba(179,58,42,.08);
+    border:1px solid rgba(179,58,42,.25);
     color:var(--danger);
     font-size:.85rem;
+  }
+  .foot{
+    margin-top:20px;
+    text-align:center;
+    font-size:.72rem;
+    color:var(--soft);
+    letter-spacing:.02em;
   }
 </style>
 </head>
 <body>
   <div class="card">
+    <div class="brand">YC Digital</div>
     <h1>Espace admin</h1>
-    <p class="sub">Connecte-toi pour voir les demandes reçues sur le site.</p>
+    <p class="sub">Connecte-toi pour consulter les demandes reçues et les messages du site.</p>
     <form method="POST" autocomplete="off">
       <label for="mot_de_passe">Mot de passe</label>
       <input type="password" id="mot_de_passe" name="mot_de_passe" required autofocus>
@@ -100,6 +140,7 @@
     {% if erreur %}
       <div class="erreur">{{ erreur }}</div>
     {% endif %}
+    <div class="foot">Accès réservé — session sécurisée</div>
   </div>
 </body>
 </html>
