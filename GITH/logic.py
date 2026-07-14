@@ -592,34 +592,61 @@ def list_contact_messages() -> list:
 def _email_configure() -> Optional[dict]:
     api_key = os.environ.get("RESEND_API_KEY")
     admin_email = os.environ.get("ADMIN_EMAIL")
-    if not (api_key and admin_email):
+    if not api_key:
+        print("[email] RESEND_API_KEY absente — notifications désactivées.")
+        return None
+    if not admin_email:
+        print("[email] ADMIN_EMAIL absente — notifications désactivées.")
         return None
     return {
         "api_key": api_key,
         "admin_email": admin_email,
+        # Par défaut on utilise l'adresse de test de Resend (fonctionne sans
+        # domaine vérifié, mais n'envoie qu'à l'adresse du compte Resend).
+        # Une fois un domaine vérifié dans Resend, définir RESEND_FROM.
         "from": os.environ.get("RESEND_FROM", "onboarding@resend.dev"),
     }
 
 
 def send_email_notification(subject: str, body_text: str) -> bool:
+    """Envoie un e-mail via Resend. Reproduit exactement le pattern du script
+    de test fourni par le client :
+
+        resend.api_key = "..."
+        resend.Emails.send({"from": ..., "to": ..., "subject": ..., "html": ...})
+    """
     cfg = _email_configure()
     if not cfg:
-        print("[email] Notifications désactivées (variables RESEND_API_KEY / ADMIN_EMAIL absentes).")
         return False
+
+    # Ré-affecte la clé à chaque envoi : garantit qu'on utilise bien la valeur
+    # actuelle (utile si la variable d'environnement est rafraîchie).
+    resend.api_key = cfg["api_key"]
+
+    html_body = (
+        "<pre style=\"font-family:Arial,sans-serif;white-space:pre-wrap;"
+        "font-size:14px;line-height:1.5;\">"
+        + body_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        + "</pre>"
+    )
+
+    payload = {
+        "from": cfg["from"],
+        "to": cfg["admin_email"],
+        "subject": subject,
+        "html": html_body,
+    }
+
     try:
-        resend.api_key = cfg["api_key"]
-        html_body = "<pre style=\"font-family:inherit;white-space:pre-wrap;\">" + \
-            body_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + \
-            "</pre>"
-        resend.Emails.send({
-            "from": cfg["from"],
-            "to": cfg["admin_email"],
-            "subject": subject,
-            "html": html_body,
-        })
+        response = resend.Emails.send(payload)
+        print(f"[email] OK — sujet={subject!r} to={cfg['admin_email']} "
+              f"from={cfg['from']} response={response}")
         return True
     except Exception as exc:
-        print(f"[email] Échec de l'envoi de la notification : {exc}")
+        # On imprime le maximum de contexte : c'est la seule façon de diagnostiquer
+        # les problèmes côté Resend (domaine non vérifié, clé invalide, etc.).
+        print(f"[email] ÉCHEC — sujet={subject!r} to={cfg['admin_email']} "
+              f"from={cfg['from']} erreur={type(exc).__name__}: {exc}")
         return False
 
 
