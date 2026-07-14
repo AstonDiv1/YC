@@ -14,8 +14,19 @@ la configuration du questionnaire via /api/config, l'affiche dynamiquement,
 puis envoie les réponses à /api/submit. Si tu veux ajouter, retirer ou
 modifier une question demain, tu n'as qu'à modifier le dictionnaire SERVICES
 ci-dessous : le site s'adapte tout seul.
+
+Note structurelle importante :
+Historiquement, un seul jeu de "questions communes" était concaténé à la
+suite de toutes les questions spécifiques. Ce n'était pas cohérent :
+demander "ambiance visuelle" ou "logo/charte" pour un montage PC n'a pas
+de sens. Désormais chaque service définit sa propre queue de questions
+communes via COMMON_TAIL_WEB, COMMON_TAIL_APP, COMMON_TAIL_PC, et
+get_public_config() les injecte dans service["questions"]. Le champ
+questions_communes global est renvoyé vide pour rester compatible avec
+le front (qui concatène toujours service.questions + questions_communes).
 """
 
+import copy
 import json
 import os
 import sqlite3
@@ -30,16 +41,12 @@ DB_PATH = Path(__file__).parent / "bookings.db"
 UPLOAD_DIR = Path(__file__).parent / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
-# Taille max acceptée par fichier joint (25 Mo). Le front prévient à 25 Mo
-# aussi, mais on garde une garde côté serveur pour éviter les abus.
+# Taille max acceptée par fichier joint (25 Mo).
 MAX_UPLOAD_SIZE = 25 * 1024 * 1024
 
 # ---------------------------------------------------------------------------
 # 1. STRUCTURE DU QUESTIONNAIRE
 # ---------------------------------------------------------------------------
-# Chaque service définit ses propres questions. Types de questions supportés
-# côté front (voir index.html) : "choix_unique", "choix_multiple", "texte",
-# "nombre", "select", "zone_texte", "fichiers".
 
 SERVICES = {
     "site_web": {
@@ -91,17 +98,17 @@ SERVICES = {
     },
     "application": {
         "label": "Création d'application",
-        "description": "Applications Android, web (PWA) et Windows, sur-mesure.",
+        "description": "Applications Android et Windows Desktop, sur-mesure.",
         "icone": "app",
         "questions": [
             {
                 "id": "plateforme",
                 "label": "Sur quelle(s) plateforme(s) ?",
                 "type": "choix_multiple",
-                # iOS et macOS retirés — on ne développe pas pour l'écosystème Apple.
+                # On ne fait ni iOS/macOS, ni PWA / application web.
+                # Les prestations proposées se limitent à Android et Windows Desktop.
                 "options": [
                     "Android",
-                    "Application web (PWA)",
                     "Desktop Windows",
                 ],
                 "required": True,
@@ -110,31 +117,28 @@ SERVICES = {
                 "id": "fonctionnalites_app",
                 "label": "Quelles fonctionnalités sont nécessaires ?",
                 "type": "choix_multiple",
+                # Liste resserrée : on retire les fonctionnalités qui sont
+                # systématiquement du sur-mesure et qui n'ont pas leur place
+                # dans un questionnaire standard (paiement intégré, back-office,
+                # rôles/permissions, statistiques, géolocalisation, API externes).
+                # Ces prestations sont proposées directement dans le devis.
                 "options": [
                     "Compte utilisateur / connexion",
                     "Notifications push",
-                    "Paiement intégré",
-                    "Géolocalisation",
                     "Mode hors-ligne",
-                    "Back-office / tableau de bord admin",
                     "Chat / messagerie interne",
                     "Upload / gestion de fichiers",
                     "Génération de PDF / documents",
                     "Import / export de données (CSV, Excel)",
-                    "Intégration API externe",
-                    "Statistiques / tableau de bord",
+                    "Recherche avancée / filtres",
                     "Multilingue",
                     "Notifications par e-mail",
-                    "Système de rôles / permissions",
-                    "Recherche avancée / filtres",
                 ],
                 "required": False,
             },
             {
                 "id": "existant_app",
                 "label": "Où en êtes-vous dans votre projet ?",
-                # On ne fait pas d'amélioration d'app existante — l'option a été retirée.
-                # Reste : "à partir de zéro", "maquettes/idée précise", ou "idée à structurer".
                 "type": "choix_unique",
                 "options": [
                     "Projet entièrement nouveau, à partir de zéro",
@@ -197,85 +201,143 @@ SERVICES = {
     },
 }
 
-# Questions communes à TOUS les services, posées à la fin (budget, délai,
-# contexte, ambiance visuelle, fichiers). Enrichies pour mieux qualifier
-# la demande avant même le premier échange.
-QUESTIONS_COMMUNES = [
-    {
-        "id": "budget",
-        "label": "Quel budget envisagez-vous ?",
-        "type": "select",
-        "options": [
-            "Moins de 300 €",
-            "300 € - 800 €",
-            "800 € - 2000 €",
-            "2000 € - 5000 €",
-            "Plus de 5000 €",
-            "Je ne sais pas encore",
-        ],
-        "required": True,
-    },
-    {
-        "id": "delai",
-        "label": "Dans quel délai souhaitez-vous être livré ?",
-        "type": "choix_unique",
-        "options": [
-            "Urgent — dès que possible",
-            "Sous 1 à 2 semaines",
-            "Sous 2 à 3 semaines",
-            "Pas de contrainte particulière",
-        ],
-        "required": True,
-    },
-    {
-        "id": "contexte",
-        "label": "Décrivez votre projet en quelques mots (contexte, objectif, cible)",
-        "type": "zone_texte",
-        "required": False,
-    },
-    {
-        "id": "inspirations",
-        "label": "Avez-vous des références ou sites qui vous plaisent ? (liens, exemples)",
-        "type": "zone_texte",
-        "required": False,
-    },
-    {
-        "id": "ambiance_visuelle",
-        "label": "Quelle ambiance visuelle imaginez-vous ?",
-        "type": "choix_multiple",
-        "options": [
-            "Épurée / minimaliste",
-            "Chaleureuse / naturelle",
-            "Élégante / haut de gamme",
-            "Dynamique / colorée",
-            "Technique / corporate",
-            "Créative / artistique",
-            "Je ne sais pas encore — orientez-moi",
-        ],
-        "required": False,
-    },
-    {
-        "id": "charte_existante",
-        "label": "Avez-vous déjà un logo ou une charte graphique ?",
-        # NOTE : nous ne créons pas la charte graphique — elle reste à la charge
-        # du client (ou de son graphiste). On peut en revanche l'orienter dans
-        # ses choix visuels. Cette question sert uniquement à savoir sur quoi
-        # nous partons pour le développement.
-        "type": "choix_unique",
-        "options": [
-            "Oui, tout est prêt (logo + couleurs + typos)",
-            "J'ai seulement un logo",
-            "Non, rien pour le moment",
-        ],
-        "required": False,
-    },
-    {
-        "id": "fichiers",
-        "label": "Ajoutez tout document utile (cahier des charges, maquettes, logo, photos, exemples…)",
-        "type": "fichiers",
-        "required": False,
-    },
-]
+# ---------------------------------------------------------------------------
+# Questions communes injectées EN FIN de service. On distingue trois queues
+# de questions selon la nature du projet, pour éviter d'imposer les mêmes
+# questions à un site web et à un montage PC.
+# ---------------------------------------------------------------------------
+
+_Q_BUDGET = {
+    "id": "budget",
+    "label": "Quel budget envisagez-vous ?",
+    "type": "select",
+    "options": [
+        "Moins de 300 €",
+        "300 € - 800 €",
+        "800 € - 2000 €",
+        "2000 € - 5000 €",
+        "Plus de 5000 €",
+        "Je ne sais pas encore",
+    ],
+    "required": True,
+}
+
+_Q_DELAI = {
+    "id": "delai",
+    "label": "Dans quel délai souhaitez-vous être livré ?",
+    "type": "choix_unique",
+    "options": [
+        "Urgent — dès que possible",
+        "Sous 1 à 2 semaines",
+        "Sous 2 à 3 semaines",
+        "Pas de contrainte particulière",
+    ],
+    "required": True,
+}
+
+_Q_CONTEXTE = {
+    "id": "contexte",
+    "label": "Décrivez votre projet en quelques mots (contexte, objectif, cible)",
+    "type": "zone_texte",
+    "required": False,
+}
+
+_Q_INSPIRATIONS = {
+    "id": "inspirations",
+    "label": "Avez-vous des références ou sites qui vous plaisent ? (liens, exemples)",
+    "type": "zone_texte",
+    "required": False,
+}
+
+_Q_AMBIANCE = {
+    "id": "ambiance_visuelle",
+    "label": "Quelle ambiance visuelle imaginez-vous ?",
+    "type": "choix_multiple",
+    "options": [
+        "Épurée / minimaliste",
+        "Chaleureuse / naturelle",
+        "Élégante / haut de gamme",
+        "Dynamique / colorée",
+        "Technique / corporate",
+        "Créative / artistique",
+        "Je ne sais pas encore — orientez-moi",
+    ],
+    "required": False,
+}
+
+_Q_CHARTE = {
+    "id": "charte_existante",
+    "label": "Avez-vous déjà un logo ou une charte graphique ?",
+    "type": "choix_unique",
+    "options": [
+        "Oui, tout est prêt (logo + couleurs + typos)",
+        "J'ai seulement un logo",
+        "Non, rien pour le moment",
+    ],
+    "required": False,
+}
+
+_Q_FICHIERS = {
+    "id": "fichiers",
+    "label": "Ajoutez tout document utile (cahier des charges, maquettes, logo, photos, exemples…)",
+    "type": "fichiers",
+    "required": False,
+}
+
+# --- Version spécifique montage PC ---
+# Pas de charte graphique, pas d'"ambiance visuelle" au sens web : on
+# demande plutôt une esthétique de boîtier (sobre / RGB / etc.) qui a
+# du sens pour un build. Les fichiers restent proposés pour permettre
+# d'envoyer une photo du setup existant ou d'un boîtier de référence.
+_Q_ESTHETIQUE_PC = {
+    "id": "esthetique_pc",
+    "label": "Quelle esthétique souhaitez-vous pour la machine ?",
+    "type": "choix_unique",
+    "options": [
+        "Sobre / discrète (aucun éclairage)",
+        "Sobre avec un peu de LED (blanc ou une seule couleur)",
+        "RGB modéré (quelques ventilateurs / barrettes)",
+        "RGB assumé (setup gaming complet)",
+        "Format compact / mini-ITX",
+        "Peu importe — orientez-moi",
+    ],
+    "required": False,
+}
+
+_Q_CONTEXTE_PC = {
+    "id": "contexte",
+    "label": "Détails complémentaires (jeux / logiciels visés, résolution d'écran, configuration actuelle…)",
+    "type": "zone_texte",
+    "required": False,
+}
+
+_Q_FICHIERS_PC = {
+    "id": "fichiers",
+    "label": "Ajoutez si besoin une photo de votre setup actuel, une liste de composants ou une référence de boîtier",
+    "type": "fichiers",
+    "required": False,
+}
+
+# Queues par service.
+COMMON_TAIL_WEB = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE, _Q_INSPIRATIONS,
+                   _Q_AMBIANCE, _Q_CHARTE, _Q_FICHIERS]
+
+COMMON_TAIL_APP = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE, _Q_INSPIRATIONS,
+                   _Q_AMBIANCE, _Q_CHARTE, _Q_FICHIERS]
+
+COMMON_TAIL_PC = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE_PC,
+                  _Q_ESTHETIQUE_PC, _Q_FICHIERS_PC]
+
+COMMON_TAILS = {
+    "site_web": COMMON_TAIL_WEB,
+    "application": COMMON_TAIL_APP,
+    "montage_pc": COMMON_TAIL_PC,
+}
+
+# Conservé pour compatibilité avec d'anciens appels éventuels.
+# Le front reçoit désormais une liste vide dans questions_communes :
+# les questions communes sont injectées directement dans chaque service.
+QUESTIONS_COMMUNES = []
 
 CONTACT_FIELDS = [
     {"id": "nom", "label": "Nom complet", "type": "texte", "required": True},
@@ -288,10 +350,22 @@ CONTACT_FIELDS = [
 
 
 def get_public_config():
-    """Renvoie la config du questionnaire, telle que consommée par le front."""
+    """Renvoie la config du questionnaire, telle que consommée par le front.
+
+    On construit une copie de SERVICES dans laquelle chaque service voit
+    sa queue de questions communes concaténée à ses propres questions.
+    Le front reste inchangé : il fait service.questions + questions_communes,
+    et questions_communes est désormais vide.
+    """
+    services_out = {}
+    for key, svc in SERVICES.items():
+        svc_copy = copy.deepcopy(svc)
+        tail = COMMON_TAILS.get(key, COMMON_TAIL_WEB)
+        svc_copy["questions"] = list(svc_copy.get("questions", [])) + copy.deepcopy(tail)
+        services_out[key] = svc_copy
     return {
-        "services": SERVICES,
-        "questions_communes": QUESTIONS_COMMUNES,
+        "services": services_out,
+        "questions_communes": [],
         "contact_fields": CONTACT_FIELDS,
     }
 
@@ -388,9 +462,6 @@ def init_db():
             statut TEXT DEFAULT 'nouveau'
         )
     """)
-    # Table des fichiers joints à une demande. On stocke seulement le chemin
-    # relatif (sous UPLOAD_DIR) et le nom original — le fichier lui-même
-    # reste sur disque, ce qui permet d'éviter de gonfler la base SQLite.
     conn.execute("""
         CREATE TABLE IF NOT EXISTS booking_files (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -433,27 +504,17 @@ def save_booking(service: str, reponses: dict, contact: dict, recommandation: di
 
 
 def _safe_filename(name: str) -> str:
-    """Nettoie un nom de fichier pour éviter les injections de chemin."""
     name = os.path.basename(name or "fichier")
-    # Retire tout caractère problématique tout en gardant l'extension lisible.
     keep = "-_.() "
     cleaned = "".join(c for c in name if c.isalnum() or c in keep).strip()
     return cleaned or "fichier"
 
 
 def save_booking_file(booking_id: str, file_storage) -> Optional[dict]:
-    """
-    Sauvegarde un fichier joint à une demande. `file_storage` est un
-    werkzeug.datastructures.FileStorage (fourni par Flask via request.files).
-    Renvoie un dict décrivant le fichier, ou None si le fichier est vide
-    ou trop lourd.
-    """
     if not file_storage or not file_storage.filename:
         return None
 
     original = _safe_filename(file_storage.filename)
-    # Lit le contenu pour vérifier la taille (Flask ne renseigne pas
-    # toujours .content_length côté multipart).
     data = file_storage.read()
     if not data:
         return None
@@ -461,7 +522,6 @@ def save_booking_file(booking_id: str, file_storage) -> Optional[dict]:
         print(f"[upload] Fichier ignoré ({original}) : {len(data)} octets > {MAX_UPLOAD_SIZE}")
         return None
 
-    # Dossier par booking_id, pour retrouver facilement les fichiers d'une demande.
     dest_dir = UPLOAD_DIR / booking_id
     dest_dir.mkdir(parents=True, exist_ok=True)
     stored_name = f"{uuid.uuid4().hex[:8]}_{original}"
@@ -505,14 +565,11 @@ def list_booking_files(booking_id: str) -> list:
 
 
 def get_booking_file_path(booking_id: str, filename_stored: str) -> Optional[Path]:
-    """Renvoie le chemin absolu d'un fichier joint, ou None s'il n'existe pas
-    (ou n'appartient pas à ce booking)."""
     filename_stored = _safe_filename(filename_stored)
     booking_id = _safe_filename(booking_id)
     path = UPLOAD_DIR / booking_id / filename_stored
     if not path.exists() or not path.is_file():
         return None
-    # Sécurité : on vérifie que le chemin résolu reste sous UPLOAD_DIR.
     try:
         path.resolve().relative_to(UPLOAD_DIR.resolve())
     except ValueError:
@@ -601,26 +658,15 @@ def _email_configure() -> Optional[dict]:
     return {
         "api_key": api_key,
         "admin_email": admin_email,
-        # Par défaut on utilise l'adresse de test de Resend (fonctionne sans
-        # domaine vérifié, mais n'envoie qu'à l'adresse du compte Resend).
-        # Une fois un domaine vérifié dans Resend, définir RESEND_FROM.
         "from": os.environ.get("RESEND_FROM", "onboarding@resend.dev"),
     }
 
 
 def send_email_notification(subject: str, body_text: str) -> bool:
-    """Envoie un e-mail via Resend. Reproduit exactement le pattern du script
-    de test fourni par le client :
-
-        resend.api_key = "..."
-        resend.Emails.send({"from": ..., "to": ..., "subject": ..., "html": ...})
-    """
     cfg = _email_configure()
     if not cfg:
         return False
 
-    # Ré-affecte la clé à chaque envoi : garantit qu'on utilise bien la valeur
-    # actuelle (utile si la variable d'environnement est rafraîchie).
     resend.api_key = cfg["api_key"]
 
     html_body = (
@@ -643,8 +689,6 @@ def send_email_notification(subject: str, body_text: str) -> bool:
               f"from={cfg['from']} response={response}")
         return True
     except Exception as exc:
-        # On imprime le maximum de contexte : c'est la seule façon de diagnostiquer
-        # les problèmes côté Resend (domaine non vérifié, clé invalide, etc.).
         print(f"[email] ÉCHEC — sujet={subject!r} to={cfg['admin_email']} "
               f"from={cfg['from']} erreur={type(exc).__name__}: {exc}")
         return False
@@ -673,7 +717,7 @@ def notify_new_booking(booking_id: str, service: str, contact: dict, recommandat
         f"{liste_fichiers}\n"
         f"Message du client :\n{contact.get('message') or '(aucun)'}\n\n"
         f"Connecte-toi à ton espace admin pour voir tous les détails, "
-        f"télécharger les fichiers et changer le statut de cette demande."
+        f"consulter les photos jointes et changer le statut de cette demande."
     )
     send_email_notification(f"Nouvelle demande — {label} ({contact.get('nom', '—')})", corps)
 
