@@ -1,2 +1,3 @@
 Flask>=3.0
 gunicorn>=21.0
+resend==2.13.0
