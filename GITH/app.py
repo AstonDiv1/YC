@@ -10,28 +10,35 @@ Lancement local :
     python app.py
 Puis ouvrir http://127.0.0.1:5000
 
-Espace admin : http://127.0.0.1:5000/admin/login
+Espace admin :
+    Le chemin d'accès à l'administration n'est plus /admin (trop facile à
+    deviner). Il est désormais configurable via la variable d'environnement
+    ADMIN_URL_SLUG. Par défaut on utilise une valeur volontairement longue
+    et non-évidente : "gestion-yc-4c9e2a8f7b".
+
+    URL de connexion  : /<ADMIN_URL_SLUG>/connexion
+    URL du dashboard  : /<ADMIN_URL_SLUG>
+    URL de logout     : /<ADMIN_URL_SLUG>/deconnexion
+
+    Le chemin historique /admin renvoie désormais un 404 explicite, pour
+    ne rien indiquer à un visiteur qui tenterait de deviner l'URL.
 """
 
 import json
+import mimetypes
 import os
 import secrets
 from functools import wraps
 
 from flask import (
     Flask, render_template, request, jsonify,
-    redirect, url_for, session, send_from_directory, abort,
+    redirect, url_for, session, send_from_directory, abort, Response,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import logic
 
 app = Flask(__name__)
-
-# Taille max d'une requête (utile pour les uploads). On autorise ~110 Mo
-# côté Flask pour laisser de la marge à plusieurs fichiers de 25 Mo dans
-# une même requête multipart. La vraie limite par fichier est appliquée
-# dans logic.save_booking_file (MAX_UPLOAD_SIZE).
 app.config["MAX_CONTENT_LENGTH"] = 110 * 1024 * 1024
 
 # ---------------------------------------------------------------------------
@@ -49,6 +56,13 @@ if not _ADMIN_PASSWORD_HASH:
               "avant de mettre le site en ligne.")
 
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
+
+# Slug de l'espace admin — non deviné. Configurable via l'environnement,
+# avec un défaut long et opaque pour éviter que /admin fonctionne.
+ADMIN_URL_SLUG = os.environ.get("ADMIN_URL_SLUG", "gestion-yc-4c9e2a8f7b").strip("/")
+if not ADMIN_URL_SLUG:
+    ADMIN_URL_SLUG = "gestion-yc-4c9e2a8f7b"
+print(f"[admin] Espace admin accessible sur /{ADMIN_URL_SLUG}/connexion")
 
 
 def _is_authorized() -> bool:
@@ -90,6 +104,15 @@ def index():
     return render_template("index.html")
 
 
+# L'ancien /admin ne doit plus donner d'indice sur l'existence d'un espace
+# admin : on renvoie un 404 générique.
+@app.route("/admin")
+@app.route("/admin/login")
+@app.route("/admin/logout")
+def _legacy_admin_disabled():
+    abort(404)
+
+
 # ---------------------------------------------------------------------------
 # API - questionnaire
 # ---------------------------------------------------------------------------
@@ -101,17 +124,7 @@ def api_config():
 
 @app.route("/api/submit", methods=["POST"])
 def api_submit():
-    """Réception d'une demande de devis.
-
-    Supporte deux formats :
-      - JSON classique (aucun fichier joint) : Content-Type application/json
-      - multipart/form-data (avec fichiers joints)  : champs `service`,
-        `reponses` (JSON stringifié), `contact` (JSON stringifié) et un
-        ou plusieurs fichiers dans le champ `fichiers`.
-    """
     ctype = (request.content_type or "").lower()
-    # Détection robuste : on considère "multipart" dès qu'un fichier OU un champ
-    # de formulaire est présent (le header seul peut être trompeur).
     is_multipart = (
         ctype.startswith("multipart/")
         or bool(request.files)
@@ -211,11 +224,23 @@ def api_update_statut(booking_id):
 @app.route("/api/bookings/<booking_id>/fichiers/<path:filename>")
 @api_admin_required
 def api_download_file(booking_id, filename):
-    """Télécharge un fichier joint à une demande (admin uniquement)."""
+    """Sert un fichier joint à une demande (admin uniquement).
+
+    Le paramètre ?dl=1 force le téléchargement. Par défaut, le fichier est
+    servi en inline pour que les images puissent s'afficher directement
+    dans le tableau de bord (les mails Resend ne portent pas les pièces
+    jointes : la consultation se fait donc ici).
+    """
     path = logic.get_booking_file_path(booking_id, filename)
     if not path:
         abort(404)
-    return send_from_directory(path.parent, path.name, as_attachment=True)
+    as_attachment = request.args.get("dl") == "1"
+    guessed_mime, _ = mimetypes.guess_type(path.name)
+    return send_from_directory(
+        path.parent, path.name,
+        as_attachment=as_attachment,
+        mimetype=guessed_mime or "application/octet-stream",
+    )
 
 
 @app.route("/api/messages")
@@ -225,16 +250,16 @@ def api_messages():
 
 
 # ---------------------------------------------------------------------------
-# Espace admin
+# Espace admin (URL non devinée via ADMIN_URL_SLUG)
 # ---------------------------------------------------------------------------
 
-@app.route("/admin")
+@app.route(f"/{ADMIN_URL_SLUG}")
 @admin_required
 def admin_dashboard():
     return render_template("admin_dashboard.html")
 
 
-@app.route("/admin/login", methods=["GET", "POST"])
+@app.route(f"/{ADMIN_URL_SLUG}/connexion", methods=["GET", "POST"], endpoint="admin_login")
 def admin_login():
     erreur = None
     if request.method == "POST":
@@ -249,7 +274,7 @@ def admin_login():
     return render_template("admin_login.html", erreur=erreur)
 
 
-@app.route("/admin/logout")
+@app.route(f"/{ADMIN_URL_SLUG}/deconnexion", endpoint="admin_logout")
 def admin_logout():
     session.clear()
     return redirect(url_for("admin_login"))
