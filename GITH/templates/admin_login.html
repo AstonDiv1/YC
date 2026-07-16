@@ -133,7 +133,6 @@
     <h1>Espace admin</h1>
     <p class="sub">Connecte-toi pour consulter les demandes reçues et les messages du site.</p>
     <form method="POST" autocomplete="off">
-      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
       <label for="mot_de_passe">Mot de passe</label>
       <input type="password" id="mot_de_passe" name="mot_de_passe" required autofocus>
       <button type="submit">Se connecter</button>
