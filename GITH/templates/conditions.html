@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conditions d'utilisation — YC Digital</title>
+<meta name="description" content="Conditions générales d'utilisation du site YC Digital : usage, données personnelles, RGPD, propriété intellectuelle.">
+<meta name="theme-color" content="#0B1229">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F4F1EA;
+    --paper:#FBF9F4;
+    --ink:#0B1229;
+    --ink-soft:#2A3350;
+    --muted:#5B6478;
+    --soft:#8B93A6;
+    --line:#E2DED2;
+    --line-strong:#D2CCBB;
+    --accent:#0F52BA;
+    --accent-ink:#0A2E6D;
+    --font-display:"Fraunces",Georgia,serif;
+    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+  body{
+    font-family:var(--font-body);
+    color:var(--ink);
+    background:
+      radial-gradient(1000px 400px at 10% -10%, rgba(15,82,186,.05), transparent 60%),
+      var(--paper);
+    line-height:1.65;
+    min-height:100vh;
+  }
+  .topbar{
+    border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    padding:16px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:10;
+  }
+  .topbar .brand{
+    font-family:var(--font-display);
+    font-size:1rem; font-weight:600;
+    letter-spacing:-.01em;
+    color:var(--ink);
+  }
+  .topbar .brand small{
+    display:block;
+    font-family:var(--font-body);
+    font-size:.68rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:500;
+    margin-top:2px;
+  }
+  .topbar a.back{
+    color:var(--accent);
+    text-decoration:none;
+    font-size:.86rem;
+    font-weight:500;
+    padding:8px 14px;
+    border:1px solid var(--line-strong);
+    border-radius:8px;
+    transition:all .2s;
+  }
+  .topbar a.back:hover{
+    color:#fff;
+    background:var(--accent);
+    border-color:var(--accent);
+  }
+  main{
+    max-width:760px;
+    margin:0 auto;
+    padding:64px 24px 96px;
+  }
+  .eyebrow{
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+    margin-bottom:16px;
+  }
+  h1{
+    font-family:var(--font-display);
+    font-size:2.4rem;
+    line-height:1.15;
+    font-weight:600;
+    letter-spacing:-.02em;
+    color:var(--ink);
+    margin-bottom:14px;
+  }
+  .lead{
+    color:var(--muted);
+    font-size:1rem;
+    max-width:56ch;
+    margin-bottom:12px;
+  }
+  .lastup{
+    color:var(--soft);
+    font-size:.82rem;
+    margin-bottom:48px;
+    padding-bottom:32px;
+    border-bottom:1px solid var(--line);
+  }
+  section{ margin-bottom:36px; }
+  h2{
+    font-family:var(--font-display);
+    font-size:1.35rem;
+    font-weight:600;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin-bottom:14px;
+    display:flex; align-items:baseline; gap:14px;
+  }
+  h2 .num{
+    font-family:var(--font-body);
+    font-size:.75rem;
+    color:var(--accent);
+    font-weight:600;
+    letter-spacing:.08em;
+    min-width:28px;
+  }
+  p, li{
+    color:var(--ink-soft);
+    font-size:.96rem;
+    margin-bottom:12px;
+  }
+  ul{ padding-left:22px; margin-bottom:12px; }
+  li{ margin-bottom:8px; }
+  strong{ color:var(--ink); font-weight:600; }
+  a{ color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(15,82,186,.25); transition:border-color .2s; }
+  a:hover{ border-bottom-color:var(--accent); }
+  .callout{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    padding:18px 22px;
+    border-radius:10px;
+    margin:16px 0;
+    font-size:.94rem;
+    color:var(--ink-soft);
+  }
+  .callout strong{ color:var(--accent-ink); }
+  .footer{
+    border-top:1px solid var(--line);
+    padding:28px 24px;
+    text-align:center;
+    color:var(--muted);
+    font-size:.82rem;
+    background:#fff;
+  }
+  .footer a{ color:var(--muted); border-bottom-color:transparent; }
+  .footer a:hover{ color:var(--ink); }
+
+  @media (max-width:640px){
+    main{ padding:40px 20px 72px; }
+    h1{ font-size:1.9rem; }
+    h2{ font-size:1.2rem; }
+    .topbar{ padding:14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    YC Digital
+    <small>Studio digital</small>
+  </div>
+  <a class="back" href="/">← Retour à l'accueil</a>
+</div>
+
+<main>
+  <div class="eyebrow">Mentions légales</div>
+  <h1>Conditions d'utilisation</h1>
+  <p class="lead">Les règles simples et transparentes qui encadrent l'utilisation
+  de ce site et l'envoi de vos demandes.</p>
+  <p class="lastup">Dernière mise à jour : janvier 2025</p>
+
+  <section>
+    <h2><span class="num">01</span> Éditeur du site</h2>
+    <p>Le présent site est édité par <strong>YC Digital</strong>, studio digital
+    proposant des prestations de création de sites internet, d'applications et
+    de configurations informatiques sur-mesure.</p>
+    <p>Contact : <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>
+    · Instagram : <a href="https://instagram.com/yc_digital33" target="_blank" rel="noopener">@yc_digital33</a></p>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span> Objet</h2>
+    <p>Les présentes conditions régissent l'utilisation du site vitrine
+    <em>YC Digital</em> et notamment l'envoi de demandes de devis, de messages
+    de contact et le dépôt de fichiers joints à ces demandes. En utilisant le
+    site, vous acceptez ces conditions.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span> Utilisation acceptable</h2>
+    <p>En utilisant les formulaires du site, vous vous engagez à :</p>
+    <ul>
+      <li>Ne pas soumettre de contenu illégal, diffamatoire, contrefait ou nuisible.</li>
+      <li>Ne pas tenter de compromettre la sécurité du site, de son espace
+      d'administration ou de ses services (tentatives d'intrusion, injection,
+      scraping automatisé, envoi massif de formulaires).</li>
+      <li>Fournir des informations exactes lors de vos demandes de devis
+      ou messages de contact.</li>
+    </ul>
+    <div class="callout">
+      <strong>Limitation d'envoi :</strong> afin de protéger le service, le
+      nombre de demandes envoyées depuis une même connexion est limité à
+      <strong>10 par période de 24 heures</strong>. Au-delà, un message
+      d'erreur vous invitera à réessayer plus tard ou à nous écrire
+      directement par e-mail.
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span> Données personnelles &amp; RGPD</h2>
+    <p>Les informations transmises via les formulaires (nom, e-mail,
+    téléphone, ville, message, fichiers joints) sont utilisées
+    <strong>uniquement pour traiter votre demande</strong>. Elles ne sont ni
+    revendues, ni transmises à des tiers, à l'exception du prestataire
+    technique d'envoi d'e-mails (<em>Resend</em>) strictement nécessaire au
+    fonctionnement du service de notification.</p>
+    <p>Conformément au Règlement Général sur la Protection des Données (RGPD),
+    vous disposez à tout moment d'un droit d'accès, de rectification, de
+    portabilité et de suppression de vos données. Pour l'exercer, écrivez à
+    <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>.</p>
+    <p>Les demandes sont conservées le temps nécessaire au traitement du
+    projet, puis archivées à des fins comptables et légales.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span> Fichiers joints</h2>
+    <p>Vous pouvez joindre des fichiers à votre demande de devis (maquettes,
+    photos, cahier des charges, références). La taille maximale par fichier
+    est fixée à <strong>25 Mo</strong>. En déposant un fichier, vous
+    garantissez en détenir les droits d'usage et acceptez qu'il soit consulté
+    par l'équipe YC Digital pour l'étude de votre projet.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">06</span> Cookies &amp; session</h2>
+    <p>Le site n'utilise <strong>aucun cookie de suivi publicitaire</strong>,
+    ni traceur tiers. Un unique cookie de session, strictement nécessaire,
+    est utilisé pour maintenir la connexion à l'espace d'administration
+    interne (non accessible aux visiteurs).</p>
+  </section>
+
+  <section>
+    <h2><span class="num">07</span> Propriété intellectuelle</h2>
+    <p>L'ensemble des éléments composant ce site (textes, visuels, code,
+    identité visuelle) est la propriété exclusive de YC Digital, sauf mention
+    contraire. Toute reproduction, représentation ou diffusion, totale ou
+    partielle, sans autorisation écrite préalable est interdite.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">08</span> Sécurité</h2>
+    <p>Le site met en œuvre plusieurs mesures pour protéger vos données et le
+    service : accès administrateur restreint par URL non-devinée, protection
+    contre les tentatives de connexion abusives, chiffrement des mots de
+    passe, limitation du volume de demandes par visiteur, hébergement sur
+    infrastructure sécurisée.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">09</span> Responsabilité</h2>
+    <p>YC Digital s'efforce d'assurer la disponibilité du site mais ne peut
+    être tenu responsable d'une interruption temporaire du service, d'une
+    perte de données liée à un incident technique, ou d'une utilisation non
+    conforme aux présentes conditions.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">10</span> Contact</h2>
+    <p>Pour toute question relative à ces conditions ou à l'utilisation du
+    site, écrivez-nous à
+    <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>. Nous
+    répondons en général sous 48 heures ouvrées.</p>
+  </section>
+</main>
+
+<div class="footer">
+  © <span id="year"></span> YC Digital — <a href="/">Retour à l'accueil</a>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
