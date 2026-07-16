@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conditions d'utilisation — YC Digital</title>
-<meta name="description" content="Conditions générales d'utilisation du site YC Digital : usage, données personnelles, RGPD, propriété intellectuelle.">
+<title>Conditions générales d'utilisation — YC Digital</title>
+<meta name="description" content="Conditions générales d'utilisation du site YC Digital : usage, données personnelles, RGPD, propriété intellectuelle, responsabilité.">
 <meta name="theme-color" content="#0B1229">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,11 +75,39 @@
     background:var(--accent);
     border-color:var(--accent);
   }
-  main{
-    max-width:760px;
+  .layout{
+    max-width:1040px;
     margin:0 auto;
     padding:64px 24px 96px;
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:56px;
+    align-items:start;
   }
+  aside.toc{
+    position:sticky;
+    top:96px;
+    font-size:.82rem;
+  }
+  aside.toc .toc-title{
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--soft);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  aside.toc ul{ list-style:none; }
+  aside.toc li{ margin-bottom:9px; }
+  aside.toc a{
+    color:var(--muted);
+    text-decoration:none;
+    border-bottom:none;
+    display:block;
+    line-height:1.4;
+  }
+  aside.toc a:hover{ color:var(--accent); }
+  main{ max-width:720px; }
   .eyebrow{
     font-size:.72rem;
     letter-spacing:.18em;
@@ -110,7 +138,7 @@
     padding-bottom:32px;
     border-bottom:1px solid var(--line);
   }
-  section{ margin-bottom:36px; }
+  section{ margin-bottom:36px; scroll-margin-top:96px; }
   h2{
     font-family:var(--font-display);
     font-size:1.35rem;
@@ -127,6 +155,13 @@
     font-weight:600;
     letter-spacing:.08em;
     min-width:28px;
+  }
+  h3{
+    font-family:var(--font-body);
+    font-size:.96rem;
+    font-weight:600;
+    color:var(--ink);
+    margin:18px 0 8px;
   }
   p, li{
     color:var(--ink-soft);
@@ -149,6 +184,42 @@
     color:var(--ink-soft);
   }
   .callout strong{ color:var(--accent-ink); }
+  .table-wrap{
+    overflow-x:auto;
+    margin:16px 0;
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    font-size:.88rem;
+  }
+  th, td{
+    text-align:left;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+    color:var(--ink-soft);
+  }
+  th{
+    background:var(--ivory);
+    color:var(--ink);
+    font-weight:600;
+    font-size:.78rem;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+  tr:last-child td{ border-bottom:none; }
+  .disclaimer{
+    margin-top:56px;
+    padding:20px 22px;
+    background:var(--ivory);
+    border:1px dashed var(--line-strong);
+    border-radius:10px;
+    font-size:.84rem;
+    color:var(--muted);
+  }
   .footer{
     border-top:1px solid var(--line);
     padding:28px 24px;
@@ -160,8 +231,12 @@
   .footer a{ color:var(--muted); border-bottom-color:transparent; }
   .footer a:hover{ color:var(--ink); }
 
+  @media (max-width:900px){
+    .layout{ grid-template-columns:1fr; padding:40px 20px 72px; }
+    aside.toc{ position:static; order:2; }
+    main{ order:1; max-width:none; }
+  }
   @media (max-width:640px){
-    main{ padding:40px 20px 72px; }
     h1{ font-size:1.9rem; }
     h2{ font-size:1.2rem; }
     .topbar{ padding:14px 20px; }
@@ -178,116 +253,328 @@
   <a class="back" href="/">← Retour à l'accueil</a>
 </div>
 
-<main>
-  <div class="eyebrow">Mentions légales</div>
-  <h1>Conditions d'utilisation</h1>
-  <p class="lead">Les règles simples et transparentes qui encadrent l'utilisation
-  de ce site et l'envoi de vos demandes.</p>
-  <p class="lastup">Dernière mise à jour : janvier 2025</p>
+<div class="layout">
 
-  <section>
-    <h2><span class="num">01</span> Éditeur du site</h2>
-    <p>Le présent site est édité par <strong>YC Digital</strong>, studio digital
-    proposant des prestations de création de sites internet, d'applications et
-    de configurations informatiques sur-mesure.</p>
-    <p>Contact : <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>
-    · Instagram : <a href="https://instagram.com/yc_digital33" target="_blank" rel="noopener">@yc_digital33</a></p>
-  </section>
-
-  <section>
-    <h2><span class="num">02</span> Objet</h2>
-    <p>Les présentes conditions régissent l'utilisation du site vitrine
-    <em>YC Digital</em> et notamment l'envoi de demandes de devis, de messages
-    de contact et le dépôt de fichiers joints à ces demandes. En utilisant le
-    site, vous acceptez ces conditions.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">03</span> Utilisation acceptable</h2>
-    <p>En utilisant les formulaires du site, vous vous engagez à :</p>
+  <aside class="toc">
+    <div class="toc-title">Sommaire</div>
     <ul>
-      <li>Ne pas soumettre de contenu illégal, diffamatoire, contrefait ou nuisible.</li>
-      <li>Ne pas tenter de compromettre la sécurité du site, de son espace
-      d'administration ou de ses services (tentatives d'intrusion, injection,
-      scraping automatisé, envoi massif de formulaires).</li>
-      <li>Fournir des informations exactes lors de vos demandes de devis
-      ou messages de contact.</li>
+      <li><a href="#s01">01. Éditeur du site</a></li>
+      <li><a href="#s02">02. Définitions</a></li>
+      <li><a href="#s03">03. Objet et acceptation</a></li>
+      <li><a href="#s04">04. Accès au site</a></li>
+      <li><a href="#s05">05. Utilisation acceptable</a></li>
+      <li><a href="#s06">06. Demandes de devis</a></li>
+      <li><a href="#s07">07. Données personnelles</a></li>
+      <li><a href="#s08">08. Fichiers joints</a></li>
+      <li><a href="#s09">09. Cookies</a></li>
+      <li><a href="#s10">10. Propriété intellectuelle</a></li>
+      <li><a href="#s11">11. Liens externes</a></li>
+      <li><a href="#s12">12. Disponibilité du site</a></li>
+      <li><a href="#s13">13. Responsabilité</a></li>
+      <li><a href="#s14">14. Indemnisation</a></li>
+      <li><a href="#s15">15. Sécurité</a></li>
+      <li><a href="#s16">16. Modification des CGU</a></li>
+      <li><a href="#s17">17. Droit applicable</a></li>
+      <li><a href="#s18">18. Médiation</a></li>
+      <li><a href="#s19">19. Divisibilité</a></li>
+      <li><a href="#s20">20. Contact</a></li>
     </ul>
-    <div class="callout">
-      <strong>Limitation d'envoi :</strong> afin de protéger le service, le
-      nombre de demandes envoyées depuis une même connexion est limité à
-      <strong>10 par période de 24 heures</strong>. Au-delà, un message
-      d'erreur vous invitera à réessayer plus tard ou à nous écrire
-      directement par e-mail.
+  </aside>
+
+  <main>
+    <div class="eyebrow">Mentions légales</div>
+    <h1>Conditions générales d'utilisation</h1>
+    <p class="lead">Les règles complètes et transparentes qui encadrent l'utilisation
+    de ce site, l'envoi de vos demandes, et vos droits sur vos données.</p>
+    <p class="lastup">Dernière mise à jour : juillet 2026</p>
+
+    <section id="s01">
+      <h2><span class="num">01</span> Éditeur du site</h2>
+      <p>Le présent site est édité par <strong>YC Digital</strong>, studio digital
+      proposant des prestations de création de sites internet, d'applications et
+      de configurations informatiques sur-mesure.</p>
+      <p>Contact : <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>
+      · Instagram : <a href="https://instagram.com/yc_digital33" target="_blank" rel="noopener">@yc_digital33</a></p>
+      <p>Le site est hébergé sur une infrastructure d'hébergement tierce, dont les
+      coordonnées peuvent être communiquées sur simple demande écrite à l'adresse
+      ci-dessus, conformément à la réglementation applicable.</p>
+    </section>
+
+    <section id="s02">
+      <h2><span class="num">02</span> Définitions</h2>
+      <ul>
+        <li><strong>« Site »</strong> désigne le site vitrine YC Digital et
+        l'ensemble de ses pages, formulaires et contenus.</li>
+        <li><strong>« Utilisateur » ou « Visiteur »</strong> désigne toute
+        personne consultant ou utilisant le Site.</li>
+        <li><strong>« Client »</strong> désigne toute personne ayant soumis
+        une demande de devis ou de contact via le Site.</li>
+        <li><strong>« Contenu »</strong> désigne l'ensemble des éléments
+        publiés sur le Site : textes, images, code, identité visuelle.</li>
+      </ul>
+    </section>
+
+    <section id="s03">
+      <h2><span class="num">03</span> Objet et acceptation</h2>
+      <p>Les présentes conditions générales d'utilisation (« CGU ») ont pour
+      objet de définir les modalités de mise à disposition du Site et de ses
+      services, ainsi que les conditions d'utilisation par l'Utilisateur,
+      notamment l'envoi de demandes de devis, de messages de contact et le
+      dépôt de fichiers joints à ces demandes.</p>
+      <p>Le simple fait d'accéder au Site ou d'utiliser l'un de ses
+      formulaires emporte acceptation pleine et entière des présentes CGU. Si
+      vous n'acceptez pas ces conditions, nous vous invitons à ne pas utiliser
+      le Site.</p>
+    </section>
+
+    <section id="s04">
+      <h2><span class="num">04</span> Accès au site</h2>
+      <p>Le Site est accessible gratuitement à tout Utilisateur disposant d'un
+      accès à internet. Tous les frais afférents à cet accès (matériel,
+      logiciels, connexion internet) sont à la charge exclusive de
+      l'Utilisateur.</p>
+      <p>YC Digital met en œuvre tous les moyens raisonnables à sa disposition
+      pour assurer un accès de qualité au Site, mais n'est tenue à aucune
+      obligation d'y parvenir.</p>
+    </section>
+
+    <section id="s05">
+      <h2><span class="num">05</span> Utilisation acceptable</h2>
+      <p>En utilisant les formulaires du Site, vous vous engagez à :</p>
+      <ul>
+        <li>Ne pas soumettre de contenu illégal, diffamatoire, injurieux,
+        contrefait, trompeur ou nuisible à des tiers.</li>
+        <li>Ne pas tenter de compromettre la sécurité, la disponibilité ou
+        l'intégrité du Site ou de ses services (tentatives d'intrusion,
+        injection de code, scraping automatisé, envoi massif de formulaires,
+        déni de service).</li>
+        <li>Ne pas utiliser le Site à des fins frauduleuses ou contraires à
+        l'ordre public.</li>
+        <li>Fournir des informations exactes et à jour lors de vos demandes
+        de devis ou messages de contact.</li>
+        <li>Ne pas extraire ou réutiliser, par des moyens automatisés, tout ou
+        partie substantielle du Contenu sans autorisation préalable.</li>
+      </ul>
+      <div class="callout">
+        <strong>Limitation d'envoi :</strong> afin de protéger le service, le
+        nombre de demandes envoyées depuis une même connexion est limité à
+        <strong>10 par période de 24 heures</strong>. Au-delà, un message
+        d'erreur vous invitera à réessayer plus tard ou à nous écrire
+        directement par e-mail.
+      </div>
+      <p>Tout manquement à ces engagements peut entraîner le rejet de la
+      demande concernée et, le cas échéant, un signalement aux autorités
+      compétentes si la loi l'exige.</p>
+    </section>
+
+    <section id="s06">
+      <h2><span class="num">06</span> Demandes de devis et messages de contact</h2>
+      <p>Les formulaires du Site permettent d'envoyer une demande de devis ou
+      un message de contact. Cet envoi ne constitue ni une commande, ni un
+      contrat, ni un engagement ferme d'aucune des parties : il ouvre une
+      simple mise en relation en vue d'échanger sur un projet.</p>
+      <p>Toute prestation de services proposée par YC Digital à la suite d'une
+      demande de devis fera l'objet d'un devis ou d'un contrat distinct,
+      accepté séparément par le Client, précisant notamment le prix, les
+      délais, le périmètre de la prestation et les conditions de paiement.
+      Les présentes CGU ne régissent pas l'exécution de ces prestations.</p>
+    </section>
+
+    <section id="s07">
+      <h2><span class="num">07</span> Données personnelles &amp; RGPD</h2>
+      <p>YC Digital agit en qualité de responsable de traitement pour les
+      données collectées via le Site.</p>
+
+      <h3>Données collectées</h3>
+      <p>Les informations transmises via les formulaires (nom, e-mail,
+      téléphone, ville, message, fichiers joints) sont utilisées
+      <strong>uniquement pour traiter votre demande</strong>. Des données
+      techniques minimales (adresse IP, horodatage) peuvent également être
+      collectées afin d'assurer la sécurité et la limitation d'envoi décrite
+      à l'article 5.</p>
+
+      <h3>Finalités et base légale</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Finalité</th><th>Base légale</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Traitement des demandes de devis et de contact</td><td>Exécution de mesures précontractuelles / intérêt légitime</td></tr>
+            <tr><td>Sécurité du Site et prévention des abus</td><td>Intérêt légitime</td></tr>
+            <tr><td>Obligations comptables et légales</td><td>Obligation légale</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Destinataires</h3>
+      <p>Les données ne sont ni revendues, ni transmises à des tiers, à
+      l'exception du prestataire technique d'envoi d'e-mails (<em>Resend</em>)
+      strictement nécessaire au fonctionnement du service de notification, et,
+      le cas échéant, de l'hébergeur du Site.</p>
+
+      <h3>Durée de conservation</h3>
+      <p>Les demandes sont conservées le temps nécessaire au traitement du
+      projet, puis archivées pendant une durée maximale de 3 ans à des fins
+      commerciales, ou plus longtemps si une obligation comptable ou légale
+      l'impose.</p>
+
+      <h3>Vos droits</h3>
+      <p>Conformément au Règlement Général sur la Protection des Données
+      (RGPD) et à la loi Informatique et Libertés, vous disposez à tout
+      moment d'un droit d'accès, de rectification, d'effacement, de
+      limitation, de portabilité et d'opposition concernant vos données,
+      ainsi que du droit de définir des directives relatives à leur sort
+      après votre décès. Pour exercer ces droits, écrivez à
+      <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a> en
+      justifiant de votre identité. Nous répondons dans un délai maximal
+      d'un mois.</p>
+      <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez
+      introduire une réclamation auprès de la
+      <a href="https://www.cnil.fr" target="_blank" rel="noopener">CNIL</a>
+      (Commission Nationale de l'Informatique et des Libertés).</p>
+    </section>
+
+    <section id="s08">
+      <h2><span class="num">08</span> Fichiers joints</h2>
+      <p>Vous pouvez joindre des fichiers à votre demande de devis (maquettes,
+      photos, cahier des charges, références). La taille maximale par fichier
+      est fixée à <strong>25 Mo</strong>. En déposant un fichier, vous
+      garantissez en détenir les droits d'usage et acceptez qu'il soit
+      consulté par l'équipe YC Digital pour l'étude de votre projet. YC
+      Digital ne saurait être tenue responsable du contenu des fichiers
+      déposés par les Utilisateurs.</p>
+    </section>
+
+    <section id="s09">
+      <h2><span class="num">09</span> Cookies</h2>
+      <p>Le Site n'utilise <strong>aucun cookie de suivi publicitaire</strong>,
+      ni traceur tiers à des fins de mesure d'audience ou de ciblage
+      publicitaire. Seuls des cookies ou traceurs strictement nécessaires au
+      fonctionnement technique du Site peuvent être déposés ; ceux-ci ne
+      requièrent pas de consentement préalable au titre de la réglementation
+      applicable.</p>
+    </section>
+
+    <section id="s10">
+      <h2><span class="num">10</span> Propriété intellectuelle</h2>
+      <p>L'ensemble des éléments composant le Site (textes, visuels, code,
+      identité visuelle, logo, structure) est la propriété exclusive de YC
+      Digital ou de ses partenaires, sauf mention contraire, et est protégé
+      par le droit de la propriété intellectuelle.</p>
+      <p>Toute reproduction, représentation, modification, publication ou
+      diffusion, totale ou partielle, de ces éléments, par quelque procédé
+      que ce soit, sans autorisation écrite préalable de YC Digital, est
+      strictement interdite et pourra faire l'objet de poursuites
+      conformément aux articles L.335-2 et suivants du Code de la propriété
+      intellectuelle.</p>
+    </section>
+
+    <section id="s11">
+      <h2><span class="num">11</span> Liens externes</h2>
+      <p>Le Site peut contenir des liens vers des sites tiers (notamment des
+      réseaux sociaux). YC Digital n'exerce aucun contrôle sur ces sites et
+      décline toute responsabilité quant à leur contenu, leur disponibilité
+      ou leurs pratiques en matière de données personnelles.</p>
+    </section>
+
+    <section id="s12">
+      <h2><span class="num">12</span> Disponibilité et évolution du site</h2>
+      <p>YC Digital se réserve le droit de modifier, suspendre ou interrompre,
+      temporairement ou définitivement, tout ou partie du Site, à des fins de
+      maintenance, d'amélioration ou pour toute autre raison, sans préavis et
+      sans que sa responsabilité puisse être engagée de ce fait.</p>
+    </section>
+
+    <section id="s13">
+      <h2><span class="num">13</span> Limitation de responsabilité</h2>
+      <p>YC Digital s'efforce d'assurer l'exactitude et la mise à jour des
+      informations diffusées sur le Site, sans garantir l'absence totale
+      d'erreurs ou d'omissions.</p>
+      <p>YC Digital ne pourra être tenue responsable :</p>
+      <ul>
+        <li>D'une interruption temporaire ou d'un dysfonctionnement du Site,
+        quelle qu'en soit la cause ;</li>
+        <li>D'une perte de données liée à un incident technique, une
+        cyberattaque ou un cas de force majeure ;</li>
+        <li>D'un dommage indirect résultant de l'utilisation du Site
+        (perte d'exploitation, perte de chance, préjudice commercial) ;</li>
+        <li>D'une utilisation du Site non conforme aux présentes CGU.</li>
+      </ul>
+      <p>Rien dans les présentes CGU n'a pour effet d'exclure ou de limiter la
+      responsabilité de YC Digital dans les cas où la loi l'interdit,
+      notamment en cas de faute lourde ou intentionnelle.</p>
+    </section>
+
+    <section id="s14">
+      <h2><span class="num">14</span> Indemnisation</h2>
+      <p>L'Utilisateur s'engage à garantir YC Digital contre toute réclamation,
+      perte ou dommage résultant d'une violation des présentes CGU ou d'une
+      utilisation illicite du Site de son fait.</p>
+    </section>
+
+    <section id="s15">
+      <h2><span class="num">15</span> Sécurité</h2>
+      <p>Le Site met en œuvre des mesures techniques et organisationnelles
+      raisonnables pour protéger vos données et le service, notamment le
+      chiffrement des communications, la limitation du volume de demandes par
+      visiteur, et l'hébergement sur une infrastructure sécurisée.</p>
+    </section>
+
+    <section id="s16">
+      <h2><span class="num">16</span> Modification des CGU</h2>
+      <p>YC Digital se réserve le droit de modifier les présentes CGU à tout
+      moment, notamment pour se conformer à toute évolution légale,
+      réglementaire, jurisprudentielle ou technique. La version en vigueur est
+      celle publiée sur le Site à la date de consultation, indiquée en haut de
+      cette page. Il est conseillé à l'Utilisateur de consulter régulièrement
+      cette page.</p>
+    </section>
+
+    <section id="s17">
+      <h2><span class="num">17</span> Droit applicable</h2>
+      <p>Les présentes CGU sont soumises au droit français. En cas de litige
+      relatif à leur interprétation ou leur exécution, et à défaut de
+      résolution amiable, les tribunaux français compétents seront seuls
+      saisis, sous réserve des règles de compétence territoriale impératives
+      applicables aux consommateurs.</p>
+    </section>
+
+    <section id="s18">
+      <h2><span class="num">18</span> Médiation de la consommation</h2>
+      <p>Conformément aux articles L.616-1 et R.616-1 du Code de la
+      consommation, tout Client consommateur dispose du droit de recourir
+      gratuitement à un médiateur de la consommation en vue de la résolution
+      amiable d'un litige qui n'aurait pas trouvé d'issue via une réclamation
+      écrite préalable adressée à YC Digital.</p>
+    </section>
+
+    <section id="s19">
+      <h2><span class="num">19</span> Divisibilité</h2>
+      <p>Si l'une des clauses des présentes CGU venait à être déclarée nulle
+      ou inapplicable au regard d'une loi, d'un règlement ou d'une décision
+      de justice, les autres clauses conserveraient toute leur force et leur
+      portée.</p>
+    </section>
+
+    <section id="s20">
+      <h2><span class="num">20</span> Contact</h2>
+      <p>Pour toute question relative à ces conditions ou à l'utilisation du
+      Site, écrivez-nous à
+      <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>. Nous
+      répondons en général sous 48 heures ouvrées.</p>
+    </section>
+
+    <div class="disclaimer">
+      Ce document a été rédigé à titre de modèle général et ne constitue pas
+      un avis juridique. Il est recommandé de le faire relire par un
+      professionnel du droit avant publication, afin de s'assurer de sa
+      conformité avec votre activité réelle et les évolutions
+      réglementaires en vigueur.
     </div>
-  </section>
+  </main>
 
-  <section>
-    <h2><span class="num">04</span> Données personnelles &amp; RGPD</h2>
-    <p>Les informations transmises via les formulaires (nom, e-mail,
-    téléphone, ville, message, fichiers joints) sont utilisées
-    <strong>uniquement pour traiter votre demande</strong>. Elles ne sont ni
-    revendues, ni transmises à des tiers, à l'exception du prestataire
-    technique d'envoi d'e-mails (<em>Resend</em>) strictement nécessaire au
-    fonctionnement du service de notification.</p>
-    <p>Conformément au Règlement Général sur la Protection des Données (RGPD),
-    vous disposez à tout moment d'un droit d'accès, de rectification, de
-    portabilité et de suppression de vos données. Pour l'exercer, écrivez à
-    <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>.</p>
-    <p>Les demandes sont conservées le temps nécessaire au traitement du
-    projet, puis archivées à des fins comptables et légales.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">05</span> Fichiers joints</h2>
-    <p>Vous pouvez joindre des fichiers à votre demande de devis (maquettes,
-    photos, cahier des charges, références). La taille maximale par fichier
-    est fixée à <strong>25 Mo</strong>. En déposant un fichier, vous
-    garantissez en détenir les droits d'usage et acceptez qu'il soit consulté
-    par l'équipe YC Digital pour l'étude de votre projet.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">06</span> Cookies &amp; session</h2>
-    <p>Le site n'utilise <strong>aucun cookie de suivi publicitaire</strong>,
-    ni traceur tiers. Un unique cookie de session, strictement nécessaire,
-    est utilisé pour maintenir la connexion à l'espace d'administration
-    interne (non accessible aux visiteurs).</p>
-  </section>
-
-  <section>
-    <h2><span class="num">07</span> Propriété intellectuelle</h2>
-    <p>L'ensemble des éléments composant ce site (textes, visuels, code,
-    identité visuelle) est la propriété exclusive de YC Digital, sauf mention
-    contraire. Toute reproduction, représentation ou diffusion, totale ou
-    partielle, sans autorisation écrite préalable est interdite.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">08</span> Sécurité</h2>
-    <p>Le site met en œuvre plusieurs mesures pour protéger vos données et le
-    service : accès administrateur restreint par URL non-devinée, protection
-    contre les tentatives de connexion abusives, chiffrement des mots de
-    passe, limitation du volume de demandes par visiteur, hébergement sur
-    infrastructure sécurisée.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">09</span> Responsabilité</h2>
-    <p>YC Digital s'efforce d'assurer la disponibilité du site mais ne peut
-    être tenu responsable d'une interruption temporaire du service, d'une
-    perte de données liée à un incident technique, ou d'une utilisation non
-    conforme aux présentes conditions.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">10</span> Contact</h2>
-    <p>Pour toute question relative à ces conditions ou à l'utilisation du
-    site, écrivez-nous à
-    <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>. Nous
-    répondons en général sous 48 heures ouvrées.</p>
-  </section>
-</main>
+</div>
 
 <div class="footer">
   © <span id="year"></span> YC Digital — <a href="/">Retour à l'accueil</a>
