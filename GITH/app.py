@@ -368,19 +368,31 @@ def admin_dashboard():
 @app.route(f"/{ADMIN_URL_SLUG}/connexion", methods=["GET", "POST"], endpoint="admin_login")
 def admin_login():
     erreur = None
+    status = 200
 
-    # 1) Blocage actif : on refuse même les GET (page + 429).
+    # 1) Blocage actif : on refuse même les GET.
     blocage_restant = _admin_is_blocked()
     if blocage_restant > 0:
         minutes = (blocage_restant + 59) // 60
         erreur = (f"Trop de tentatives échouées. "
                   f"Réessayez dans {minutes} minute(s).")
-        return render_template("admin_login.html", erreur=erreur), 429
+        return render_template(
+            "admin_login.html",
+            erreur=erreur,
+            blocage_restant=blocage_restant,
+            restant_essais=0,
+        ), 429
 
     # 2) POST : on vérifie le mot de passe.
     if request.method == "POST":
         mot_de_passe = request.form.get("mot_de_passe", "")
-        if check_password_hash(_ADMIN_PASSWORD_HASH, mot_de_passe):
+        try:
+            ok = check_password_hash(_ADMIN_PASSWORD_HASH, mot_de_passe)
+        except Exception as exc:  # hash mal formé dans l'env, etc.
+            print(f"[admin] Erreur de vérification du mot de passe : {exc}")
+            ok = False
+
+        if ok:
             _admin_register_success()
             session.clear()
             session["admin_logged_in"] = True
@@ -390,17 +402,24 @@ def admin_login():
 
         # échec
         _admin_register_failure()
-        restant = _admin_is_blocked()
-        if restant > 0:
-            minutes = (restant + 59) // 60
-            erreur = (f"Trop de tentatives. Accès bloqué {minutes} minute(s).")
+        blocage_restant = _admin_is_blocked()
+        if blocage_restant > 0:
+            minutes = (blocage_restant + 59) // 60
+            erreur = f"Trop de tentatives. Accès bloqué {minutes} minute(s)."
+            status = 429
         else:
             restant_essais = _admin_remaining_attempts()
             erreur = (f"Mot de passe incorrect. "
                       f"Il vous reste {restant_essais} tentative(s) "
                       f"avant blocage.")
+            status = 401
 
-    return render_template("admin_login.html", erreur=erreur)
+    return render_template(
+        "admin_login.html",
+        erreur=erreur,
+        blocage_restant=blocage_restant,
+        restant_essais=_admin_remaining_attempts(),
+    ), status
 
 
 @app.route(f"/{ADMIN_URL_SLUG}/deconnexion", endpoint="admin_logout")
