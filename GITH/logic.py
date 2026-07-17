@@ -29,6 +29,7 @@ le front (qui concatène toujours service.questions + questions_communes).
 
 import copy
 import json
+import logging
 import os
 import re
 import sqlite3
@@ -40,10 +41,12 @@ from typing import Optional
 
 import resend
 
+logger = logging.getLogger("yc_digital.logic")
+
 DB_PATH = Path(os.environ.get("YC_DIGITAL_DB_PATH", Path(__file__).parent / "bookings.db"))
-UPLOAD_DIR = Path(__file__).parent / "uploads"
+UPLOAD_DIR = Path(os.environ.get("YC_DIGITAL_UPLOAD_DIR", Path(__file__).parent / "uploads"))
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-UPLOAD_DIR.mkdir(exist_ok=True)
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 # Taille max acceptée par fichier joint (25 Mo).
 MAX_UPLOAD_SIZE = 25 * 1024 * 1024
@@ -467,6 +470,13 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
 def init_db():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(DB_PATH))
+    # Mode WAL : évite les erreurs "database is locked" quand plusieurs workers
+    # gunicorn écrivent en concurrence sur la même base SQLite.
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=NORMAL")
+    except sqlite3.Error as exc:
+        logger.warning("Impossible d'activer le mode WAL SQLite : %s", exc)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS bookings (
             id TEXT PRIMARY KEY,
@@ -889,10 +899,10 @@ def _email_configure() -> Optional[dict]:
     api_key = os.environ.get("RESEND_API_KEY")
     admin_email = os.environ.get("ADMIN_EMAIL")
     if not api_key:
-        print("[email] RESEND_API_KEY absente — notifications désactivées.")
+        logger.warning("RESEND_API_KEY absente — notifications désactivées.")
         return None
     if not admin_email:
-        print("[email] ADMIN_EMAIL absente — notifications désactivées.")
+        logger.warning("ADMIN_EMAIL absente — notifications désactivées.")
         return None
     return {
         "api_key": api_key,
@@ -924,12 +934,16 @@ def send_email_notification(subject: str, body_text: str) -> bool:
 
     try:
         response = resend.Emails.send(payload)
-        print(f"[email] OK — sujet={subject!r} to={cfg['admin_email']} "
-              f"from={cfg['from']} response={response}")
+        logger.info(
+            "Email envoyé — sujet=%r to=%s from=%s response=%s",
+            subject, cfg["admin_email"], cfg["from"], response,
+        )
         return True
     except Exception as exc:
-        print(f"[email] ÉCHEC — sujet={subject!r} to={cfg['admin_email']} "
-              f"from={cfg['from']} erreur={type(exc).__name__}: {exc}")
+        logger.error(
+            "Échec envoi email — sujet=%r to=%s from=%s erreur=%s: %s",
+            subject, cfg["admin_email"], cfg["from"], type(exc).__name__, exc,
+        )
         return False
 
 
