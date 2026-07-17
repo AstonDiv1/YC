@@ -1723,6 +1723,38 @@ injectIcons(document);
 /* -------- NAV MOBILE -------- */
 function toggleMobileNav(){ const el=document.getElementById('mobileNav'); if(el) el.classList.toggle('actif'); }
 
+const YC_ALLOWED_FILE_EXTENSIONS = ['jpg','jpeg','png','webp','gif','heic','heif','avif','pdf'];
+const YC_ALLOWED_FILE_MIMES = ['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif','image/avif','application/pdf'];
+const YC_MAX_FILE_SIZE = 25 * 1024 * 1024;
+const YC_MAX_FILES = 8;
+
+function formatWait(seconds){
+  seconds = Math.max(1, parseInt(seconds || 0, 10));
+  const h = Math.floor(seconds / 3600);
+  const m = Math.ceil((seconds % 3600) / 60);
+  if(h > 0) return h + ' h ' + (m ? m + ' min' : '');
+  return Math.max(1, m) + ' min';
+}
+function apiErrorMessage(j, fallback){
+  const base = (j && j.erreur) ? j.erreur : fallback;
+  if(j && j.retry_after_seconds){ return base + ' Réessayez dans environ ' + formatWait(j.retry_after_seconds) + '.'; }
+  return base;
+}
+function validateClientFile(file){
+  const ext = (file.name || '').split('.').pop().toLowerCase();
+  const mime = (file.type || '').toLowerCase();
+  if(!YC_ALLOWED_FILE_EXTENSIONS.includes(ext)){
+    return 'Format refusé pour ' + file.name + ' — images et PDF uniquement.';
+  }
+  if(mime && !YC_ALLOWED_FILE_MIMES.includes(mime)){
+    return 'Type de fichier refusé pour ' + file.name + ' — images et PDF uniquement.';
+  }
+  if(file.size > YC_MAX_FILE_SIZE){
+    return 'Fichier trop volumineux (25 Mo max) : ' + file.name;
+  }
+  return '';
+}
+
 /* -------- FORMULAIRE CONTACT -------- */
 async function envoyerContact(e){
   e.preventDefault();
@@ -1734,7 +1766,7 @@ async function envoyerContact(e){
   try{
     const r = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({nom,email,message}) });
     const j = await r.json().catch(()=>({}));
-    if(!r.ok){ throw new Error(j.erreur || 'Erreur inconnue'); }
+    if(!r.ok){ throw new Error(apiErrorMessage(j, 'Erreur inconnue')); }
     if(msgEl){
       msgEl.textContent = 'Message envoyé — merci, nous vous répondons rapidement.';
       msgEl.className = 'form-msg ok'; msgEl.style.display = 'block';
@@ -1891,12 +1923,12 @@ function renderQuestion(q){
   } else if(type === 'fichiers'){
     const files = Array.isArray(QSTATE.fichiers) ? QSTATE.fichiers : [];
     inner += `<div class="file-upload-zone" id="fileDropZone">
-      <input type="file" id="fileInput" multiple onchange="ajouterFichiers(this.files)" style="display:none;" accept="image/*,.pdf,.doc,.docx,.txt,.zip,.psd,.ai,.fig,.sketch,.xd,.xls,.xlsx,.csv,.ppt,.pptx">
+      <input type="file" id="fileInput" multiple onchange="ajouterFichiers(this.files)" style="display:none;" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,image/avif,application/pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.heif,.avif,.pdf">
       <label for="fileInput" class="file-upload-label">
         <span class="icon" data-icon="upload"></span>
         <div>
           <strong>Cliquez pour ajouter des fichiers</strong>
-          <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">ou glissez-déposez ici — Images, PDF, docs, maquettes, ZIP… (25 Mo max par fichier)</p>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">ou glissez-déposez ici — images et PDF uniquement (25 Mo max par fichier, 8 fichiers max)</p>
         </div>
       </label>
       <div class="file-list" id="fileList">`;
@@ -2071,7 +2103,7 @@ async function soumettre(){
       });
     }
     const j = await r.json().catch(()=>({}));
-    if(!r.ok) throw new Error(j.erreur || ('Erreur serveur ('+r.status+')'));
+    if(!r.ok) throw new Error(apiErrorMessage(j, 'Erreur serveur ('+r.status+')'));
     setProgress(100);
     document.getElementById('modalTitle').textContent = 'Demande envoyée';
     const reco = j.recommandation || {};
@@ -2099,13 +2131,19 @@ async function soumettre(){
 function ajouterFichiers(fileList){
   if(!fileList) return;
   const arr = Array.isArray(QSTATE.fichiers) ? QSTATE.fichiers : [];
-  const MAX = 25 * 1024 * 1024; // 25 Mo
+  const errors = [];
   for(const f of fileList){
-    if(f.size > MAX){ alert('Fichier trop volumineux (25 Mo max) : ' + f.name); continue; }
+    if(arr.length >= YC_MAX_FILES){ errors.push('Vous pouvez joindre ' + YC_MAX_FILES + ' fichiers maximum.'); break; }
+    const err = validateClientFile(f);
+    if(err){ errors.push(err); continue; }
     arr.push(f);
   }
   QSTATE.fichiers = arr;
   renderStep();
+  if(errors.length){
+    const msg = document.getElementById('stepMsg');
+    if(msg){ msg.textContent = errors.join(' '); msg.className = 'form-msg err'; msg.style.display = 'block'; }
+  }
 }
 function retirerFichier(i){
   if(!Array.isArray(QSTATE.fichiers)) return;
