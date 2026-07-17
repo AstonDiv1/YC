@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 """
 logic.py
 --------
@@ -29,7 +30,9 @@ le front (qui concatène toujours service.questions + questions_communes).
 import copy
 import json
 import os
+import re
 import sqlite3
+import time
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -37,12 +40,36 @@ from typing import Optional
 
 import resend
 
-DB_PATH = Path(__file__).parent / "bookings.db"
+DB_PATH = Path(os.environ.get("YC_DIGITAL_DB_PATH", Path(__file__).parent / "bookings.db"))
 UPLOAD_DIR = Path(__file__).parent / "uploads"
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 # Taille max acceptée par fichier joint (25 Mo).
 MAX_UPLOAD_SIZE = 25 * 1024 * 1024
+MAX_UPLOAD_FILES = 8
+
+VALID_STATUSES = {"nouveau", "en_cours", "devis_envoye", "termine", "annule"}
+
+# Fichiers autorisés côté client ET côté serveur : images sûres + PDF.
+# Les formats Office/Excel, archives ZIP et fichiers exécutables sont refusés.
+ALLOWED_UPLOAD_EXTENSIONS = {
+    ".jpg", ".jpeg", ".png", ".webp", ".gif", ".heic", ".heif", ".avif", ".pdf"
+}
+ALLOWED_UPLOAD_MIMES = {
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/heic",
+    "image/heif",
+    "image/avif",
+    "application/pdf",
+}
+
+
+class UploadValidationError(ValueError):
+    """Erreur contrôlée quand un fichier joint n'est pas acceptable."""
 
 # ---------------------------------------------------------------------------
 # 1. STRUCTURE DU QUESTIONNAIRE
@@ -438,7 +465,8 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(DB_PATH))
     conn.execute("""
         CREATE TABLE IF NOT EXISTS bookings (
             id TEXT PRIMARY KEY,
@@ -474,8 +502,135 @@ def init_db():
             FOREIGN KEY(booking_id) REFERENCES bookings(id) ON DELETE CASCADE
         )
     """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS public_rate_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip TEXT NOT NULL,
+            endpoint TEXT NOT NULL,
+            created_at REAL NOT NULL
+        )
+    """)
+    conn.execute("""
+        CREATE INDEX IF NOT EXISTS idx_public_rate_events_ip_endpoint_created
+        ON public_rate_events(ip, endpoint, created_at)
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS admin_login_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip TEXT NOT NULL,
+            created_at REAL NOT NULL
+        )
+    """)
+    conn.execute("""
+        CREATE INDEX IF NOT EXISTS idx_admin_login_attempts_ip_created
+        ON admin_login_attempts(ip, created_at)
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS admin_ip_blocks (
+            ip TEXT PRIMARY KEY,
+            blocked_until REAL NOT NULL,
+            updated_at REAL NOT NULL
+        )
+    """)
     conn.commit()
     conn.close()
+
+
+def check_public_rate_limit(ip: str, endpoint: str, limit: int, window_seconds: int) -> tuple[bool, int]:
+    """Rate-limit persistant en SQLite : utile même après redémarrage du serveur."""
+    now = time.time()
+    cutoff = now - window_seconds
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    try:
+        conn.execute("DELETE FROM public_rate_events WHERE created_at < ?", (cutoff,))
+        rows = conn.execute(
+            """SELECT created_at FROM public_rate_events
+               WHERE ip = ? AND endpoint = ? AND created_at >= ?
+               ORDER BY created_at ASC""",
+            (ip, endpoint, cutoff),
+        ).fetchall()
+        if len(rows) >= limit:
+            retry_after = max(1, int(window_seconds - (now - float(rows[0][0]))))
+            conn.commit()
+            return False, retry_after
+        conn.execute(
+            "INSERT INTO public_rate_events(ip, endpoint, created_at) VALUES (?, ?, ?)",
+            (ip, endpoint, now),
+        )
+        conn.commit()
+        return True, 0
+    finally:
+        conn.close()
+
+
+def admin_block_remaining(ip: str) -> int:
+    now = time.time()
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    try:
+        row = conn.execute(
+            "SELECT blocked_until FROM admin_ip_blocks WHERE ip = ?",
+            (ip,),
+        ).fetchone()
+        if not row:
+            return 0
+        blocked_until = float(row[0])
+        if blocked_until > now:
+            return max(1, int(blocked_until - now))
+        conn.execute("DELETE FROM admin_ip_blocks WHERE ip = ?", (ip,))
+        conn.execute("DELETE FROM admin_login_attempts WHERE ip = ?", (ip,))
+        conn.commit()
+        return 0
+    finally:
+        conn.close()
+
+
+def admin_register_failure(ip: str, max_attempts: int, block_seconds: int) -> None:
+    now = time.time()
+    cutoff = now - block_seconds
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    try:
+        conn.execute("DELETE FROM admin_login_attempts WHERE ip = ? AND created_at < ?", (ip, cutoff))
+        conn.execute("INSERT INTO admin_login_attempts(ip, created_at) VALUES (?, ?)", (ip, now))
+        count = conn.execute(
+            "SELECT COUNT(*) FROM admin_login_attempts WHERE ip = ? AND created_at >= ?",
+            (ip, cutoff),
+        ).fetchone()[0]
+        if count >= max_attempts:
+            conn.execute(
+                """INSERT INTO admin_ip_blocks(ip, blocked_until, updated_at)
+                   VALUES (?, ?, ?)
+                   ON CONFLICT(ip) DO UPDATE SET
+                       blocked_until = excluded.blocked_until,
+                       updated_at = excluded.updated_at""",
+                (ip, now + block_seconds, now),
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def admin_register_success(ip: str) -> None:
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    try:
+        conn.execute("DELETE FROM admin_login_attempts WHERE ip = ?", (ip,))
+        conn.execute("DELETE FROM admin_ip_blocks WHERE ip = ?", (ip,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def admin_remaining_attempts(ip: str, max_attempts: int, block_seconds: int) -> int:
+    now = time.time()
+    cutoff = now - block_seconds
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    try:
+        count = conn.execute(
+            "SELECT COUNT(*) FROM admin_login_attempts WHERE ip = ? AND created_at >= ?",
+            (ip, cutoff),
+        ).fetchone()[0]
+        return max(0, max_attempts - int(count))
+    finally:
+        conn.close()
 
 
 def save_booking(service: str, reponses: dict, contact: dict, recommandation: dict) -> str:
@@ -505,9 +660,93 @@ def save_booking(service: str, reponses: dict, contact: dict, recommandation: di
 
 def _safe_filename(name: str) -> str:
     name = os.path.basename(name or "fichier")
+    name = name.replace("\x00", "")
     keep = "-_.() "
     cleaned = "".join(c for c in name if c.isalnum() or c in keep).strip()
+    cleaned = re.sub(r"\s+", " ", cleaned)[:120]
     return cleaned or "fichier"
+
+
+def _file_extension(filename: str) -> str:
+    return Path(filename or "").suffix.lower()
+
+
+def _sniff_mime(data: bytes, fallback: str = "") -> str:
+    if data.startswith(b"%PDF-"):
+        return "application/pdf"
+    if data.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if data.startswith(b"GIF87a") or data.startswith(b"GIF89a"):
+        return "image/gif"
+    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
+        return "image/webp"
+    if len(data) >= 12 and data[4:8] == b"ftyp" and data[8:12] in {b"avif", b"avis"}:
+        return "image/avif"
+    if len(data) >= 12 and data[4:8] == b"ftyp" and data[8:12] in {b"heic", b"heix", b"hevc", b"hevx", b"mif1"}:
+        return "image/heic"
+    return (fallback or "application/octet-stream").split(";", 1)[0].lower()
+
+
+def validate_uploaded_files(files: list) -> tuple[bool, str]:
+    files = [f for f in (files or []) if f and f.filename]
+    if len(files) > MAX_UPLOAD_FILES:
+        return False, f"Vous pouvez joindre {MAX_UPLOAD_FILES} fichiers maximum."
+    for file_storage in files:
+        name = _safe_filename(file_storage.filename)
+        ext = _file_extension(name)
+        if ext not in ALLOWED_UPLOAD_EXTENSIONS:
+            return False, (
+                f"Fichier refusé ({name}). Formats autorisés : images JPG, PNG, WebP, GIF, HEIC, AVIF et PDF."
+            )
+        try:
+            data = file_storage.read()
+            _validate_upload_content(name, data, file_storage.mimetype or "application/octet-stream")
+        except UploadValidationError as exc:
+            return False, str(exc)
+        finally:
+            try:
+                file_storage.stream.seek(0)
+            except Exception:
+                pass
+    return True, ""
+
+
+def _validate_upload_content(original: str, data: bytes, browser_mime: str) -> str:
+    if not data:
+        raise UploadValidationError(f"Le fichier {original} est vide.")
+    if len(data) > MAX_UPLOAD_SIZE:
+        raise UploadValidationError(f"Le fichier {original} dépasse la limite de 25 Mo.")
+
+    ext = _file_extension(original)
+    if ext not in ALLOWED_UPLOAD_EXTENSIONS:
+        raise UploadValidationError(
+            f"Fichier refusé ({original}). Formats autorisés : images JPG, PNG, WebP, GIF, HEIC, AVIF et PDF."
+        )
+
+    detected = _sniff_mime(data, browser_mime)
+    if detected not in ALLOWED_UPLOAD_MIMES:
+        raise UploadValidationError(
+            f"Fichier refusé ({original}). Le contenu ne correspond pas à une image ou un PDF autorisé."
+        )
+
+    if ext == ".pdf" and detected != "application/pdf":
+        raise UploadValidationError(f"Fichier refusé ({original}). Le PDF semble invalide.")
+    if ext in {".jpg", ".jpeg"} and detected != "image/jpeg":
+        raise UploadValidationError(f"Fichier refusé ({original}). L'image JPG semble invalide.")
+    if ext == ".png" and detected != "image/png":
+        raise UploadValidationError(f"Fichier refusé ({original}). L'image PNG semble invalide.")
+    if ext == ".gif" and detected != "image/gif":
+        raise UploadValidationError(f"Fichier refusé ({original}). L'image GIF semble invalide.")
+    if ext == ".webp" and detected != "image/webp":
+        raise UploadValidationError(f"Fichier refusé ({original}). L'image WebP semble invalide.")
+    if ext == ".avif" and detected != "image/avif":
+        raise UploadValidationError(f"Fichier refusé ({original}). L'image AVIF semble invalide.")
+    if ext in {".heic", ".heif"} and detected not in {"image/heic", "image/heif"}:
+        raise UploadValidationError(f"Fichier refusé ({original}). L'image HEIC/HEIF semble invalide.")
+
+    return detected
 
 
 def save_booking_file(booking_id: str, file_storage) -> Optional[dict]:
@@ -516,11 +755,11 @@ def save_booking_file(booking_id: str, file_storage) -> Optional[dict]:
 
     original = _safe_filename(file_storage.filename)
     data = file_storage.read()
-    if not data:
-        return None
-    if len(data) > MAX_UPLOAD_SIZE:
-        print(f"[upload] Fichier ignoré ({original}) : {len(data)} octets > {MAX_UPLOAD_SIZE}")
-        return None
+    detected_mime = _validate_upload_content(
+        original,
+        data,
+        file_storage.mimetype or "application/octet-stream",
+    )
 
     dest_dir = UPLOAD_DIR / booking_id
     dest_dir.mkdir(parents=True, exist_ok=True)
@@ -537,7 +776,7 @@ def save_booking_file(booking_id: str, file_storage) -> Optional[dict]:
             booking_id,
             original,
             stored_name,
-            (file_storage.mimetype or "application/octet-stream"),
+            detected_mime,
             len(data),
             datetime.now().isoformat(timespec="seconds"),
         ),
@@ -549,7 +788,7 @@ def save_booking_file(booking_id: str, file_storage) -> Optional[dict]:
         "filename_original": original,
         "filename_stored": stored_name,
         "size_bytes": len(data),
-        "mimetype": file_storage.mimetype or "application/octet-stream",
+        "mimetype": detected_mime,
     }
 
 
