@@ -19,6 +19,7 @@ Puis ouvrir http://127.0.0.1:5000
 """
 
 import json
+import logging
 import mimetypes
 import os
 import re
@@ -26,6 +27,16 @@ import secrets
 from functools import wraps
 from typing import Optional
 from urllib.parse import urlsplit
+
+# --------------------------------------------------------------------------
+# LOGS : sortie stdout structurée, consultable dans les logs Render.
+# LOG_LEVEL configurable via variable d'environnement (INFO par défaut).
+# --------------------------------------------------------------------------
+logging.basicConfig(
+    level=os.environ.get("LOG_LEVEL", "INFO").upper(),
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("yc_digital.app")
 
 from flask import (
     Flask, render_template, request, jsonify,
@@ -58,9 +69,7 @@ if not _ADMIN_PASSWORD_HASH:
     _plain = os.environ.get("ADMIN_PASSWORD", "change-moi")
     _ADMIN_PASSWORD_HASH = generate_password_hash(_plain)
     if _plain == "change-moi":
-        print("[admin] ATTENTION : mot de passe admin par défaut ('change-moi') "
-              "utilisé. Définis la variable d'environnement ADMIN_PASSWORD "
-              "avant de mettre le site en ligne.")
+        logger.warning("Mot de passe admin par défaut ('change-moi') utilisé. Définis la variable d'environnement ADMIN_PASSWORD avant de mettre le site en ligne.")
 
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 
@@ -84,7 +93,7 @@ def _normalize_admin_slug(raw) -> str:
 
 # Slug de l'espace admin — non deviné. Configurable via l'environnement.
 ADMIN_URL_SLUG = _normalize_admin_slug(os.environ.get("ADMIN_URL_SLUG"))
-print(f"[admin] Espace admin accessible sur /{ADMIN_URL_SLUG}/connexion")
+logger.info("Espace admin accessible sur /%s/connexion", ADMIN_URL_SLUG)
 
 
 # ---------------------------------------------------------------------------
@@ -116,7 +125,7 @@ def _check_public_rate_limit() -> tuple[bool, int]:
         PUBLIC_RATE_WINDOW,
     )
     if not ok:
-        print(f"[rate-limit] IP {_client_ip()} bloquée sur {request.path}")
+        logger.warning("Rate-limit : IP %s bloquée sur %s", _client_ip(), request.path)
     return ok, retry_after
 
 
@@ -181,7 +190,7 @@ def _admin_register_failure() -> None:
     ip = _client_ip()
     logic.admin_register_failure(ip, ADMIN_MAX_ATTEMPTS, ADMIN_BLOCK_SECONDS)
     if logic.admin_block_remaining(ip) > 0:
-        print(f"[admin] IP {ip} bloquée {ADMIN_BLOCK_SECONDS//60} min.")
+        logger.warning("Admin : IP %s bloquée %d min.", ip, ADMIN_BLOCK_SECONDS//60)
 
 
 def _admin_register_success() -> None:
@@ -237,6 +246,54 @@ def _handle_request_too_large(_exc):
     return message, 413
 
 
+@app.errorhandler(404)
+def _handle_not_found(_exc):
+    """404 : sans détails techniques. JSON pour /api/*, page simple sinon."""
+    if request.path.startswith("/api/"):
+        return _json_error("Ressource introuvable.", 404)
+    html = (
+        "<!doctype html><html lang='fr'><head><meta charset='utf-8'>"
+        "<title>Page introuvable — YC Digital</title>"
+        "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+        "<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;"
+        "background:#FBF9F4;color:#0B1229;display:flex;align-items:center;justify-content:center;"
+        "min-height:100vh;margin:0;padding:24px;text-align:center;}"
+        "h1{font-size:2rem;margin:0 0 8px;}p{color:#5B6478;margin:0 0 24px;}"
+        "a{color:#0F52BA;text-decoration:none;font-weight:600;}</style></head>"
+        "<body><div><h1>Page introuvable</h1>"
+        "<p>La page que vous cherchez n'existe pas ou a été déplacée.</p>"
+        "<a href='/'>← Retour à l'accueil</a></div></body></html>"
+    )
+    return html, 404
+
+
+@app.errorhandler(500)
+def _handle_internal_error(exc):
+    """500 : jamais de détails techniques exposés à l'utilisateur.
+    L'erreur est loguée côté serveur pour investigation.
+    """
+    logger.exception("Erreur serveur non gérée sur %s : %s", request.path, exc)
+    if request.path.startswith("/api/"):
+        return _json_error(
+            "Une erreur inattendue est survenue. Merci de réessayer dans quelques instants.",
+            500,
+        )
+    html = (
+        "<!doctype html><html lang='fr'><head><meta charset='utf-8'>"
+        "<title>Erreur — YC Digital</title>"
+        "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+        "<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;"
+        "background:#FBF9F4;color:#0B1229;display:flex;align-items:center;justify-content:center;"
+        "min-height:100vh;margin:0;padding:24px;text-align:center;}"
+        "h1{font-size:2rem;margin:0 0 8px;}p{color:#5B6478;margin:0 0 24px;}"
+        "a{color:#0F52BA;text-decoration:none;font-weight:600;}</style></head>"
+        "<body><div><h1>Une erreur est survenue</h1>"
+        "<p>Nous en avons été notifiés. Merci de réessayer dans quelques instants.</p>"
+        "<a href='/'>← Retour à l'accueil</a></div></body></html>"
+    )
+    return html, 500
+
+
 @app.before_request
 def _ensure_db():
     logic.init_db()
@@ -288,7 +345,7 @@ def api_submit():
             reponses = json.loads(request.form.get("reponses") or "{}")
             contact = json.loads(request.form.get("contact") or "{}")
         except (TypeError, ValueError) as exc:
-            print(f"[submit] JSON invalide dans multipart: {exc}")
+            logger.warning("Submit : JSON invalide dans multipart: %s", exc)
             return _json_error("Format des réponses invalide.", 400)
         uploaded = request.files.getlist("fichiers")
     else:
@@ -306,12 +363,16 @@ def api_submit():
     if not uploads_ok:
         return _json_error(upload_error, 400)
 
-    print(f"[submit] content_type={ctype!r} service={service!r} "
-          f"nb_fichiers={len(uploaded)} nom={contact.get('nom')!r}")
+    logger.info(
+        "Submit : content_type=%r service=%r nb_fichiers=%d nom=%r",
+        ctype, service, len(uploaded), contact.get("nom"),
+    )
 
     if service not in logic.SERVICES:
-        print(f"[submit] REJET service inconnu : reçu={service!r} "
-              f"attendus={list(logic.SERVICES.keys())}")
+        logger.warning(
+            "Submit : REJET service inconnu — reçu=%r attendus=%s",
+            service, list(logic.SERVICES.keys()),
+        )
         return _json_error(
             f"Service inconnu ({service!r}). Attendus : {', '.join(logic.SERVICES.keys())}.",
             400,
@@ -467,7 +528,7 @@ def admin_login():
         try:
             ok = check_password_hash(_ADMIN_PASSWORD_HASH, mot_de_passe)
         except Exception as exc:  # hash mal formé dans l'env, etc.
-            print(f"[admin] Erreur de vérification du mot de passe : {exc}")
+            logger.error("Admin : erreur de vérification du mot de passe : %s", exc)
             ok = False
 
         if ok:
