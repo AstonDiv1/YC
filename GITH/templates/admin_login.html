@@ -75,6 +75,7 @@
       {% endif %}
 
       <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
         <label for="mot_de_passe">Mot de passe</label>
         <input
           type="password" id="mot_de_passe" name="mot_de_passe"
