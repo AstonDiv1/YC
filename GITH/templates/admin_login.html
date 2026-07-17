@@ -1,146 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Connexion — Espace admin YC Digital</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ivory:#F4F1EA;
-    --paper:#FBF9F4;
-    --ink:#0B1229;
-    --muted:#5B6478;
-    --soft:#8B93A6;
-    --line:#E2DED2;
-    --line-strong:#D2CCBB;
-    --accent:#0F52BA;
-    --accent-ink:#0A2E6D;
-    --danger:#B33A2A;
-    --font-display:"Fraunces",Georgia,serif;
-    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:
-      radial-gradient(1200px 500px at 15% -10%, rgba(15,82,186,.06), transparent 60%),
-      radial-gradient(900px 400px at 100% 110%, rgba(15,82,186,.05), transparent 60%),
-      var(--paper);
-    font-family:var(--font-body);
-    color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    padding:24px;
-  }
-  .card{
-    width:100%;
-    max-width:400px;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:36px 32px 32px;
-    box-shadow:0 30px 80px -30px rgba(11,18,41,.18), 0 6px 18px -10px rgba(11,18,41,.08);
-  }
-  .brand{
-    font-size:.72rem;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--accent);
-    font-weight:600;
-    margin-bottom:12px;
-  }
-  h1{
-    font-family:var(--font-display);
-    font-size:1.55rem;
-    margin:0 0 6px;
-    font-weight:600;
-    letter-spacing:-.015em;
-  }
-  p.sub{
-    margin:0 0 26px;
-    color:var(--muted);
-    font-size:.88rem;
-    line-height:1.5;
-  }
-  label{
-    display:block;
-    font-size:.78rem;
-    color:var(--muted);
-    margin-bottom:8px;
-    font-weight:500;
-  }
-  input[type="password"]{
-    width:100%;
-    padding:12px 14px;
-    border-radius:10px;
-    border:1px solid var(--line-strong);
-    background:var(--paper);
-    color:var(--ink);
-    font-size:.95rem;
-    font-family:var(--font-body);
-    outline:none;
-    transition:border-color .2s, background .2s;
-  }
-  input[type="password"]:focus{
-    border-color:var(--accent);
-    background:#fff;
-    box-shadow:0 0 0 3px rgba(15,82,186,.12);
-  }
-  button{
-    width:100%;
-    margin-top:20px;
-    padding:12px 14px;
-    border:none;
-    border-radius:10px;
-    background:var(--ink);
-    color:#fff;
-    font-size:.92rem;
-    font-weight:600;
-    cursor:pointer;
-    font-family:var(--font-body);
-    transition:background .2s, transform .1s;
-  }
-  button:hover{ background:var(--accent-ink); }
-  button:active{ transform:translateY(1px); }
-  .erreur{
-    margin:16px 0 0;
-    padding:11px 14px;
-    border-radius:10px;
-    background:rgba(179,58,42,.08);
-    border:1px solid rgba(179,58,42,.25);
-    color:var(--danger);
-    font-size:.85rem;
-  }
-  .foot{
-    margin-top:20px;
-    text-align:center;
-    font-size:.72rem;
-    color:var(--soft);
-    letter-spacing:.02em;
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Connexion — Espace de gestion</title>
+  <style>
+    :root{
+      --ink:#1a1a1a; --ink-soft:#5b5b5b; --paper:#fcfbf8;
+      --line:#e7e3da; --danger:#b33a2a; --accent:#1f7a4c;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; background:var(--paper); color:var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .wrap{ min-height:100vh; display:grid; place-items:center; padding:24px; }
+    .card{
+      width:100%; max-width:400px; background:#fff; border:1px solid var(--line);
+      border-radius:14px; padding:36px 32px; box-shadow: 0 6px 24px rgba(0,0,0,0.04);
+    }
+    h1{ font-size:1.35rem; margin:0 0 6px; }
+    p.sub{ color:var(--ink-soft); font-size:0.92rem; margin:0 0 24px; }
+    label{ display:block; font-size:0.88rem; font-weight:600; margin-bottom:6px; }
+    input[type=password]{
+      width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:8px;
+      font-size:1rem; background:#fafaf7; transition:border-color .15s, background .15s;
+    }
+    input[type=password]:focus{ outline:none; border-color:var(--ink); background:#fff; }
+    input[type=password]:disabled{ background:#f0eee9; color:#999; cursor:not-allowed; }
+    button{
+      width:100%; margin-top:18px; padding:12px; border:none; border-radius:8px;
+      background:var(--ink); color:#fff; font-size:0.98rem; font-weight:600;
+      cursor:pointer; transition:opacity .15s;
+    }
+    button:hover:not(:disabled){ opacity:0.85; }
+    button:disabled{ background:#999; cursor:not-allowed; }
+    .msg{
+      margin-top:16px; padding:12px 14px; border-radius:8px; font-size:0.9rem;
+      background:rgba(179,58,42,0.08); color:var(--danger);
+      border:1px solid rgba(179,58,42,0.2);
+    }
+    .msg.warn{
+      background:rgba(200,140,20,0.08); color:#8a5a00;
+      border-color:rgba(200,140,20,0.25);
+    }
+    .countdown{
+      margin-top:14px; padding:14px; text-align:center;
+      background:rgba(179,58,42,0.06); border:1px solid rgba(179,58,42,0.2);
+      border-radius:8px; color:var(--danger); font-weight:600;
+    }
+    .countdown .timer{ font-size:1.6rem; margin-top:4px; font-variant-numeric:tabular-nums; }
+    .footer{ margin-top:22px; text-align:center; font-size:0.82rem; color:var(--ink-soft); }
+    .footer a{ color:var(--ink-soft); text-decoration:none; }
+  </style>
 </head>
 <body>
-  <div class="card">
-    <div class="brand">YC Digital</div>
-    <h1>Espace admin</h1>
-    <p class="sub">Connecte-toi pour consulter les demandes reçues et les messages du site.</p>
-    <form method="POST" autocomplete="off">
-      <label for="mot_de_passe">Mot de passe</label>
-      <input type="password" id="mot_de_passe" name="mot_de_passe" required autofocus>
-      <button type="submit">Se connecter</button>
-    </form>
-    {% if erreur %}
-      <div class="erreur">{{ erreur }}</div>
-    {% endif %}
-    <div class="foot">Accès réservé — session sécurisée</div>
+  <div class="wrap">
+    <div class="card">
+      <h1>Espace de gestion</h1>
+      <p class="sub">Accès réservé. Entrez votre mot de passe pour continuer.</p>
+
+      {% if erreur %}
+        <div class="msg">{{ erreur }}</div>
+      {% endif %}
+
+      {% if blocage_restant and blocage_restant > 0 %}
+        <div class="countdown">
+          Accès temporairement bloqué
+          <div class="timer" id="timer" data-seconds="{{ blocage_restant }}">--:--</div>
+        </div>
+      {% elif restant_essais is not none and restant_essais < 3 %}
+        <div class="msg warn">
+          Il vous reste <strong>{{ restant_essais }}</strong> tentative(s) avant blocage de 10 minutes.
+        </div>
+      {% endif %}
+
+      <form method="POST" autocomplete="off">
+        <label for="mot_de_passe">Mot de passe</label>
+        <input
+          type="password" id="mot_de_passe" name="mot_de_passe"
+          required autofocus
+          {% if blocage_restant and blocage_restant > 0 %}disabled{% endif %}
+        />
+        <button type="submit" id="submitBtn"
+          {% if blocage_restant and blocage_restant > 0 %}disabled{% endif %}>
+          Se connecter
+        </button>
+      </form>
+
+      <div class="footer">
+        <a href="/">← Retour au site</a>
+      </div>
+    </div>
   </div>
+
+  <script>
+    (function(){
+      var el = document.getElementById('timer');
+      if(!el) return;
+      var s = parseInt(el.dataset.seconds, 10) || 0;
+      var input = document.getElementById('mot_de_passe');
+      var btn = document.getElementById('submitBtn');
+      function fmt(n){ return n < 10 ? '0'+n : ''+n; }
+      function tick(){
+        if(s <= 0){
+          el.textContent = '00:00';
+          if(input) input.disabled = false;
+          if(btn) btn.disabled = false;
+          location.reload();
+          return;
+        }
+        var m = Math.floor(s / 60), r = s % 60;
+        el.textContent = fmt(m) + ':' + fmt(r);
+        s--;
+        setTimeout(tick, 1000);
+      }
+      tick();
+    })();
+  </script>
 </body>
 </html>
