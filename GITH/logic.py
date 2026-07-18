@@ -98,30 +98,65 @@ SERVICES = {
                 "required": True,
             },
             {
+                "id": "nb_pages",
+                "label": "Nombre de pages souhaitées",
+                "type": "select",
+                "options": [
+                    "1 page",
+                    "2 pages",
+                    "3 pages",
+                    "4 pages",
+                    "5 pages (inclus dans le pack)",
+                    "6 pages ou plus (chiffrage sur devis)",
+                ],
+                "required": True,
+            },
+            {
                 "id": "fonctionnalites",
-                "label": "Quelles fonctionnalités sont indispensables ?",
+                "label": "Options fonctionnelles souhaitées",
                 "type": "choix_multiple",
                 "options": [
-                    "Système de réservation / prise de rendez-vous",
-                    "Paiement en ligne",
-                    "Espace client / connexion",
-                    "Multilingue",
-                    "Blog intégré",
-                    "Référencement SEO avancé",
-                    "Newsletter",
-                    "Formulaire de contact avancé",
-                    "Galerie / portfolio",
-                    "Intégration Google Maps",
-                    "Chat en direct",
-                    "Import / export de données",
+                    "Tableau de bord administratif personnalisé (+90 €)",
+                    "Prise de rendez-vous (+40 €)",
+                    "Calendrier interactif (+40 €)",
+                    "Blog (+30 €)",
+                    "Espace membre / Connexion (+180 €)",
+                    "Paiement en ligne — achat à l'unité (+300 €)",
+                    "Boutique en ligne — panier + gestion de stock (+750 €)",
+                    "Calculateur ou outil personnalisé (sur devis)",
                 ],
                 "required": False,
             },
             {
-                "id": "nb_pages",
-                "label": "Nombre de pages estimé",
-                "type": "select",
-                "options": ["1 à 3 pages", "4 à 8 pages", "9 à 15 pages", "15+ pages"],
+                "id": "formulaire_avance",
+                "label": "Souhaitez-vous un formulaire avancé ? (+20 €)",
+                "type": "choix_unique",
+                "options": ["Non, formulaire de contact standard", "Oui, formulaire avancé (+20 €)"],
+                "required": False,
+            },
+            {
+                "id": "livraison_prioritaire",
+                "label": "Livraison",
+                "type": "choix_unique",
+                "options": ["Délais standards (inclus)", "Livraison prioritaire (+40 €)"],
+                "required": False,
+            },
+            {
+                "id": "pack_modifications",
+                "label": "Pack de modifications après livraison",
+                "type": "choix_unique",
+                "options": ["Aucun pack pour l'instant", "Pack de 10 modifications (+50 €)"],
+                "required": False,
+            },
+            {
+                "id": "maintenance",
+                "label": "Forfait de maintenance",
+                "type": "choix_unique",
+                "options": [
+                    "Aucune maintenance",
+                    "Maintenance Standard — 2 ans (200 €)",
+                    "Maintenance e-commerce / Sécurisée — 2 ans (350 €)",
+                ],
                 "required": True,
             },
         ],
@@ -367,6 +402,9 @@ COMMON_TAILS = {
 # Conservé pour compatibilité avec d'anciens appels éventuels.
 # Le front reçoit désormais une liste vide dans questions_communes :
 # les questions communes sont injectées directement dans chaque service.
+COMMON_TAIL_SITE_WEB = [_Q_CONTEXTE, _Q_INSPIRATIONS, _Q_AMBIANCE, _Q_CHARTE, _Q_FICHIERS]
+COMMON_TAILS["site_web"] = COMMON_TAIL_SITE_WEB
+
 QUESTIONS_COMMUNES = []
 
 CONTACT_FIELDS = [
@@ -429,7 +467,157 @@ def _compter_fonctionnalites(reponses: dict) -> int:
     return total
 
 
+_PRIX_OPTIONS_SITE = {
+    "Tableau de bord administratif personnalisé (+90 €)": ("Tableau de bord administratif personnalisé", 90),
+    "Prise de rendez-vous (+40 €)": ("Prise de rendez-vous", 40),
+    "Calendrier interactif (+40 €)": ("Calendrier interactif", 40),
+    "Blog (+30 €)": ("Blog", 30),
+    "Espace membre / Connexion (+180 €)": ("Espace membre / Connexion", 180),
+    "Paiement en ligne — achat à l'unité (+300 €)": ("Paiement en ligne (achat à l'unité)", 300),
+    "Boutique en ligne — panier + gestion de stock (+750 €)": ("Boutique en ligne (panier + gestion de stock)", 750),
+    "Calculateur ou outil personnalisé (sur devis)": ("Calculateur ou outil personnalisé", None),
+}
+
+_MAINTENANCE_SITE = {
+    "Maintenance Standard — 2 ans (200 €)": ("Maintenance Standard (2 ans)", 200),
+    "Maintenance e-commerce / Sécurisée — 2 ans (350 €)": ("Maintenance e-commerce / Sécurisée (2 ans)", 350),
+}
+
+
+def _format_prix(v):
+    return f"{v} €"
+
+
+def _reco_site_web(reponses: dict) -> dict:
+    """Simulation tarifaire — Pack Site Vitrine + options."""
+    lignes = []
+    total = 0
+    sur_devis = False
+    messages_devis = []
+
+    # Base : Pack Site Vitrine
+    lignes.append({"label": "Pack Site Vitrine (jusqu'à 5 pages)", "prix": 250, "prix_txt": "250 €"})
+    total += 250
+
+    # Pages supplémentaires
+    nb_pages = reponses.get("nb_pages", "")
+    if isinstance(nb_pages, str) and "6 pages ou plus" in nb_pages:
+        sur_devis = True
+        messages_devis.append(
+            "Les pages supplémentaires (à partir de la 6ᵉ page) sont chiffrées directement "
+            "sur le devis, en fonction du nombre de pages et de leur complexité."
+        )
+
+    # Options fonctionnelles
+    fonctions = reponses.get("fonctionnalites", []) or []
+    if isinstance(fonctions, str):
+        fonctions = [fonctions]
+    for opt in fonctions:
+        info = _PRIX_OPTIONS_SITE.get(opt)
+        if not info:
+            continue
+        label, prix = info
+        if prix is None:
+            sur_devis = True
+            messages_devis.append(f"« {label} » : réalisé sur devis (outil personnalisé).")
+            lignes.append({"label": label, "prix": None, "prix_txt": "sur devis"})
+        else:
+            total += prix
+            lignes.append({"label": label, "prix": prix, "prix_txt": f"+{prix} €"})
+
+    # Formulaire avancé
+    if "Oui" in str(reponses.get("formulaire_avance", "")):
+        total += 20
+        lignes.append({"label": "Formulaire avancé", "prix": 20, "prix_txt": "+20 €"})
+
+    # Livraison prioritaire
+    if "prioritaire" in str(reponses.get("livraison_prioritaire", "")).lower():
+        total += 40
+        lignes.append({"label": "Livraison prioritaire", "prix": 40, "prix_txt": "+40 €"})
+
+    # Pack modifications
+    if "Pack de 10" in str(reponses.get("pack_modifications", "")):
+        total += 50
+        lignes.append({"label": "Pack de 10 modifications", "prix": 50, "prix_txt": "+50 €"})
+
+    # Maintenance
+    maint = _MAINTENANCE_SITE.get(reponses.get("maintenance", ""))
+    if maint:
+        label, prix = maint
+        total += prix
+        lignes.append({"label": label, "prix": prix, "prix_txt": f"+{prix} €"})
+
+    # Délai
+    urgent = "prioritaire" in str(reponses.get("livraison_prioritaire", "")).lower()
+    delai_estime = "Livraison prioritaire (à confirmer avec vous)" if urgent \
+        else "2 à 4 semaines selon la charge"
+
+    # Fourchette / affichage principal
+    if sur_devis:
+        fourchette = f"À partir de {total} € — compléments sur devis"
+        profil = "Devis personnalisé"
+    else:
+        fourchette = f"{total} € (estimation)"
+        profil = "Pack Site Vitrine personnalisé"
+
+    # HTML détaillé injecté par le front
+    rows_html = "".join(
+        f"<tr><td>{ligne['label']}</td><td style='text-align:right;white-space:nowrap;'>"
+        f"{ligne['prix_txt']}</td></tr>"
+        for ligne in lignes
+    )
+    total_html = (
+        f"<tr style='border-top:2px solid currentColor;font-weight:600;'>"
+        f"<td style='padding-top:8px;'>Total estimé</td>"
+        f"<td style='text-align:right;padding-top:8px;white-space:nowrap;'>"
+        f"{'À partir de ' if sur_devis else ''}{total} €</td></tr>"
+    )
+    devis_html = ""
+    if messages_devis:
+        devis_html = "<ul style='margin-top:12px;text-align:left;padding-left:18px;'>" + \
+            "".join(f"<li style='margin:4px 0;'>{m}</li>" for m in messages_devis) + "</ul>"
+
+    conditions_html = (
+        "<div style='margin-top:16px;padding:14px;border:1px solid rgba(0,0,0,0.12);"
+        "border-radius:8px;text-align:left;font-size:0.88rem;line-height:1.55;'>"
+        "<strong>Conditions du devis</strong>"
+        "<ul style='margin:8px 0 0;padding-left:18px;'>"
+        "<li>Acompte de 30 % à la signature.</li>"
+        "<li>Solde à la livraison.</li>"
+        "<li>Toute fonctionnalité hors devis fait l'objet d'un devis complémentaire.</li>"
+        "<li>Les demandes spécifiques sont chiffrées sur devis.</li>"
+        "<li>Les outils personnalisés sont réalisés sur devis.</li>"
+        "</ul></div>"
+    )
+
+    details_html = (
+        "<div style='margin-top:18px;text-align:left;'>"
+        "<h4 style='margin-bottom:8px;font-size:1rem;'>Détail de votre simulation</h4>"
+        "<table style='width:100%;border-collapse:collapse;font-size:0.92rem;'>"
+        f"<tbody>{rows_html}{total_html}</tbody></table>"
+        f"{devis_html}"
+        f"{conditions_html}"
+        "</div>"
+    )
+
+    return {
+        "profil": profil,
+        "fourchette_prix": fourchette,
+        "delai_estime": delai_estime,
+        "urgent": urgent,
+        "message": "Merci pour ces précisions sur votre site internet.",
+        "lignes": lignes,
+        "total": total,
+        "sur_devis": sur_devis,
+        "details_html": details_html,
+    }
+
+
 def compute_recommendation(service: str, reponses: dict) -> dict:
+    if service == "site_web":
+        return _reco_site_web(reponses)
+
+    # Autres services : logique inchangée (application, montage PC).
     budget_label = reponses.get("budget", "Je ne sais pas encore")
     score_budget = BUDGET_SCORE.get(budget_label, 2)
     nb_fonctionnalites = _compter_fonctionnalites(reponses)
@@ -449,7 +637,6 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
     )
 
     messages = {
-        "site_web": "Merci pour ces précisions sur votre site internet.",
         "application": "Merci pour ces précisions sur votre application.",
         "montage_pc": "Merci pour ces précisions sur votre configuration PC.",
     }
