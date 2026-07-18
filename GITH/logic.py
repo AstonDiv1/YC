@@ -116,36 +116,36 @@ SERVICES = {
                 "label": "Options fonctionnelles souhaitées",
                 "type": "choix_multiple",
                 "options": [
-                    "Tableau de bord administratif personnalisé (+90 €)",
-                    "Prise de rendez-vous (+40 €)",
-                    "Calendrier interactif (+40 €)",
-                    "Blog (+30 €)",
-                    "Espace membre / Connexion (+180 €)",
-                    "Paiement en ligne — achat à l'unité (+300 €)",
-                    "Boutique en ligne — panier + gestion de stock (+750 €)",
-                    "Calculateur ou outil personnalisé (sur devis)",
+                    "Tableau de bord administratif personnalisé",
+                    "Prise de rendez-vous",
+                    "Calendrier interactif",
+                    "Blog",
+                    "Espace membre / Connexion",
+                    "Paiement en ligne — achat à l'unité",
+                    "Boutique en ligne — panier + gestion de stock",
+                    "Calculateur ou outil personnalisé",
                 ],
                 "required": False,
             },
             {
                 "id": "formulaire_avance",
-                "label": "Souhaitez-vous un formulaire avancé ? (+20 €)",
+                "label": "Souhaitez-vous un formulaire de contact avancé ?",
                 "type": "choix_unique",
-                "options": ["Non, formulaire de contact standard", "Oui, formulaire avancé (+20 €)"],
+                "options": ["Formulaire de contact standard", "Formulaire avancé (champs personnalisés)"],
                 "required": False,
             },
             {
                 "id": "livraison_prioritaire",
-                "label": "Livraison",
+                "label": "Délai de livraison",
                 "type": "choix_unique",
-                "options": ["Délais standards (inclus)", "Livraison prioritaire (+40 €)"],
+                "options": ["Délais standards", "Livraison prioritaire"],
                 "required": False,
             },
             {
                 "id": "pack_modifications",
                 "label": "Pack de modifications après livraison",
                 "type": "choix_unique",
-                "options": ["Aucun pack pour l'instant", "Pack de 10 modifications (+50 €)"],
+                "options": ["Aucun pack pour l'instant", "Pack de 10 modifications"],
                 "required": False,
             },
             {
@@ -154,11 +154,12 @@ SERVICES = {
                 "type": "choix_unique",
                 "options": [
                     "Aucune maintenance",
-                    "Maintenance Standard — 2 ans (200 €)",
-                    "Maintenance e-commerce / Sécurisée — 2 ans (350 €)",
+                    "Maintenance Standard (2 ans)",
+                    "Maintenance e-commerce / Sécurisée (2 ans)",
                 ],
                 "required": True,
             },
+
         ],
     },
     "application": {
@@ -468,19 +469,19 @@ def _compter_fonctionnalites(reponses: dict) -> int:
 
 
 _PRIX_OPTIONS_SITE = {
-    "Tableau de bord administratif personnalisé (+90 €)": ("Tableau de bord administratif personnalisé", 90),
-    "Prise de rendez-vous (+40 €)": ("Prise de rendez-vous", 40),
-    "Calendrier interactif (+40 €)": ("Calendrier interactif", 40),
-    "Blog (+30 €)": ("Blog", 30),
-    "Espace membre / Connexion (+180 €)": ("Espace membre / Connexion", 180),
-    "Paiement en ligne — achat à l'unité (+300 €)": ("Paiement en ligne (achat à l'unité)", 300),
-    "Boutique en ligne — panier + gestion de stock (+750 €)": ("Boutique en ligne (panier + gestion de stock)", 750),
-    "Calculateur ou outil personnalisé (sur devis)": ("Calculateur ou outil personnalisé", None),
+    "Tableau de bord administratif personnalisé": 90,
+    "Prise de rendez-vous": 40,
+    "Calendrier interactif": 40,
+    "Blog": 30,
+    "Espace membre / Connexion": 180,
+    "Paiement en ligne — achat à l'unité": 300,
+    "Boutique en ligne — panier + gestion de stock": 750,
+    "Calculateur ou outil personnalisé": None,  # sur devis
 }
 
 _MAINTENANCE_SITE = {
-    "Maintenance Standard — 2 ans (200 €)": ("Maintenance Standard (2 ans)", 200),
-    "Maintenance e-commerce / Sécurisée — 2 ans (350 €)": ("Maintenance e-commerce / Sécurisée (2 ans)", 350),
+    "Maintenance Standard (2 ans)": 200,
+    "Maintenance e-commerce / Sécurisée (2 ans)": 350,
 }
 
 
@@ -489,23 +490,28 @@ def _format_prix(v):
 
 
 def _reco_site_web(reponses: dict) -> dict:
-    """Simulation tarifaire — Pack Site Vitrine + options."""
-    lignes = []
+    """Simulation tarifaire — Pack Site Vitrine + options.
+
+    Les prix ne sont JAMAIS affichés dans le questionnaire (options seules).
+    Seule la fourchette finale, avec un intervalle de ± 25 € (soit 50 € de
+    largeur), est communiquée en fin de simulation.
+    """
     total = 0
     sur_devis = False
+    options_retenues = []
     messages_devis = []
 
     # Base : Pack Site Vitrine
-    lignes.append({"label": "Pack Site Vitrine (jusqu'à 5 pages)", "prix": 250, "prix_txt": "250 €"})
     total += 250
+    options_retenues.append("Pack Site Vitrine (jusqu'à 5 pages)")
 
     # Pages supplémentaires
     nb_pages = reponses.get("nb_pages", "")
     if isinstance(nb_pages, str) and "6 pages ou plus" in nb_pages:
         sur_devis = True
         messages_devis.append(
-            "Les pages supplémentaires (à partir de la 6ᵉ page) sont chiffrées directement "
-            "sur le devis, en fonction du nombre de pages et de leur complexité."
+            "Les pages supplémentaires (à partir de la 6ᵉ page) seront "
+            "chiffrées directement sur le devis final."
         )
 
     # Options fonctionnelles
@@ -513,92 +519,83 @@ def _reco_site_web(reponses: dict) -> dict:
     if isinstance(fonctions, str):
         fonctions = [fonctions]
     for opt in fonctions:
-        info = _PRIX_OPTIONS_SITE.get(opt)
-        if not info:
+        if opt not in _PRIX_OPTIONS_SITE:
             continue
-        label, prix = info
+        prix = _PRIX_OPTIONS_SITE[opt]
+        options_retenues.append(opt)
         if prix is None:
             sur_devis = True
-            messages_devis.append(f"« {label} » : réalisé sur devis (outil personnalisé).")
-            lignes.append({"label": label, "prix": None, "prix_txt": "sur devis"})
+            messages_devis.append(f"« {opt} » : chiffré sur devis.")
         else:
             total += prix
-            lignes.append({"label": label, "prix": prix, "prix_txt": f"+{prix} €"})
 
     # Formulaire avancé
-    if "Oui" in str(reponses.get("formulaire_avance", "")):
+    if "avancé" in str(reponses.get("formulaire_avance", "")).lower():
         total += 20
-        lignes.append({"label": "Formulaire avancé", "prix": 20, "prix_txt": "+20 €"})
+        options_retenues.append("Formulaire avancé")
 
     # Livraison prioritaire
-    if "prioritaire" in str(reponses.get("livraison_prioritaire", "")).lower():
+    urgent = "prioritaire" in str(reponses.get("livraison_prioritaire", "")).lower()
+    if urgent:
         total += 40
-        lignes.append({"label": "Livraison prioritaire", "prix": 40, "prix_txt": "+40 €"})
+        options_retenues.append("Livraison prioritaire")
 
     # Pack modifications
     if "Pack de 10" in str(reponses.get("pack_modifications", "")):
         total += 50
-        lignes.append({"label": "Pack de 10 modifications", "prix": 50, "prix_txt": "+50 €"})
+        options_retenues.append("Pack de 10 modifications")
 
     # Maintenance
-    maint = _MAINTENANCE_SITE.get(reponses.get("maintenance", ""))
-    if maint:
-        label, prix = maint
-        total += prix
-        lignes.append({"label": label, "prix": prix, "prix_txt": f"+{prix} €"})
+    maint_key = reponses.get("maintenance", "")
+    if maint_key in _MAINTENANCE_SITE:
+        total += _MAINTENANCE_SITE[maint_key]
+        options_retenues.append(maint_key)
 
-    # Délai
-    urgent = "prioritaire" in str(reponses.get("livraison_prioritaire", "")).lower()
     delai_estime = "Livraison prioritaire (à confirmer avec vous)" if urgent \
         else "2 à 4 semaines selon la charge"
 
-    # Fourchette / affichage principal
+    # Fourchette avec intervalle de 50 € (± 25 € autour du total)
+    bas = max(0, total - 25)
+    haut = total + 25
     if sur_devis:
-        fourchette = f"À partir de {total} € — compléments sur devis"
+        fourchette = f"À partir de {bas} € – {haut} € (compléments sur devis)"
         profil = "Devis personnalisé"
     else:
-        fourchette = f"{total} € (estimation)"
+        fourchette = f"Entre {bas} € et {haut} €"
         profil = "Pack Site Vitrine personnalisé"
 
-    # HTML détaillé injecté par le front
-    rows_html = "".join(
-        f"<tr><td>{ligne['label']}</td><td style='text-align:right;white-space:nowrap;'>"
-        f"{ligne['prix_txt']}</td></tr>"
-        for ligne in lignes
-    )
-    total_html = (
-        f"<tr style='border-top:2px solid currentColor;font-weight:600;'>"
-        f"<td style='padding-top:8px;'>Total estimé</td>"
-        f"<td style='text-align:right;padding-top:8px;white-space:nowrap;'>"
-        f"{'À partir de ' if sur_devis else ''}{total} €</td></tr>"
-    )
+    # Récap des options retenues (sans aucun prix), affiché en fin de parcours.
+    options_html = ""
+    if options_retenues:
+        items = "".join(f"<li style='margin:4px 0;'>{o}</li>" for o in options_retenues)
+        options_html = (
+            "<div style='margin-top:18px;text-align:left;'>"
+            "<h4 style='margin-bottom:8px;font-size:1rem;'>Options retenues</h4>"
+            f"<ul style='margin:0;padding-left:18px;font-size:0.92rem;line-height:1.55;'>{items}</ul>"
+            "</div>"
+        )
+
     devis_html = ""
     if messages_devis:
-        devis_html = "<ul style='margin-top:12px;text-align:left;padding-left:18px;'>" + \
-            "".join(f"<li style='margin:4px 0;'>{m}</li>" for m in messages_devis) + "</ul>"
+        devis_html = (
+            "<ul style='margin-top:12px;text-align:left;padding-left:18px;"
+            "font-size:0.9rem;line-height:1.5;'>"
+            + "".join(f"<li style='margin:4px 0;'>{m}</li>" for m in messages_devis)
+            + "</ul>"
+        )
 
     conditions_html = (
         "<div style='margin-top:16px;padding:14px;border:1px solid rgba(0,0,0,0.12);"
-        "border-radius:8px;text-align:left;font-size:0.88rem;line-height:1.55;'>"
+        "border-radius:8px;text-align:left;font-size:0.86rem;line-height:1.55;'>"
         "<strong>Conditions du devis</strong>"
         "<ul style='margin:8px 0 0;padding-left:18px;'>"
-        "<li>Acompte de 30 % à la signature.</li>"
-        "<li>Solde à la livraison.</li>"
-        "<li>Toute fonctionnalité hors devis fait l'objet d'un devis complémentaire.</li>"
-        "<li>Les demandes spécifiques sont chiffrées sur devis.</li>"
-        "<li>Les outils personnalisés sont réalisés sur devis.</li>"
+        "<li>Estimation indicative — le devis définitif vous sera transmis sous 48 h.</li>"
+        "<li>Acompte de 30 % à la signature, solde à la livraison.</li>"
+        "<li>Toute demande hors devis fait l'objet d'un chiffrage complémentaire.</li>"
         "</ul></div>"
     )
 
-    details_html = (
-        "<div style='margin-top:18px;text-align:left;'>"
-        "<h4 style='margin-bottom:8px;font-size:1rem;'>Détail de votre simulation</h4>"
-        "<table style='width:100%;border-collapse:collapse;font-size:0.92rem;'>"
-        f"<tbody>{rows_html}{total_html}</tbody></table>"
-        f"{devis_html}"
-        f"{conditions_html}"
-        "</div>"
-    )
+    details_html = options_html + devis_html + conditions_html
 
     return {
         "profil": profil,
@@ -606,11 +603,13 @@ def _reco_site_web(reponses: dict) -> dict:
         "delai_estime": delai_estime,
         "urgent": urgent,
         "message": "Merci pour ces précisions sur votre site internet.",
-        "lignes": lignes,
+        "options": options_retenues,
         "total": total,
         "sur_devis": sur_devis,
         "details_html": details_html,
     }
+
+
 
 
 def compute_recommendation(service: str, reponses: dict) -> dict:
