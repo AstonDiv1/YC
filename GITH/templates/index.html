@@ -2183,7 +2183,6 @@ async function soumettre(){
         ${reco.profil ? `<p style="margin-top:12px;"><strong>Profil estimé :</strong> ${escapeHtml(reco.profil)}</p>`:''}
         ${reco.fourchette_prix ? `<p><strong>Fourchette indicative :</strong> ${escapeHtml(reco.fourchette_prix)}</p>`:''}
         ${reco.delai_estime ? `<p><strong>Délai estimé :</strong> ${escapeHtml(reco.delai_estime)}</p>`:''}
-        ${reco.details_html ? reco.details_html : ''}
         <p class="id-demande">Référence : ${escapeHtml(j.booking_id || '—')}</p>
         <div style="margin-top:24px;"><button type="button" class="btn btn-primary" onclick="fermerQuestionnaire()">Fermer</button></div>
       </div>`;
