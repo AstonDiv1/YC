@@ -422,11 +422,12 @@ DELAI_URGENCE = {
 
 
 def _compter_fonctionnalites(reponses: dict) -> int:
-    total = 0
-    for _, valeur in reponses.items():
-        if isinstance(valeur, list):
-            total += len(valeur)
-    return total
+    # Platform and visual preferences are not additional product features.
+    return sum(
+        len(reponses[key])
+        for key in ("fonctionnalites", "fonctionnalites_app")
+        if isinstance(reponses.get(key), list)
+    )
 
 
 def compute_recommendation(service: str, reponses: dict) -> dict:
@@ -443,9 +444,25 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
     else:
         profil, fourchette = "Sur-mesure", "2500 € et plus (devis détaillé nécessaire)"
 
+    if service == "montage_pc":
+        profil = "Montage & optimisation PC"
+        fourchette = "À partir de 100 € hors composants ; devis selon la prestation"
+    elif service == "application":
+        fourchette = "À partir de 450 € pour un outil simple ; devis selon les fonctionnalités"
+    elif service == "site_web":
+        if reponses.get("type_site") in {
+            "E-commerce / boutique en ligne", "Application web (avec compte utilisateur)"
+        }:
+            profil = "Sur-mesure"
+            fourchette = "Sur devis après définition des fonctionnalités"
+        elif profil == "Starter":
+            fourchette = "À partir de 250 € pour une vitrine simple ; périmètre à confirmer"
+        else:
+            fourchette += " (indicatif, à confirmer par devis)"
+
     delai_estime = (
         "à définir en priorité avec vous" if urgent
-        else "2 à 6 semaines en moyenne selon la charge"
+        else "confirmé au devis selon le périmètre, les contenus et notre disponibilité"
     )
 
     messages = {

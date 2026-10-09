@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+# Initial launch: no recurring compute charge; contact directly by email.
+# Do not enable stored forms on this plan without durable storage.
+services:
+  - type: web
+    name: yc-digital
+    runtime: python
+    plan: free
+    region: frankfurt
+    repo: https://github.com/AstonDiv1/YC
+    branch: main
+    rootDir: GITH
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 60
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.10"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: CONTACT_EMAIL_ONLY
+        value: "1"
+      - key: ADMIN_EMAIL
+        value: yc.digital33@gmail.com
+      - key: LOG_LEVEL
+        value: INFO
