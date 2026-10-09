@@ -121,6 +121,33 @@ class AuditTests(unittest.TestCase):
             result = self.client.post("/api/submit",json={"service":"site_web","contact":{"nom":"Test", "email":"test@example.com"}},environ_overrides={"REMOTE_ADDR":"192.0.2.32"})
         self.assertEqual(result.status_code,503)
 
+    def test_indexing_uses_public_origin_and_excludes_private_and_demo_pages(self):
+        from xml.etree import ElementTree
+        origin = "https://yc-digital.onrender.com"
+        home = self.client.get("/", headers={"Host": "untrusted.example"}).get_data(as_text=True)
+        self.assertIn('rel="canonical" href="' + origin + '/"', home)
+        self.assertIn('"@type": "WebSite"', home)
+        sitemap = self.client.get("/sitemap.xml", headers={"Host": "untrusted.example"})
+        self.assertEqual(sitemap.status_code, 200)
+        locations = ElementTree.fromstring(sitemap.data).findall(".//{*}loc")
+        self.assertEqual([node.text for node in locations], [origin + "/"])
+        robots = self.client.get("/robots.txt").get_data(as_text=True)
+        self.assertIn("Sitemap: " + origin + "/sitemap.xml", robots)
+        for path in ("/api/bookings", "/healthz", "/static/demos/artisan.html", "/not-found"):
+            with self.client.get(path) as response:
+                self.assertIn("noindex", response.headers["X-Robots-Tag"])
+
+    def test_legal_page_reuses_brand_and_has_working_project_links(self):
+        html = self.client.get("/conditions-utilisation").get_data(as_text=True)
+        self.assertIn('src="/static/img/brand-mark.png"', html)
+        self.assertIn('href="/#contact"', html)
+        self.assertNotIn("ouvrirQuestionnaire", html)
+        self.assertIn('name="robots" content="noindex,follow"', html)
+        for asset in ("/static/css/site.css", "/static/css/legal.css"):
+            with self.client.get(asset) as response:
+                self.assertEqual(response.status_code, 200)
+                self.assertIn("text/css", response.content_type)
+
 
 if __name__ == "__main__":
     unittest.main()
