@@ -1622,15 +1622,6 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
         </div>
       </div>
 
-      {% if contact_email_only %}
-      <div class="contact-form reveal reveal-delay-2">
-        <h3>Parlons de votre besoin</h3>
-        <p>Écrivez-nous votre activité, votre objectif et votre échéance. Nous vous répondons sous 48h pour préciser le projet ensemble.</p>
-        <p style="margin:20px 0;"><a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a></p>
-        <a class="btn btn-primary" href="mailto:yc.digital33@gmail.com?subject=Mon%20projet%20avec%20YC%20Digital">Écrire à YC Digital <span class="icon" data-icon="mail"></span></a>
-        <p class="sub" style="margin-top:16px;">Vous pouvez aussi copier cette adresse dans votre messagerie.</p>
-      </div>
-      {% else %}
       <form class="contact-form reveal reveal-delay-2" id="contactForm" onsubmit="envoyerContact(event)">
         <h3>Parlons de votre besoin</h3>
         <p class="sub">Nom, e-mail, objectif : commencez simplement, sans engagement.</p>
@@ -1655,7 +1646,6 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
         </button>
         <div class="form-msg" id="contactMsg" style="display:none;"></div>
       </form>
-      {% endif %}
     </div>
   </div>
 </section>
@@ -1666,7 +1656,7 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="brand" style="color: var(--paper);">
-          <span class="brand-mark" style="background: var(--paper);"></span>
+          <span class="brand-mark" style="background-color: var(--paper);"></span>
           <span>YC Digital<small style="color: rgba(244,241,234,0.5);">Studio digital</small></span>
         </div>
         <p>Sites internet et applications Android et Windows pour les petites entreprises. Conseil et montage PC à Bordeaux. Une équipe de deux, en lancement.</p>
@@ -1792,7 +1782,7 @@ function toggleMobileNav(){ const el=document.getElementById('mobileNav'); if(el
 
 const YC_ALLOWED_FILE_EXTENSIONS = ['jpg','jpeg','png','webp','gif','heic','heif','avif','pdf'];
 const YC_ALLOWED_FILE_MIMES = ['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif','image/avif','application/pdf'];
-const YC_MAX_FILE_SIZE = 25 * 1024 * 1024;
+const YC_MAX_FILE_SIZE = 16 * 1024 * 1024;
 const YC_MAX_FILES = 8;
 
 function formatWait(seconds){
@@ -1817,7 +1807,7 @@ function validateClientFile(file){
     return 'Type de fichier refusé pour ' + file.name + ' — images et PDF uniquement.';
   }
   if(file.size > YC_MAX_FILE_SIZE){
-    return 'Fichier trop volumineux (25 Mo max) : ' + file.name;
+    return 'Fichier trop volumineux (16 Mo max) : ' + file.name;
   }
   return '';
 }
@@ -1825,6 +1815,8 @@ function validateClientFile(file){
 /* -------- FORMULAIRE CONTACT -------- */
 async function envoyerContact(e){
   e.preventDefault();
+  const submitButton = e.target.querySelector('button[type="submit"]');
+  if(submitButton?.disabled) return;
   const nom = (document.getElementById('c_nom')||{}).value?.trim() || '';
   const email = (document.getElementById('c_email')||{}).value?.trim() || '';
   const message = (document.getElementById('c_msg')||{}).value?.trim() || '';
@@ -1838,6 +1830,7 @@ async function envoyerContact(e){
     }
     return;
   }
+  if(submitButton) submitButton.disabled = true;
   try{
     const r = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({nom,email,message}) });
     const j = await r.json().catch(()=>({}));
@@ -1852,6 +1845,8 @@ async function envoyerContact(e){
       msgEl.textContent = err.message || 'Une erreur est survenue.';
       msgEl.className = 'form-msg err'; msgEl.style.display = 'block';
     }
+  } finally {
+    if(submitButton) submitButton.disabled = false;
   }
 }
 
@@ -1935,10 +1930,6 @@ function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'
 function normalizeServiceKey(k){ if(!k) return null; if(CONFIG && CONFIG.services && CONFIG.services[k]) return k; return SERVICE_ALIAS[k] || k; }
 
 async function ouvrirQuestionnaire(serviceForce){
-  {% if contact_email_only %}
-  window.location.hash = 'contact';
-  return;
-  {% endif %}
   await chargerConfig();
   const key = normalizeServiceKey(serviceForce);
   const validForced = key && CONFIG.services && CONFIG.services[key];
@@ -2007,7 +1998,7 @@ function renderQuestion(q){
         <span class="icon" data-icon="upload"></span>
         <div>
           <strong>Cliquez pour ajouter des fichiers</strong>
-          <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">ou glissez-déposez ici — images et PDF uniquement (25 Mo max par fichier, 8 fichiers max)</p>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">ou glissez-déposez ici — images et PDF uniquement (16 Mo max par fichier, 8 fichiers max)</p>
         </div>
       </label>
       <div class="file-list" id="fileList">`;
@@ -2221,6 +2212,7 @@ function ajouterFichiers(fileList){
   const arr = Array.isArray(QSTATE.fichiers) ? QSTATE.fichiers : [];
   const errors = [];
   for(const f of fileList){
+    if(arr.reduce((sum,item)=>sum+item.size,0)+f.size > 16*1024*1024){ errors.push('Les pièces jointes ne doivent pas dépasser 16 Mo au total.'); break; }
     if(arr.length >= YC_MAX_FILES){ errors.push('Vous pouvez joindre ' + YC_MAX_FILES + ' fichiers maximum.'); break; }
     const err = validateClientFile(f);
     if(err){ errors.push(err); continue; }

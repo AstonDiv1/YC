@@ -28,6 +28,7 @@ le front (qui concatène toujours service.questions + questions_communes).
 """
 
 import copy
+import base64
 import json
 import logging
 import os
@@ -48,8 +49,8 @@ UPLOAD_DIR = Path(os.environ.get("YC_DIGITAL_UPLOAD_DIR", Path(__file__).parent 
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-# Taille max acceptée par fichier joint (25 Mo).
-MAX_UPLOAD_SIZE = 25 * 1024 * 1024
+# Taille max acceptée par fichier joint (16 Mo).
+MAX_UPLOAD_SIZE = 16 * 1024 * 1024
 MAX_UPLOAD_FILES = 8
 
 VALID_STATUSES = {"nouveau", "en_cours", "devis_envoye", "termine", "annule"}
@@ -744,7 +745,7 @@ def _validate_upload_content(original: str, data: bytes, browser_mime: str) -> s
     if not data:
         raise UploadValidationError(f"Le fichier {original} est vide.")
     if len(data) > MAX_UPLOAD_SIZE:
-        raise UploadValidationError(f"Le fichier {original} dépasse la limite de 25 Mo.")
+        raise UploadValidationError(f"Le fichier {original} dépasse la limite de 16 Mo.")
 
     ext = _file_extension(original)
     if ext not in ALLOWED_UPLOAD_EXTENSIONS:
@@ -928,7 +929,11 @@ def _email_configure() -> Optional[dict]:
     }
 
 
-def send_email_notification(subject: str, body_text: str) -> bool:
+def email_notifications_configured() -> bool:
+    return bool(os.environ.get("RESEND_API_KEY") and os.environ.get("ADMIN_EMAIL"))
+
+
+def send_email_notification(subject: str, body_text: str, *, reply_to=None, attachments=None) -> bool:
     cfg = _email_configure()
     if not cfg:
         return False
@@ -948,6 +953,10 @@ def send_email_notification(subject: str, body_text: str) -> bool:
         "subject": subject,
         "html": html_body,
     }
+    if reply_to:
+        payload["reply_to"] = reply_to
+    if attachments:
+        payload["attachments"] = attachments
 
     try:
         response = resend.Emails.send(payload)
@@ -965,7 +974,7 @@ def send_email_notification(subject: str, body_text: str) -> bool:
 
 
 def notify_new_booking(booking_id: str, service: str, contact: dict, recommandation: dict,
-                       fichiers: Optional[list] = None) -> None:
+                       fichiers: Optional[list] = None, reponses: Optional[dict] = None) -> bool:
     label = SERVICES.get(service, {}).get("label", service)
     liste_fichiers = ""
     if fichiers:
@@ -981,18 +990,30 @@ def notify_new_booking(booking_id: str, service: str, contact: dict, recommandat
         f"E-mail     : {contact.get('email', '—')}\n"
         f"Téléphone  : {contact.get('telephone', '—')}\n"
         f"Ville      : {contact.get('ville', '—')}\n"
+        f"Disponibilité : {contact.get('disponibilite', '—')}\n"
         f"Profil estimé      : {recommandation.get('profil', '—')}\n"
         f"Fourchette de prix : {recommandation.get('fourchette_prix', '—')}\n"
         f"Délai estimé       : {recommandation.get('delai_estime', '—')}\n"
         f"{liste_fichiers}\n"
         f"Message du client :\n{contact.get('message') or '(aucun)'}\n\n"
-        f"Connecte-toi à ton espace admin pour voir tous les détails, "
-        f"consulter les photos jointes et changer le statut de cette demande."
+        f"Réponses au questionnaire :\n{json.dumps(reponses or {}, ensure_ascii=False, indent=2)}\n\n"
+        f"Réponds à cet e-mail pour contacter la personne. Les pièces jointes reçues sont incluses."
     )
-    send_email_notification(f"Nouvelle demande — {label} ({contact.get('nom', '—')})", corps)
+    attachments = []
+    for file_info in fichiers or []:
+        path = get_booking_file_path(booking_id, file_info["filename_stored"])
+        if path:
+            attachments.append({
+                "filename": file_info["filename_original"],
+                "content": base64.b64encode(path.read_bytes()).decode("ascii"),
+            })
+    return send_email_notification(
+        f"Nouvelle demande — {label} ({contact.get('nom', '—')})", corps,
+        reply_to=contact.get("email"), attachments=attachments,
+    )
 
 
-def notify_new_message(message_id: str, nom: str, email: str, message: str) -> None:
+def notify_new_message(message_id: str, nom: str, email: str, message: str) -> bool:
     corps = (
         f"Nouveau message reçu via le formulaire de contact du site.\n\n"
         f"Référence : {message_id}\n"
@@ -1000,4 +1021,4 @@ def notify_new_message(message_id: str, nom: str, email: str, message: str) -> N
         f"E-mail    : {email}\n\n"
         f"Message :\n{message}"
     )
-    send_email_notification(f"Nouveau message de contact — {nom}", corps)
+    return send_email_notification(f"Nouveau message de contact — {nom}", corps, reply_to=email)

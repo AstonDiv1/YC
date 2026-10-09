@@ -57,6 +57,8 @@ app.config.update(
     SESSION_COOKIE_SECURE=os.environ.get("SESSION_COOKIE_SECURE", "0").lower() in {"1", "true", "yes"},
 )
 CONTACT_EMAIL_ONLY = os.environ.get("CONTACT_EMAIL_ONLY", "0").lower() in {"1", "true", "yes"}
+REQUIRE_EMAIL_DELIVERY = os.environ.get("REQUIRE_EMAIL_DELIVERY", "0").lower() in {"1", "true", "yes"}
+MAX_EMAIL_ATTACHMENT_BYTES = 16 * 1024 * 1024
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
@@ -336,6 +338,8 @@ def api_config():
 def api_submit():
     if CONTACT_EMAIL_ONLY:
         return _json_error("Contactez-nous par e-mail : yc.digital33@gmail.com.", 503)
+    if REQUIRE_EMAIL_DELIVERY and not logic.email_notifications_configured():
+        return _json_error("L'envoi est momentanément indisponible. Écrivez-nous à yc.digital33@gmail.com.", 503)
     allowed, retry_after = _check_public_rate_limit()
     if not allowed:
         return _json_error(
@@ -380,6 +384,14 @@ def api_submit():
     if not uploads_ok:
         return _json_error(upload_error, 400)
 
+    if REQUIRE_EMAIL_DELIVERY:
+        attachment_bytes = 0
+        for file_storage in uploaded:
+            attachment_bytes += len(file_storage.read())
+            file_storage.stream.seek(0)
+        if attachment_bytes > MAX_EMAIL_ATTACHMENT_BYTES:
+            return _json_error("Les pièces jointes ne doivent pas dépasser 16 Mo au total pour l'envoi. Réduisez leur taille ou envoyez-nous un lien par e-mail.", 400)
+
     logger.info(
         "Submit : content_type=%r service=%r nb_fichiers=%d nom=%r",
         ctype, service, len(uploaded), contact.get("nom"),
@@ -412,7 +424,9 @@ def api_submit():
         except logic.UploadValidationError as exc:
             return _json_error(str(exc), 400)
 
-    logic.notify_new_booking(booking_id, service, contact, recommandation, fichiers_sauves)
+    notified = logic.notify_new_booking(booking_id, service, contact, recommandation, fichiers_sauves, reponses)
+    if REQUIRE_EMAIL_DELIVERY and not notified:
+        return _json_error("Votre demande n'a pas pu être transmise par e-mail. Merci de réessayer ou de nous écrire à yc.digital33@gmail.com.", 503)
 
     return jsonify({
         "booking_id": booking_id,
@@ -429,6 +443,8 @@ def api_submit():
 def api_contact():
     if CONTACT_EMAIL_ONLY:
         return _json_error("Contactez-nous par e-mail : yc.digital33@gmail.com.", 503)
+    if REQUIRE_EMAIL_DELIVERY and not logic.email_notifications_configured():
+        return _json_error("L'envoi est momentanément indisponible. Écrivez-nous à yc.digital33@gmail.com.", 503)
     allowed, retry_after = _check_public_rate_limit()
     if not allowed:
         return _json_error(
@@ -450,7 +466,9 @@ def api_contact():
         return _json_error("Adresse e-mail invalide.", 400)
 
     message_id = logic.save_contact_message(nom, email, message)
-    logic.notify_new_message(message_id, nom, email, message)
+    notified = logic.notify_new_message(message_id, nom, email, message)
+    if REQUIRE_EMAIL_DELIVERY and not notified:
+        return _json_error("Votre message n'a pas pu être transmis par e-mail. Merci de réessayer ou de nous écrire à yc.digital33@gmail.com.", 503)
 
     return jsonify({"message_id": message_id})
 
