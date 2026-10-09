@@ -99,11 +99,6 @@ p { color: var(--ink-soft); }
   font-size: 0.75rem; letter-spacing:0.14em; text-transform:uppercase;
   color: var(--muted);
 }
-.eyebrow .dot{
-  width:6px; height:6px; border-radius:50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(15,82,186,0.10);
-}
 
 /* ==========================================================
    HEADER
@@ -348,10 +343,6 @@ header#siteHeader.scrolled{
   color: var(--muted);
 }
 .strip span{ display:inline-flex; align-items:center; gap:10px; }
-.strip span::before{
-  content:""; width:5px; height:5px; border-radius:50%;
-  background: var(--accent);
-}
 
 /* ==========================================================
    SECTIONS
@@ -1031,13 +1022,6 @@ img, svg, video{ max-width: 100%; height: auto; }
   }
   .step:first-child{ border-left-color: var(--line-strong); padding-left: 24px; padding-top: 8px; }
   .step:last-child{ padding-bottom: 8px; }
-  .step::before{
-    content: ""; position: absolute; left: -5px; top: 32px;
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--line-strong);
-  }
-  .step:first-child::before{ top: 16px; }
   .step .k{ font-size: 0.68rem; }
   .step h3{ font-size: 1.18rem; margin: 12px 0 8px; }
   .step p{ font-size: 0.94rem; }
@@ -1223,6 +1207,33 @@ a, button, .btn, summary, .option-item{
 /* Logo unique (dédupliqué depuis base64 x2) */
 :root{ --yc-logo: url("/static/img/brand-mark.png"); }
 .brand-mark{ background-image: var(--yc-logo); background-size: contain; background-repeat: no-repeat; background-position: center; }
+
+/* Ajustements de lisibilité — palette et composition existantes conservées. */
+section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
+.eyebrow{ font-family:var(--font-body); font-weight:500; letter-spacing:.075em; }
+.hero h1{ font-size:clamp(2.6rem,4.8vw,4.15rem); line-height:1.12; }
+.hero .lead{ max-width:52ch; line-height:1.7; }
+.hero-actions .btn-outline{ border-color:var(--line-strong); }
+.hero-actions .btn-outline:hover{ border-color:var(--ink); }
+.hero-meta{ gap:12px 24px; }
+.studio-card{ box-shadow:0 18px 40px -28px rgba(11,18,41,.3); }
+.studio-card:hover{ transform:none; box-shadow:0 18px 40px -28px rgba(11,18,41,.3); }
+.studio-card .row,.studio-card .foot{ font-family:var(--font-body); letter-spacing:.03em; text-transform:none; }
+.studio-card .services-mini .v{ font-family:var(--font-body); color:rgba(244,241,234,.72); letter-spacing:0; }
+.pillar:hover,.svc:hover{ transform:translateY(-2px); }
+.svc .foot{ flex-wrap:wrap; align-items:flex-end; gap:16px; padding-top:20px; }
+.svc .foot .price{ font-family:var(--font-body); font-size:1.05rem; font-weight:600; letter-spacing:0; text-transform:none; }
+.svc .foot .price small{ margin-top:6px; max-width:26ch; line-height:1.55; color:var(--muted); }
+.pillar .num,.svc .index,.stat .k{ letter-spacing:.06em; }
+:focus-visible{ outline:3px solid var(--accent); outline-offset:4px; }
+@media(max-width:720px){
+  .hero h1{ font-size:clamp(2.1rem,7.5vw,2.65rem); }
+  .hero .lead{ line-height:1.65; }
+  .eyebrow{ font-size:.71rem; letter-spacing:.06em; }
+  .studio-card .services-mini .v{ padding-left:32px; }
+  .step{ padding-left:0; border-left:0; }
+  .step:first-child{ padding-left:0; border-left:0; }
+}
 </style>
 </head>
 <body>
@@ -1263,15 +1274,15 @@ a, button, .btn, summary, .option-item{
 <section class="hero" id="top">
   <div class="container hero-grid">
     <div>
-      <div class="eyebrow reveal"><span class="dot"></span>Professionnels · France entière à distance</div>
+      <div class="eyebrow reveal">Professionnels · France entière à distance</div>
       <h1 class="reveal reveal-delay-1" style="margin-top:20px;">
-        Un site clair pour votre activité.<br>
-        Des <span class="accent">contacts</span> plus simples.
+        Des sites et des applications<br>
+        pour <span class="accent">votre activité.</span>
       </h1>
       <p class="lead reveal reveal-delay-2">
-        Artisans, indépendants et petites entreprises : nous créons votre site
-        pour présenter vos services et permettre à vos visiteurs de vous contacter.
-        Vous avez besoin d'un outil métier ? Nous développons aussi des applications Android et Windows.
+        Vous souhaitez présenter vos services, montrer vos réalisations ou
+        simplifier une tâche dans votre entreprise ? Nous créons avec vous
+        un site internet ou une application pour Android ou Windows, selon votre besoin.
       </p>
       <div class="hero-actions reveal reveal-delay-3">
         <a href="#contact" class="btn btn-primary">
@@ -1281,21 +1292,21 @@ a, button, .btn, summary, .option-item{
       </div>
       <div class="hero-meta reveal reveal-delay-3">
         <div><span class="icon" data-icon="check"></span> Réponse sous 48h</div>
-        <div><span class="icon" data-icon="check"></span> Devis 100% gratuit</div>
-        <div><span class="icon" data-icon="check"></span> Devis clair, sans surprise</div>
+        <div><span class="icon" data-icon="check"></span> Premier échange sans engagement</div>
+        <div><span class="icon" data-icon="check"></span> Périmètre et prix définis ensemble</div>
       </div>
     </div>
 
     <aside class="studio-card reveal reveal-delay-2" aria-label="Aperçu du studio">
       <div class="row">
-        <span>YC · Studio</span>
-        <span>Studio indépendant</span>
+        <span>YC Digital</span>
+        <span>Une équipe de deux</span>
       </div>
-      <h3>Votre site et vos outils, avec la même équipe.</h3>
+      <h3>Une petite équipe,<br>un échange direct.</h3>
       <div class="services-mini">
         <div>
           <span class="k"><span class="icon" data-icon="web"></span> Sites internet</span>
-          <span class="v">vitrine · blog · web-app</span>
+          <span class="v">Présenter votre activité</span>
         </div>
         <div>
           <span class="k"><span class="icon" data-icon="app"></span> Applications</span>
@@ -1303,11 +1314,11 @@ a, button, .btn, summary, .option-item{
         </div>
         <div>
           <span class="k"><span class="icon" data-icon="cpu"></span> Montage PC</span>
-          <span class="v">config · upgrade · optimisation</span>
+          <span class="v">Conseil et montage à Bordeaux</span>
         </div>
       </div>
       <div class="foot">
-        <span>Réponse · 48h</span>
+        <span>Votre projet commence par un échange</span>
       </div>
     </aside>
   </div>
@@ -1318,13 +1329,13 @@ a, button, .btn, summary, .option-item{
   <div class="container">
     <div class="section-head reveal">
       <div>
-        <div class="eyebrow"><span class="dot"></span>Notre approche</div>
-        <h2 style="margin-top:14px;">Une méthode pensée pour votre activité, pas pour un catalogue.</h2>
+        <div class="eyebrow">Notre approche</div>
+        <h2 style="margin-top:14px;">Nous commençons par comprendre votre besoin.</h2>
       </div>
       <p class="side">
-        Chaque projet commence par la même chose : comprendre. Nous refusons
-        les propositions génériques. Notre travail : traduire vos contraintes
-        réelles en une solution digitale qui tient dans le temps.
+        Nous échangeons sur votre activité, ce qui existe déjà et ce que vous
+        souhaitez améliorer. Nous définissons ensuite les étapes du projet,
+        les fonctionnalités utiles et le budget.
       </p>
     </div>
 
@@ -1332,26 +1343,26 @@ a, button, .btn, summary, .option-item{
       <div class="pillar reveal">
         <div class="num">01</div>
         <span class="icon-pill"><span class="icon" data-icon="target"></span></span>
-        <h3>Sur-mesure</h3>
+        <h3>Un projet à votre mesure</h3>
         <p>Nous adaptons le site ou l'application à votre activité et vous livrons les sources. Les fonctionnalités, les livrables et les droits associés sont précisés dans le devis.</p>
       </div>
       <div class="pillar reveal reveal-delay-1">
         <div class="num">02</div>
         <span class="icon-pill"><span class="icon" data-icon="bolt"></span></span>
-        <h3>Réactivité</h3>
+        <h3>Un échange direct</h3>
         <p>Un premier échange simple, une réponse sous 48h, un suivi transparent du premier échange à la livraison.</p>
       </div>
       <div class="pillar reveal reveal-delay-2">
         <div class="num">03</div>
         <span class="icon-pill"><span class="icon" data-icon="handshake"></span></span>
-        <h3>Évolutions & maintenance</h3>
-        <p>Forfait séparé, clair et sans surprise. L'hébergement reste chez vous : nous vous aidons à le choisir et à le configurer.</p>
+        <h3>Un suivi après la livraison</h3>
+        <p>Nous vous aidons à prendre en main votre site ou votre application. L'hébergement, la maintenance et les évolutions sont précisés séparément.</p>
       </div>
       <div class="pillar reveal reveal-delay-3">
         <div class="num">04</div>
         <span class="icon-pill"><span class="icon" data-icon="shield"></span></span>
-        <h3>Transparence</h3>
-        <p>Des tarifs clairs et des délais réalistes annoncés dès le départ. Aucune ligne cachée, aucune mauvaise surprise.</p>
+        <h3>Un devis détaillé</h3>
+        <p>Avant de commencer, vous savez ce qui est inclus, ce qui est en option et ce que coûte le suivi. Le calendrier est confirmé dans le devis.</p>
       </div>
     </div>
   </div>
@@ -1362,8 +1373,8 @@ a, button, .btn, summary, .option-item{
   <div class="container">
     <div class="section-head reveal">
       <div>
-        <div class="eyebrow"><span class="dot"></span>Services</div>
-        <h2 style="margin-top:14px;">Un site pour être contacté.<br>Une application pour travailler.</h2>
+        <div class="eyebrow">Services</div>
+        <h2 style="margin-top:14px;">Ce que nous pouvons<br>construire avec vous.</h2>
       </div>
       <p class="side">
         Choisissez le service adapté à votre objectif. Les fonctionnalités,
@@ -1374,7 +1385,7 @@ a, button, .btn, summary, .option-item{
 
     <div class="services-grid">
       <article class="svc reveal">
-        <span class="index">S/01</span>
+        <span class="index">01</span>
         <span class="icon-pill"><span class="icon" data-icon="globe"></span></span>
         <h3>Sites internet</h3>
         <p class="desc">Présentez vos services, vos réalisations et votre zone d'intervention. Un parcours de contact clair, sur ordinateur comme sur mobile.</p>
@@ -1386,12 +1397,12 @@ a, button, .btn, summary, .option-item{
         </ul>
         <div class="foot">
           <span class="price">à partir de 250 €<small style="display:block;font-size:.75rem;font-weight:400;">Vitrine simple · périmètre défini au devis</small></span>
-          <button class="link" onclick="ouvrirQuestionnaire('site')">Démarrer <span class="icon" data-icon="arrow-right"></span></button>
+          <button class="link" onclick="ouvrirQuestionnaire('site')">Parler de mon site <span class="icon" data-icon="arrow-right"></span></button>
         </div>
       </article>
 
       <article class="svc reveal reveal-delay-1">
-        <span class="index">S/02</span>
+        <span class="index">02</span>
         <span class="icon-pill"><span class="icon" data-icon="app"></span></span>
         <h3>Applications</h3>
         <p class="desc">Applications Android et Windows Desktop pour simplifier une tâche métier : saisie, documents ou échanges de données. Périmètre défini ensemble.</p>
@@ -1402,12 +1413,12 @@ a, button, .btn, summary, .option-item{
         </ul>
         <div class="foot">
           <span class="price">à partir de 450 €<small style="display:block;font-size:.75rem;font-weight:400;">Outil simple · fonctionnalités définies au devis</small></span>
-          <button class="link" onclick="ouvrirQuestionnaire('application')">Démarrer <span class="icon" data-icon="arrow-right"></span></button>
+          <button class="link" onclick="ouvrirQuestionnaire('application')">Parler de mon application <span class="icon" data-icon="arrow-right"></span></button>
         </div>
       </article>
 
       <article class="svc reveal reveal-delay-2">
-        <span class="index">S/03</span>
+        <span class="index">03</span>
         <span class="icon-pill"><span class="icon" data-icon="cpu"></span></span>
         <h3>Montage & optimisation PC</h3>
         <p class="desc">Configuration, montage, upgrade et optimisation. Sur place à Bordeaux, à distance partout ailleurs.</p>
@@ -1419,7 +1430,7 @@ a, button, .btn, summary, .option-item{
         </ul>
         <div class="foot">
           <span class="price">à partir de 100 €</span>
-          <button class="link" onclick="ouvrirQuestionnaire('pc')">Démarrer <span class="icon" data-icon="arrow-right"></span></button>
+          <button class="link" onclick="ouvrirQuestionnaire('pc')">Parler de mon PC <span class="icon" data-icon="arrow-right"></span></button>
         </div>
       </article>
     </div>
@@ -1431,12 +1442,12 @@ a, button, .btn, summary, .option-item{
   <div class="container">
     <div class="section-head reveal">
       <div>
-        <div class="eyebrow"><span class="dot"></span>Méthode</div>
+        <div class="eyebrow">Méthode</div>
         <h2 style="margin-top:14px;">Comment se déroule un projet.</h2>
       </div>
       <p class="side">
-        Quatre étapes claires pour définir votre besoin, avec un suivi
-        continu, aucune surprise en cours de route.
+        Nous définissons le projet avec vous, puis nous avançons par étapes.
+        Vous savez ce qui est prévu et vous pouvez nous faire vos retours.
       </p>
     </div>
 
@@ -1473,8 +1484,8 @@ a, button, .btn, summary, .option-item{
 <section class="section">
   <div class="container">
     <div class="section-head stack reveal">
-      <div class="eyebrow"><span class="dot"></span>Le studio en un coup d'œil</div>
-      <h2>Une structure à taille humaine, taillée pour vos projets.</h2>
+      <div class="eyebrow">Le studio en un coup d'œil</div>
+      <h2>Des engagements simples, dès le départ.</h2>
     </div>
     <div class="stats reveal">
       <div class="stat">
@@ -1500,24 +1511,24 @@ a, button, .btn, summary, .option-item{
 <section class="section section-alt" id="histoire">
   <div class="container histoire">
     <div class="reveal">
-      <div class="eyebrow"><span class="dot"></span>Le studio</div>
-      <h2 style="margin-top:14px;">Deux associés, une même ambition : donner vie à vos projets digitaux.</h2>
-      <p style="margin-top:24px;">YC Digital est né d'un constat simple : trop d'entreprises se retrouvent avec un site vitrine daté, une application qui ne leur ressemble pas, ou du matériel informatique mal dimensionné pour leurs besoins réels.</p>
-      <p>Nous sommes deux associés, animés par une même passion pour le web et le numérique, avec l'ambition de nous implanter durablement dans le secteur digital. Notre conviction : chaque entreprise, quelle que soit sa taille, mérite une identité forte et cohérente sur internet.</p>
-      <p>C'est pourquoi nous avons choisi de couvrir l'ensemble de la chaîne technique : de la création du site ou de l'application, jusqu'au choix et au montage du matériel qui la fait tourner. Une seule équipe, un seul interlocuteur, pour transformer votre besoin en projet concret.</p>
+      <div class="eyebrow">Le studio</div>
+      <h2 style="margin-top:14px;">Deux personnes pour vous accompagner.</h2>
+      <p style="margin-top:24px;">YC Digital est un projet en lancement. Nous travaillons à deux, avec des rôles complémentaires : le développement et la gestion du projet d'un côté, les échanges et le suivi de l'autre.</p>
+      <p>Nous nous adressons aux artisans, indépendants et petites entreprises qui souhaitent un site ou un outil adapté à leur activité. Le premier échange nous permet de voir ce dont vous avez besoin et si nous pouvons vous aider.</p>
+      <p>Nous pouvons travailler à distance partout en France. À Bordeaux, nous proposons aussi du conseil et du montage informatique.</p>
     </div>
     <div class="founders reveal reveal-delay-2">
       <div class="founder">
         <div class="avatar">Y</div>
         <div>
-          <h4>Associé · Y</h4>
+          <h4>Développement</h4>
           <small>Programmation & Gestion de Projet</small>
         </div>
       </div>
       <div class="founder">
         <div class="avatar">C</div>
         <div>
-          <h4>Associé · C</h4>
+          <h4>Échanges et suivi</h4>
           <small>Gestion de la Clientèle & Administration</small>
         </div>
       </div>
@@ -1535,8 +1546,8 @@ a, button, .btn, summary, .option-item{
 <section class="section" id="faq">
   <div class="container" style="max-width: 900px;">
     <div class="section-head stack reveal">
-      <div class="eyebrow"><span class="dot"></span>Questions fréquentes</div>
-      <h2>Tout ce que vous vous demandez sûrement.</h2>
+      <div class="eyebrow">Questions fréquentes</div>
+      <h2>Quelques questions avant de commencer.</h2>
     </div>
     <div class="faq reveal">
       <details>
@@ -1564,8 +1575,8 @@ a, button, .btn, summary, .option-item{
         <p>Oui, à 100 %. Contrairement aux plateformes type Wix, Squarespace ou Shopify où votre site "loue" une infrastructure fermée, nous développons vos projets en code natif (HTML, CSS, JavaScript, Python selon les besoins). À la livraison, nous vous fournissons l'intégralité des sources : vous pouvez les héberger où vous voulez, les faire évoluer par un autre prestataire, ou les archiver. Aucun verrou technique, aucune dépendance à YC Digital.</p>
       </details>
       <details>
-        <summary>Comment se passe le paiement ?</summary>
-        <p>Un acompte à la commande, le solde à la livraison. Pour les plus gros projets, nous découpons en paliers alignés sur les jalons du projet. Facturation professionnelle standard.</p>
+        <summary>Où en est YC Digital aujourd'hui ?</summary>
+        <p>Nous préparons le lancement de notre activité. Vous pouvez nous présenter votre besoin et échanger avec nous sans engagement. Le cadre professionnel et les conditions de réalisation seront précisés avant toute commande ; aucun paiement n'est demandé à ce stade.</p>
       </details>
     </div>
   </div>
@@ -1576,7 +1587,7 @@ a, button, .btn, summary, .option-item{
   <div class="container">
     <div class="section-head reveal">
       <div>
-        <div class="eyebrow"><span class="dot"></span>Contact</div>
+        <div class="eyebrow">Contact</div>
         <h2 style="margin-top:14px;">Parlons de votre projet.</h2>
       </div>
       <p class="side">
@@ -1658,7 +1669,7 @@ a, button, .btn, summary, .option-item{
           <span class="brand-mark" style="background: var(--paper);"></span>
           <span>YC Digital<small style="color: rgba(244,241,234,0.5);">Studio digital</small></span>
         </div>
-        <p>Sites internet, applications et configurations PC sur-mesure. Un studio, deux associés, une seule promesse : votre projet, réellement compris.</p>
+        <p>Sites internet et applications Android et Windows pour les petites entreprises. Conseil et montage PC à Bordeaux. Une équipe de deux, en lancement.</p>
       </div>
       <div>
         <h4>Navigation</h4>
@@ -1698,7 +1709,7 @@ a, button, .btn, summary, .option-item{
           Conditions d'utilisation
         </a>
         <span style="color: rgba(244,241,234,0.3); margin: 0 10px;">·</span>
-        Fait main, en France.
+        Conçu par YC Digital.
       </p>
     </div>
   </div>
