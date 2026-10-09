@@ -3,369 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conditions générales d'utilisation — YC Digital</title>
-<meta name="description" content="Conditions générales d'utilisation du site YC Digital : usage, données personnelles, RGPD, propriété intellectuelle, responsabilité.">
+<title>Conditions d’utilisation et données personnelles — YC Digital</title>
+<meta name="description" content="Les conditions d’utilisation de YC Digital : demandes sans engagement, données personnelles, fichiers joints et contact.">
+<link rel="canonical" href="{{ public_site_url }}/conditions-utilisation">
+<meta name="robots" content="noindex,follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="YC Digital">
+
+
+
+<meta property="og:image" content="{{ public_site_url }}/static/img/brand-mark.png">
+{% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
+
 <meta name="theme-color" content="#0B1229">
+<link rel="icon" href="/static/img/logo-icon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ivory:#F4F1EA;
-    --paper:#FBF9F4;
-    --ink:#0B1229;
-    --ink-soft:#2A3350;
-    --muted:#5B6478;
-    --soft:#8B93A6;
-    --line:#E2DED2;
-    --line-strong:#D2CCBB;
-    --accent:#0F52BA;
-    --accent-ink:#0A2E6D;
-    --accent-soft:rgba(15,82,186,.08);
-    --shadow-sm:0 1px 2px rgba(11,18,41,.04);
-    --shadow-md:0 4px 20px -8px rgba(11,18,41,.12);
-    --font-display:"Fraunces",Georgia,serif;
-    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%; }
-  body{
-    font-family:var(--font-body);
-    color:var(--ink);
-    background:
-      radial-gradient(1200px 500px at 10% -10%, rgba(15,82,186,.06), transparent 60%),
-      radial-gradient(800px 400px at 100% 20%, rgba(15,82,186,.03), transparent 60%),
-      var(--paper);
-    line-height:1.65;
-    min-height:100vh;
-    overflow-x:hidden;
-  }
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  /* ===== Topbar ===== */
-  .topbar{
-    border-bottom:1px solid var(--line);
-    background:rgba(251,249,244,.85);
-    backdrop-filter:blur(12px) saturate(1.4);
-    -webkit-backdrop-filter:blur(12px) saturate(1.4);
-    padding:14px clamp(16px, 4vw, 32px);
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px;
-    position:sticky; top:0; z-index:20;
-  }
-  .topbar .brand{
-    font-family:var(--font-display);
-    font-size:1rem; font-weight:600;
-    letter-spacing:-.01em;
-    color:var(--ink);
-    min-width:0;
-  }
-  .topbar .brand small{
-    display:block;
-    font-family:var(--font-body);
-    font-size:.68rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--muted);
-    font-weight:500;
-    margin-top:2px;
-  }
-  .topbar a.back{
-    color:var(--accent);
-    text-decoration:none;
-    font-size:.86rem;
-    font-weight:500;
-    padding:8px 14px;
-    border:1px solid var(--line-strong);
-    border-radius:8px;
-    background:#fff;
-    transition:all .2s ease;
-    white-space:nowrap;
-    flex-shrink:0;
-  }
-  .topbar a.back:hover{
-    color:#fff;
-    background:var(--accent);
-    border-color:var(--accent);
-    transform:translateY(-1px);
-    box-shadow:var(--shadow-md);
-  }
-  .topbar a.back .full{ display:inline; }
-  .topbar a.back .short{ display:none; }
+<link rel="stylesheet" href="/static/css/site.css?v=20261009">
 
-  /* ===== Layout ===== */
-  .layout{
-    max-width:1080px;
-    margin:0 auto;
-    padding:clamp(32px, 5vw, 64px) clamp(16px, 4vw, 24px) clamp(56px, 8vw, 96px);
-    display:grid;
-    grid-template-columns:230px 1fr;
-    gap:clamp(32px, 5vw, 56px);
-    align-items:start;
-  }
-
-  /* ===== TOC ===== */
-  aside.toc{
-    position:sticky;
-    top:88px;
-    font-size:.82rem;
-    max-height:calc(100vh - 108px);
-    overflow-y:auto;
-    padding-right:8px;
-  }
-  aside.toc::-webkit-scrollbar{ width:4px; }
-  aside.toc::-webkit-scrollbar-thumb{ background:var(--line-strong); border-radius:4px; }
-  aside.toc .toc-title{
-    font-size:.7rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--soft);
-    font-weight:600;
-    margin-bottom:14px;
-  }
-  aside.toc ul{ list-style:none; }
-  aside.toc li{ margin-bottom:2px; }
-  aside.toc a{
-    color:var(--muted);
-    text-decoration:none;
-    border-bottom:none;
-    display:block;
-    line-height:1.4;
-    padding:6px 10px;
-    border-radius:6px;
-    border-left:2px solid transparent;
-    transition:all .18s ease;
-  }
-  aside.toc a:hover{
-    color:var(--accent);
-    background:var(--accent-soft);
-    border-left-color:var(--accent);
-  }
-
-  /* ===== Main content ===== */
-  main{ max-width:720px; min-width:0; }
-  .eyebrow{
-    font-size:.72rem;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--accent);
-    font-weight:600;
-    margin-bottom:16px;
-  }
-  h1{
-    font-family:var(--font-display);
-    font-size:clamp(1.9rem, 4.2vw, 2.6rem);
-    line-height:1.12;
-    font-weight:600;
-    letter-spacing:-.02em;
-    color:var(--ink);
-    margin-bottom:16px;
-  }
-  .lead{
-    color:var(--muted);
-    font-size:clamp(.98rem, 1.6vw, 1.08rem);
-    max-width:56ch;
-    margin-bottom:14px;
-    line-height:1.6;
-  }
-  .lastup{
-    color:var(--soft);
-    font-size:.82rem;
-    margin-bottom:clamp(32px, 5vw, 48px);
-    padding-bottom:clamp(24px, 4vw, 32px);
-    border-bottom:1px solid var(--line);
-  }
-  section{ margin-bottom:clamp(28px, 4vw, 40px); scroll-margin-top:96px; }
-  h2{
-    font-family:var(--font-display);
-    font-size:clamp(1.2rem, 2.4vw, 1.4rem);
-    font-weight:600;
-    letter-spacing:-.01em;
-    color:var(--ink);
-    margin-bottom:16px;
-    display:flex; align-items:baseline; gap:14px;
-    line-height:1.25;
-  }
-  h2 .num{
-    font-family:var(--font-body);
-    font-size:.72rem;
-    color:var(--accent);
-    font-weight:600;
-    letter-spacing:.08em;
-    min-width:26px;
-    flex-shrink:0;
-  }
-  h3{
-    font-family:var(--font-body);
-    font-size:.96rem;
-    font-weight:600;
-    color:var(--ink);
-    margin:20px 0 8px;
-  }
-  p, li{
-    color:var(--ink-soft);
-    font-size:.96rem;
-    margin-bottom:12px;
-    overflow-wrap:break-word;
-    word-wrap:break-word;
-  }
-  ul{ padding-left:22px; margin-bottom:12px; }
-  li{ margin-bottom:8px; }
-  strong{ color:var(--ink); font-weight:600; }
-  a{
-    color:var(--accent);
-    text-decoration:none;
-    border-bottom:1px solid rgba(15,82,186,.28);
-    transition:border-color .2s, color .2s;
-    overflow-wrap:break-word;
-  }
-  a:hover{ border-bottom-color:var(--accent); color:var(--accent-ink); }
-
-  .callout{
-    background:#fff;
-    border:1px solid var(--line);
-    border-left:3px solid var(--accent);
-    padding:16px 20px;
-    border-radius:10px;
-    margin:18px 0;
-    font-size:.94rem;
-    color:var(--ink-soft);
-    box-shadow:var(--shadow-sm);
-  }
-  .callout strong{ color:var(--accent-ink); }
-
-  .table-wrap{
-    overflow-x:auto;
-    margin:16px 0;
-    border:1px solid var(--line);
-    border-radius:10px;
-    background:#fff;
-    box-shadow:var(--shadow-sm);
-    -webkit-overflow-scrolling:touch;
-  }
-  table{
-    width:100%;
-    border-collapse:collapse;
-    background:#fff;
-    font-size:.88rem;
-    min-width:420px;
-  }
-  th, td{
-    text-align:left;
-    padding:12px 16px;
-    border-bottom:1px solid var(--line);
-    color:var(--ink-soft);
-    vertical-align:top;
-  }
-  th{
-    background:var(--ivory);
-    color:var(--ink);
-    font-weight:600;
-    font-size:.76rem;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    white-space:nowrap;
-  }
-  tr:last-child td{ border-bottom:none; }
-
-  .disclaimer{
-    margin-top:56px;
-    padding:20px 22px;
-    background:var(--ivory);
-    border:1px dashed var(--line-strong);
-    border-radius:10px;
-    font-size:.84rem;
-    color:var(--muted);
-  }
-
-  .footer{
-    border-top:1px solid var(--line);
-    padding:28px 20px;
-    text-align:center;
-    color:var(--muted);
-    font-size:.82rem;
-    background:#fff;
-  }
-  .footer a{ color:var(--muted); border-bottom-color:transparent; }
-  .footer a:hover{ color:var(--ink); border-bottom-color:var(--muted); }
-
-  /* ===== Tablet ===== */
-  @media (max-width:900px){
-    .layout{
-      grid-template-columns:1fr;
-      gap:0;
-    }
-    aside.toc{
-      position:static;
-      max-height:none;
-      overflow:visible;
-      order:2;
-      margin-top:56px;
-      padding:24px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:12px;
-      box-shadow:var(--shadow-sm);
-    }
-    aside.toc ul{
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:2px 8px;
-    }
-    main{ order:1; max-width:none; }
-  }
-
-  /* ===== Mobile ===== */
-  @media (max-width:640px){
-    .topbar{ padding:12px 16px; }
-    .topbar .brand{ font-size:.94rem; }
-    .topbar .brand small{ font-size:.62rem; letter-spacing:.12em; }
-    .topbar a.back{
-      padding:7px 12px;
-      font-size:.8rem;
-    }
-    .topbar a.back .full{ display:none; }
-    .topbar a.back .short{ display:inline; }
-
-    aside.toc ul{ grid-template-columns:1fr; }
-
-    h2{ gap:10px; margin-bottom:12px; }
-    h2 .num{ font-size:.68rem; min-width:22px; }
-
-    p, li{ font-size:.94rem; }
-    .callout{ padding:14px 16px; font-size:.9rem; }
-    .disclaimer{ padding:16px 18px; margin-top:40px; }
-
-    .footer{ padding:24px 16px; font-size:.78rem; }
-  }
-
-  @media (max-width:380px){
-    h1{ font-size:1.7rem; }
-    .lead{ font-size:.95rem; }
-  }
-
-  @media (prefers-reduced-motion:reduce){
-    *{ transition:none !important; scroll-behavior:auto !important; }
-  }
-</style>
+<meta property="og:title" content="Conditions d’utilisation — YC Digital">
+<meta property="og:url" content="{{ public_site_url }}/conditions-utilisation">
+<link rel="stylesheet" href="/static/css/legal.css?v=20261009">
 </head>
-<body>
-
-<div class="topbar">
-  <div class="brand">
-    YC Digital
-    <small>Studio digital</small>
+<body class="legal-page">
+{% set legal_page = true %}
+{% include 'site-header.html' %}
+<main id="top">
+  <div class="container legal-hero">
+    <a class="legal-back" href="/">← Retour au studio</a>
+    <div class="eyebrow">Conditions &amp; données personnelles</div>
+    <h1>Un cadre clair,<br><span class="accent">avant d’échanger.</span></h1>
+    <p class="legal-intro">Comment utiliser le site, nous transmettre votre projet et garder la main sur vos données.</p>
+    <p class="legal-date">Dernière mise à jour · 9 octobre 2026</p>
+    <div class="legal-highlights">
+      <a href="#s06"><span>01 · Votre projet</span><h2>Sans engagement</h2><p>Une demande ouvre un échange. Elle ne vaut ni commande ni paiement.</p></a>
+      <a href="#s07"><span>02 · Vos informations</span><h2>Pour vous répondre</h2><p>Vos coordonnées servent à étudier votre demande et à vous recontacter.</p></a>
+      <a href="#s20"><span>03 · Une question ?</span><h2>Un contact direct</h2><p>Écrivez-nous pour une précision ou pour exercer vos droits.</p></a>
+    </div>
   </div>
-  <a class="back" href="/">
-    <span class="full">← Retour à l'accueil</span>
-    <span class="short">← Accueil</span>
-  </a>
-</div>
-
-<div class="layout">
-
-  <aside class="toc">
-    <div class="toc-title">Sommaire</div>
-    <ul>
+  <div class="container legal-layout">
+    <aside class="legal-toc" aria-label="Sommaire des conditions">
+      <details open><summary>Dans cette page</summary><nav><ul>
       <li><a href="#s01">01. Éditeur du site</a></li>
       <li><a href="#s02">02. Définitions</a></li>
       <li><a href="#s03">03. Objet et acceptation</a></li>
@@ -383,24 +64,18 @@
       <li><a href="#s15">15. Sécurité</a></li>
       <li><a href="#s16">16. Modification des CGU</a></li>
       <li><a href="#s17">17. Droit applicable</a></li>
-      <li><a href="#s18">18. Médiation</a></li>
+      <li><a href="#s18">18. Échanges et réclamations</a></li>
       <li><a href="#s19">19. Divisibilité</a></li>
       <li><a href="#s20">20. Contact</a></li>
-    </ul>
-  </aside>
-
-  <main>
-    <div class="eyebrow">Mentions légales</div>
-    <h1>Conditions générales d'utilisation</h1>
-    <p class="lead">Les règles complètes et transparentes qui encadrent l'utilisation
-    de ce site, l'envoi de vos demandes, et vos droits sur vos données.</p>
-    <p class="lastup">Dernière mise à jour : juillet 2026</p>
-
-    <section id="s01">
+    </ul></nav></details>
+      <a class="legal-toc-contact" href="mailto:yc.digital33@gmail.com">Une question ? Écrivez-nous ↗</a>
+    </aside>
+    <div class="legal-content">    <section id="s01">
       <h2><span class="num">01</span> Éditeur du site</h2>
       <p><strong>YC Digital</strong> est le nom d'un projet en lancement, porté
       par deux personnes autour de la création de sites internet, d'applications
-      et de configurations informatiques. L'activité n'est pas encore immatriculée.</p>
+      et de configurations informatiques. Les responsables du projet sont <strong>CORET et YILMAZ</strong>.
+      L'activité n'est pas encore immatriculée.</p>
       <p>Le site permet de présenter le projet et d'échanger sur vos besoins,
       sans engagement de commande. Aucun paiement n'est demandé à ce stade.
       Le premier contact s'effectue par les formulaires du site ou par e-mail.</p>
@@ -419,8 +94,8 @@
         l'ensemble de ses pages, formulaires et contenus.</li>
         <li><strong>« Utilisateur » ou « Visiteur »</strong> désigne toute
         personne consultant ou utilisant le Site.</li>
-        <li><strong>« Client »</strong> désigne toute personne ayant soumis
-        une demande de devis ou de contact via le Site.</li>
+        <li><strong>« Client »</strong> désigne toute personne ayant accepté un devis ou un contrat distinct. Une simple
+        demande de contact ne crée pas de relation contractuelle.</li>
         <li><strong>« Contenu »</strong> désigne l'ensemble des éléments
         publiés sur le Site : textes, images, code, identité visuelle.</li>
       </ul>
@@ -514,23 +189,25 @@
           <tbody>
             <tr><td>Traitement des demandes de devis et de contact</td><td>Exécution de mesures précontractuelles / intérêt légitime</td></tr>
             <tr><td>Sécurité du Site et prévention des abus</td><td>Intérêt légitime</td></tr>
-            <tr><td>Obligations comptables et légales</td><td>Obligation légale</td></tr>
+            
           </tbody>
         </table>
       </div>
 
       <h3>Destinataires</h3>
-      <p>Les données ne sont ni revendues, ni transmises à des tiers, à
-      l'exception du prestataire technique d'envoi d'e-mails (<em>Resend</em>)
-      strictement nécessaire au fonctionnement du service de notification, et,
-      le cas échéant, de l'hébergeur du Site.</p>
+      <p>Les données ne sont pas revendues. Elles sont accessibles aux responsables du projet
+      et aux prestataires nécessaires au fonctionnement du service : <strong>Render</strong>
+      pour l'hébergement, <strong>Resend</strong> pour la transmission des notifications et
+      <strong>Google Gmail</strong> pour leur réception et les échanges. Certains de ces
+      prestataires peuvent traiter des données hors de l'Union européenne ; leurs conditions
+      de traitement et garanties contractuelles s'appliquent.</p>
 
       <h3>Durée de conservation</h3>
-      <p>Les demandes sont conservées le temps nécessaire au traitement du
-      projet, puis archivées pendant une durée maximale de 3 ans à des fins
-      commerciales, ou plus longtemps si une obligation comptable ou légale
-      l'impose.</p>
-
+      <p>Les demandes sont utilisées pendant leur traitement. Un tri manuel doit permettre
+      de supprimer les demandes sans suite au plus tard trois ans après le dernier contact,
+      sauf obligation légale de conservation. Vous pouvez demander leur suppression avant ce délai.
+      Les messages reçus sont conservés dans la boîte de contact ; le stockage technique du site
+      ne constitue pas une sauvegarde permanente de vos fichiers.</p>
       <h3>Vos droits</h3>
       <p>Conformément au Règlement Général sur la Protection des Données
       (RGPD) et à la loi Informatique et Libertés, vous disposez à tout
@@ -538,8 +215,8 @@
       limitation, de portabilité et d'opposition concernant vos données,
       ainsi que du droit de définir des directives relatives à leur sort
       après votre décès. Pour exercer ces droits, écrivez à
-      <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a> en
-      justifiant de votre identité. Nous répondons dans un délai maximal
+      <a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a>. Une preuve d’identité peut être demandée uniquement
+      si un doute raisonnable empêche de vérifier la demande. Nous répondons dans un délai maximal
       d'un mois.</p>
       <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez
       introduire une réclamation auprès de la
@@ -550,8 +227,8 @@
     <section id="s08">
       <h2><span class="num">08</span> Fichiers joints</h2>
       <p>Vous pouvez joindre des fichiers à votre demande de devis (maquettes,
-      photos, cahier des charges, références). La taille maximale par fichier
-      est fixée à <strong>25 Mo</strong>. En déposant un fichier, vous
+      photos, cahier des charges, références). Les formats acceptés sont les images et PDF, avec un maximum de huit fichiers
+      et une limite de <strong>16 Mo au total</strong>. En déposant un fichier, vous
       garantissez en détenir les droits d'usage et acceptez qu'il soit
       consulté par l'équipe YC Digital pour l'étude de votre projet. YC
       Digital ne saurait être tenue responsable du contenu des fichiers
@@ -653,12 +330,11 @@
     </section>
 
     <section id="s18">
-      <h2><span class="num">18</span> Médiation de la consommation</h2>
-      <p>Conformément aux articles L.616-1 et R.616-1 du Code de la
-      consommation, tout Client consommateur dispose du droit de recourir
-      gratuitement à un médiateur de la consommation en vue de la résolution
-      amiable d'un litige qui n'aurait pas trouvé d'issue via une réclamation
-      écrite préalable adressée à YC Digital.</p>
+      <h2><span class="num">18</span> Échanges et réclamations</h2>
+      <p>Pour toute difficulté concernant le site ou votre demande, contactez-nous par e-mail.
+      Le site ne permet actuellement ni commande ni paiement. Avant toute commercialisation
+      auprès de consommateurs, les informations relatives au professionnel et au médiateur
+      compétent devront être précisées dans les documents contractuels applicables.</p>
     </section>
 
     <section id="s19">
@@ -677,17 +353,24 @@
       répondons en général sous 48 heures ouvrées.</p>
     </section>
 
-  </main>
 
-</div>
-
-<div class="footer">
-  © <span id="year"></span> YC Digital — <a href="/">Retour à l'accueil</a>
-</div>
-
+      <a class="btn btn-primary legal-end" href="/#contact">Revenir à votre projet →</a>
+    </div>
+  </div>
+</main>
+{% include 'site-footer.html' %}
 <script>
-  document.getElementById('year').textContent = new Date().getFullYear();
+document.getElementById('year').textContent = new Date().getFullYear();
+function toggleMobileNav(){
+ const menu=document.getElementById('mobileNav');
+ const opened=menu.classList.toggle('actif');
+ document.querySelector('.menu-toggle').setAttribute('aria-expanded',String(opened));
+}
+document.querySelector('.menu-toggle').setAttribute('aria-controls','mobileNav');
+document.querySelector('.menu-toggle').setAttribute('aria-expanded','false');
+window.addEventListener('scroll',()=>document.getElementById('siteHeader').classList.toggle('scrolled',window.scrollY>8),{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('mobileNav').classList.remove('actif');document.querySelector('.menu-toggle').setAttribute('aria-expanded','false');}});
+const icons={menu:'<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>', 'arrow-right':'<svg viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>',instagram:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>'};
+document.querySelectorAll('[data-icon]').forEach(el=>{el.innerHTML=icons[el.dataset.icon]||'';el.setAttribute('aria-hidden','true');});
 </script>
-
-</body>
-</html>
+</body></html>

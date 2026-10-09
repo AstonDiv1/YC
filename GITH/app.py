@@ -40,7 +40,7 @@ logger = logging.getLogger("yc_digital.app")
 
 from flask import (
     Flask, render_template, request, jsonify,
-    redirect, url_for, session, send_from_directory, abort,
+    redirect, url_for, session, send_from_directory, abort, Response,
 )
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -59,6 +59,16 @@ app.config.update(
 CONTACT_EMAIL_ONLY = os.environ.get("CONTACT_EMAIL_ONLY", "0").lower() in {"1", "true", "yes"}
 REQUIRE_EMAIL_DELIVERY = os.environ.get("REQUIRE_EMAIL_DELIVERY", "0").lower() in {"1", "true", "yes"}
 MAX_EMAIL_ATTACHMENT_BYTES = 16 * 1024 * 1024
+
+# Use the configured public origin, never the incoming Host header, for indexing.
+PUBLIC_SITE_URL = os.environ.get("PUBLIC_SITE_URL", "https://yc-digital.onrender.com").rstrip("/")
+_public_origin = urlsplit(PUBLIC_SITE_URL)
+if (_public_origin.scheme != "https" or not _public_origin.hostname
+        or _public_origin.username or _public_origin.password
+        or _public_origin.path or _public_origin.query or _public_origin.fragment):
+    raise ValueError("PUBLIC_SITE_URL doit être une origine HTTPS sans chemin ni identifiants.")
+# Public proof supplied by Search Console for the YC Digital account (not a secret).
+GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "gxXhVr42bB7PUHCqtEVOZbIkh2FBbsm6MEVsSFQdhzI")
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
@@ -177,7 +187,16 @@ def _csrf_token() -> str:
 
 @app.context_processor
 def _inject_template_helpers():
-    return {"csrf_token": _csrf_token}
+    return {
+        "csrf_token": _csrf_token,
+        "public_site_url": PUBLIC_SITE_URL,
+        "google_site_verification": GOOGLE_SITE_VERIFICATION,
+        "website_schema": {
+            "@context": "https://schema.org", "@type": "WebSite",
+            "name": "YC Digital", "alternateName": "YC DIGITAL",
+            "url": PUBLIC_SITE_URL + "/", "inLanguage": "fr-FR",
+        },
+    }
 
 
 def _csrf_is_valid() -> bool:
@@ -242,6 +261,9 @@ def _security_headers(response):
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    if (request.path.startswith(("/api/", "/" + ADMIN_URL_SLUG, "/static/demos/"))
+            or request.path == "/healthz" or response.status_code >= 400):
+        response.headers.setdefault("X-Robots-Tag", "noindex, nofollow")
     return response
 
 
@@ -322,7 +344,23 @@ def healthz():
 
 @app.route("/conditions-utilisation")
 def conditions_utilisation():
-    return render_template("conditions.html")
+    return render_template("conditions.html", contact_email_only=CONTACT_EMAIL_ONLY)
+
+
+@app.get("/robots.txt")
+def robots_txt():
+    return Response("User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: "
+                    + PUBLIC_SITE_URL + "/sitemap.xml\n", mimetype="text/plain")
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml():
+    # Only the real studio homepage is indexed; the fictive demo stays excluded.
+    from xml.etree.ElementTree import Element, SubElement, tostring
+    root = Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
+    entry = SubElement(root, "url")
+    SubElement(entry, "loc").text = PUBLIC_SITE_URL + "/"
+    return Response(tostring(root, encoding="utf-8", xml_declaration=True), mimetype="application/xml")
 
 
 # ---------------------------------------------------------------------------
