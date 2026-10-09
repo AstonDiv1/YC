@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://render.com/schema/render.yaml.json
-# Initial launch: no recurring compute charge; contact directly by email.
-# Do not enable stored forms on this plan without durable storage.
+# Free launch: complete requests are transmitted to the owner's mailbox.
+# SQLite admin history requires a persistent disk to survive redeployments.
 services:
   - type: web
     name: yc-digital
@@ -22,7 +22,13 @@ services:
       - key: SESSION_COOKIE_SECURE
         value: "1"
       - key: CONTACT_EMAIL_ONLY
+        value: "0"
+      - key: REQUIRE_EMAIL_DELIVERY
         value: "1"
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        value: "YC Digital <onboarding@resend.dev>"
       - key: ADMIN_EMAIL
         value: yc.digital33@gmail.com
       - key: LOG_LEVEL

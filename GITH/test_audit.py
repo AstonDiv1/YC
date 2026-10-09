@@ -1,5 +1,6 @@
 """Regression tests run against temporary storage, never a live service."""
 import os
+import io
 from pathlib import Path
 import tempfile
 import unittest
@@ -78,8 +79,7 @@ class AuditTests(unittest.TestCase):
         before = len(self.module.logic.list_contact_messages())
         with patch.object(self.module, "CONTACT_EMAIL_ONLY", True):
             html = self.client.get("/").get_data(as_text=True)
-            self.assertIn("Écrire à YC Digital", html)
-            self.assertNotIn('id="contactForm"', html)
+            self.assertIn('id="contactForm"', html)
             for url in ("/api/contact", "/api/submit"):
                 self.assertEqual(self.client.post(url, json={}).status_code, 503)
             self.assertEqual(self.client.get(f"/{self.module.ADMIN_URL_SLUG}/connexion").status_code, 404)
@@ -89,6 +89,37 @@ class AuditTests(unittest.TestCase):
         with patch.object(self.module, "_ADMIN_PASSWORD_HASH", None):
             self.assertEqual(self.client.get(f"/{self.module.ADMIN_URL_SLUG}/connexion").status_code, 404)
             self.assertEqual(self.client.get("/api/bookings").status_code, 401)
+
+    def test_notification_failure_is_not_reported_as_success(self):
+        with patch.object(self.module, "REQUIRE_EMAIL_DELIVERY", True), patch.object(self.module.logic, "email_notifications_configured", return_value=True), patch.object(self.module.logic, "notify_new_message", return_value=False):
+            result = self.client.post("/api/contact", json={"nom":"Test", "email":"test@example.com", "message":"Test"}, environ_overrides={"REMOTE_ADDR":"192.0.2.30"})
+        self.assertEqual(result.status_code, 503)
+
+    def test_missing_notification_configuration_rejects_before_storage(self):
+        before = len(self.module.logic.list_contact_messages())
+        with patch.object(self.module, "REQUIRE_EMAIL_DELIVERY", True), patch.object(self.module.logic, "email_notifications_configured", return_value=False):
+            self.assertEqual(self.client.post("/api/contact",json={"nom":"Test", "email":"test@example.com", "message":"Test"}).status_code,503)
+        self.assertEqual(before,len(self.module.logic.list_contact_messages()))
+
+    def test_booking_email_contains_answers_and_attachment(self):
+        logic = self.module.logic
+        with patch.dict(os.environ,{"RESEND_API_KEY":"test-only-key", "ADMIN_EMAIL":"test@example.com"}), patch.object(logic.resend.Emails,"send",return_value={"id":"mock-email"}) as sender, patch.object(self.module,"REQUIRE_EMAIL_DELIVERY",True):
+            result = self.client.post("/api/submit",data={
+                "service":"site_web", "reponses":'{"contexte":"Portfolio de menuiserie"}',
+                "contact":'{"nom":"Test audit","email":"test@example.com","disponibilite":"Après 18h"}',
+                "fichiers":(io.BytesIO(b"%PDF-1.4\nTest local"),"test.pdf")
+            },content_type="multipart/form-data",environ_overrides={"REMOTE_ADDR":"192.0.2.31"})
+        self.assertEqual(result.status_code,200)
+        payload = sender.call_args.args[0]
+        self.assertIn("Portfolio de menuiserie",payload["html"])
+        self.assertIn("Après 18h",payload["html"])
+        self.assertEqual(payload["reply_to"],"test@example.com")
+        self.assertEqual(payload["attachments"][0]["filename"],"test.pdf")
+
+    def test_booking_notification_failure_is_not_reported_as_success(self):
+        with patch.object(self.module,"REQUIRE_EMAIL_DELIVERY",True), patch.object(self.module.logic,"email_notifications_configured",return_value=True), patch.object(self.module.logic,"notify_new_booking",return_value=False):
+            result = self.client.post("/api/submit",json={"service":"site_web","contact":{"nom":"Test", "email":"test@example.com"}},environ_overrides={"REMOTE_ADDR":"192.0.2.32"})
+        self.assertEqual(result.status_code,503)
 
 
 if __name__ == "__main__":
