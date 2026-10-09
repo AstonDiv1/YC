@@ -1,0 +1,32 @@
+<header id="siteHeader">
+  <div class="container nav">
+    <a href="{% if legal_page %}/{% endif %}#top" class="brand">
+      <span class="brand-mark"><img src="/static/img/brand-mark.png" alt="" width="44" height="44"></span>
+      <span>YC Digital<small>Studio digital</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="{% if legal_page %}/{% endif %}#services">Services</a>
+      <a href="{% if legal_page %}/{% endif %}#fonctionnement">Méthode</a>
+      <a href="{% if legal_page %}/{% endif %}#histoire">Studio</a>
+      <a href="{% if legal_page %}/{% endif %}#faq">FAQ</a>
+      <a href="{% if legal_page %}/{% endif %}#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      {% if legal_page %}<a class="btn btn-primary" href="/#contact">
+        Démarrer un projet <span class="icon" data-icon="arrow-right"></span>
+      </a>{% else %}<button class="btn btn-primary" onclick="ouvrirQuestionnaire()">
+        Démarrer un projet <span class="icon" data-icon="arrow-right"></span>
+      </button>{% endif %}
+      <button class="menu-toggle" aria-label="Menu" onclick="toggleMobileNav()">
+        <span class="icon" data-icon="menu"></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="{% if legal_page %}/{% endif %}#services" onclick="toggleMobileNav()">Services</a>
+    <a href="{% if legal_page %}/{% endif %}#fonctionnement" onclick="toggleMobileNav()">Méthode</a>
+    <a href="{% if legal_page %}/{% endif %}#histoire" onclick="toggleMobileNav()">Studio</a>
+    <a href="{% if legal_page %}/{% endif %}#faq" onclick="toggleMobileNav()">FAQ</a>
+    <a href="{% if legal_page %}/{% endif %}#contact" onclick="toggleMobileNav()">Contact</a>
+  </div>
+</header>
