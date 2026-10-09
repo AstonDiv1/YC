@@ -56,6 +56,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=os.environ.get("SESSION_COOKIE_SECURE", "0").lower() in {"1", "true", "yes"},
 )
+CONTACT_EMAIL_ONLY = os.environ.get("CONTACT_EMAIL_ONLY", "0").lower() in {"1", "true", "yes"}
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
@@ -66,10 +67,11 @@ app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 
 _ADMIN_PASSWORD_HASH = os.environ.get("ADMIN_PASSWORD_HASH")
 if not _ADMIN_PASSWORD_HASH:
-    _plain = os.environ.get("ADMIN_PASSWORD", "change-moi")
-    _ADMIN_PASSWORD_HASH = generate_password_hash(_plain)
-    if _plain == "change-moi":
-        logger.warning("Mot de passe admin par défaut ('change-moi') utilisé. Définis la variable d'environnement ADMIN_PASSWORD avant de mettre le site en ligne.")
+    _plain = os.environ.get("ADMIN_PASSWORD", "")
+    if _plain and _plain != "change-moi":
+        _ADMIN_PASSWORD_HASH = generate_password_hash(_plain)
+    else:
+        logger.warning("Administration désactivée : configurez un mot de passe administrateur.")
 
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 
@@ -151,6 +153,7 @@ def _sanitize_contact(raw: dict) -> dict:
         "email": _clean_text(raw.get("email"), 255).lower(),
         "telephone": _clean_text(raw.get("telephone"), 40),
         "ville": _clean_text(raw.get("ville"), 120),
+        "disponibilite": _clean_text(raw.get("disponibilite"), 200),
         "message": _clean_text(raw.get("message"), 2000),
     }
 
@@ -206,6 +209,8 @@ def _admin_remaining_attempts() -> int:
 # ---------------------------------------------------------------------------
 
 def _is_authorized() -> bool:
+    if not _ADMIN_PASSWORD_HASH or CONTACT_EMAIL_ONLY:
+        return False
     if session.get("admin_logged_in"):
         return True
     token = request.args.get("token")
@@ -305,7 +310,12 @@ def _ensure_db():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", contact_email_only=CONTACT_EMAIL_ONLY)
+
+
+@app.route("/healthz")
+def healthz():
+    return jsonify({"status": "ok"})
 
 
 @app.route("/conditions-utilisation")
@@ -324,6 +334,8 @@ def api_config():
 
 @app.route("/api/submit", methods=["POST"])
 def api_submit():
+    if CONTACT_EMAIL_ONLY:
+        return _json_error("Contactez-nous par e-mail : yc.digital33@gmail.com.", 503)
     allowed, retry_after = _check_public_rate_limit()
     if not allowed:
         return _json_error(
@@ -350,7 +362,12 @@ def api_submit():
         uploaded = request.files.getlist("fichiers")
     else:
         data = request.get_json(silent=True) or {}
-        service = (data.get("service") or "").strip()
+        if not isinstance(data, dict):
+            return _json_error("Format de la demande invalide.", 400)
+        service = data.get("service") or ""
+        if not isinstance(service, str):
+            return _json_error("Service invalide.", 400)
+        service = service.strip()
         reponses = data.get("reponses", {}) or {}
         contact = data.get("contact", {}) or {}
         uploaded = []
@@ -410,6 +427,8 @@ def api_submit():
 
 @app.route("/api/contact", methods=["POST"])
 def api_contact():
+    if CONTACT_EMAIL_ONLY:
+        return _json_error("Contactez-nous par e-mail : yc.digital33@gmail.com.", 503)
     allowed, retry_after = _check_public_rate_limit()
     if not allowed:
         return _json_error(
@@ -419,6 +438,8 @@ def api_contact():
         )
 
     data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return _json_error("Format du message invalide.", 400)
     nom = _clean_text(data.get("nom"), 100)
     email = _clean_text(data.get("email"), 255).lower()
     message = _clean_text(data.get("message"), 2000)
@@ -499,6 +520,8 @@ def admin_dashboard():
 @app.route(f"/{ADMIN_URL_SLUG}/connexion", methods=["GET", "POST"], endpoint="admin_login")
 @app.route(f"/{ADMIN_URL_SLUG}/login", methods=["GET", "POST"])
 def admin_login():
+    if not _ADMIN_PASSWORD_HASH or CONTACT_EMAIL_ONLY:
+        abort(404)
     erreur = None
     status = 200
 
