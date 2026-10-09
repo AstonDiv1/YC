@@ -727,6 +727,7 @@ footer{
   color: rgba(244,241,234,0.5); flex-wrap:wrap; gap: 12px;
   font-family: var(--font-mono); letter-spacing: 0.06em;
 }
+.footer-bottom p{ color:rgba(244,241,234,.72); }
 
 @media (max-width: 900px){ .footer-grid{ grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px){ .footer-grid{ grid-template-columns: 1fr; gap: 32px; } }
@@ -1226,6 +1227,12 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
 .svc .foot .price small{ margin-top:6px; max-width:26ch; line-height:1.55; color:var(--muted); }
 .pillar .num,.svc .index,.stat .k{ letter-spacing:.06em; }
 :focus-visible{ outline:3px solid var(--accent); outline-offset:4px; }
+@media(pointer:coarse){
+  body{ -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
+  input,textarea,[contenteditable],a[href^="mailto:"]{
+    -webkit-user-select:text; user-select:text;
+  }
+}
 @media(max-width:720px){
   .hero h1{ font-size:clamp(2.1rem,7.5vw,2.65rem); }
   .hero .lead{ line-height:1.65; }
@@ -1396,7 +1403,7 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
           <li><span class="icon" data-icon="check"></span> Suivi personnalisé — un interlocuteur dédié</li>
         </ul>
         <div class="foot">
-          <span class="price">à partir de 250 €<small style="display:block;font-size:.75rem;font-weight:400;">Vitrine simple · périmètre défini au devis</small></span>
+          <span class="price">à partir de 250 €<small style="display:block;font-size:.75rem;font-weight:400;">Une page simple, contenus fournis · options au devis</small></span>
           <button class="link" onclick="ouvrirQuestionnaire('site')">Parler de mon site <span class="icon" data-icon="arrow-right"></span></button>
         </div>
       </article>
@@ -1433,6 +1440,13 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
           <button class="link" onclick="ouvrirQuestionnaire('pc')">Parler de mon PC <span class="icon" data-icon="arrow-right"></span></button>
         </div>
       </article>
+    </div>
+    <div class="reveal" style="margin-top:28px;padding:24px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div style="max-width:62ch;">
+        <h3 style="margin-bottom:8px;">À quoi peut ressembler une vitrine simple ?</h3>
+        <p>Un exemple de présentation pour un artisan : ses services, ses réalisations et un contact facile. Il s'agit d'une démonstration fictive, sans client associé.</p>
+      </div>
+      <a class="btn btn-outline" href="/static/demos/artisan.html" target="_blank" rel="noopener">Voir la démonstration <span class="icon" data-icon="arrow-right"></span></a>
     </div>
   </div>
 </section>
