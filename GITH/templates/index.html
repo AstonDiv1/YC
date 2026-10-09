@@ -1241,6 +1241,66 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
   .step{ padding-left:0; border-left:0; }
   .step:first-child{ padding-left:0; border-left:0; }
 }
+
+/* Accueil choisi : démonstration sur ordinateur et téléphone. */
+
+.proposal-visual{min-width:0;position:relative}
+.proposal-caption{font-size:.78rem;color:var(--muted);text-align:center;margin-top:18px}
+.device-browser{border:1px solid #d7dce5;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 24px 50px -28px #0b122944}
+.browser-toolbar{height:34px;background:#f0f2f6;display:flex;align-items:center;gap:6px;padding:0 12px;font-size:.65rem;color:#7b8290;border-bottom:1px solid #e2e5eb}
+.browser-toolbar i{width:5px;height:5px;border-radius:50%;background:#bac1cb}
+.browser-toolbar span{margin-left:10px;background:white;padding:3px 12px;border-radius:4px;flex:1;text-align:center}
+.iframe-crop{overflow:hidden;position:relative;pointer-events:none}
+.iframe-crop iframe{border:0;display:block;transform-origin:top left}
+.web-a{height:308px}.web-a iframe{width:960px;height:1000px;transform:scale(.47)}
+.device-phone{position:absolute;right:-8px;bottom:6px;width:157px;border:7px solid #0b1229;border-radius:26px;background:#fff;overflow:hidden;box-shadow:0 16px 40px -20px #0b122966}
+.device-phone:before{content:'';display:block;height:12px;background:#0b1229}
+.phone-a{height:300px}.phone-a iframe{width:390px;height:1300px;transform:scale(.365)}
+.proposal-a{padding:20px 48px 60px 0;background:radial-gradient(ellipse at 60% 52%,#e4ebf7 0%,transparent 67%);min-height:390px}
+.visual-tag{position:absolute;left:22px;bottom:3px;display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--paper);border:1px solid var(--line);border-radius:9px;font-size:.8rem;box-shadow:0 8px 20px -14px #0b122933}
+.proposal-a .proposal-caption{position:absolute;left:0;bottom:-28px;width:100%}
+
+/* Base mobile commune aux trois propositions. */
+@media(max-width:720px){
+  :root{--gutter:20px}
+  .hero{padding:32px 0 52px}.hero-grid{gap:30px}
+  .hero .eyebrow{display:flex;justify-content:center;letter-spacing:.04em;font-size:.68rem}
+  .hero h1{font-size:clamp(2.1rem,8.9vw,2.65rem);line-height:1.1;max-width:16ch;text-align:center;margin:18px auto 0!important}
+  .hero .lead{font-size:.98rem;line-height:1.65;max-width:36ch;text-align:center;margin:18px auto 0}
+  .hero-actions{max-width:350px;margin:24px auto 0;align-items:stretch}
+  .hero-meta{display:flex;align-items:center;justify-content:center;margin:24px auto 0;padding-top:20px;gap:10px;max-width:340px}
+  .hero-meta > div{font-size:.78rem;justify-content:center}
+  .section,.section+.section{padding:54px 0}
+  .section-head,.section-head.stack{text-align:center;justify-items:center;gap:14px;margin-bottom:30px}
+  .section-head .eyebrow,.section-head.stack .eyebrow{justify-content:center}
+  .section-head h2,.section-head.stack h2{max-width:21ch;margin:12px auto 0!important;font-size:1.85rem;line-height:1.16}
+  .section-head .side{max-width:35ch;text-align:center;font-size:.94rem;line-height:1.65}
+  .pillars{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .pillar{padding:20px 15px;text-align:center}.pillar .num{display:none}
+  .pillar .icon-pill{margin:0 auto 14px;width:38px;height:38px}
+  .pillar h3{font-size:1.1rem;line-height:1.2;margin:8px 0}.pillar p{font-size:.86rem;line-height:1.6}
+  .services-grid{gap:20px}.svc{padding:26px 24px;border-radius:18px;box-shadow:0 10px 25px -24px #0b122944}
+  .svc>.icon-pill{margin:0 auto}.svc h3,.svc p.desc{text-align:center}.svc h3{font-size:1.42rem}.svc p.desc{font-size:.94rem;line-height:1.65}
+  .svc ul li{font-size:.9rem;line-height:1.6}.svc .foot{align-items:center;padding-top:20px;gap:18px}
+  .svc .foot .price{text-align:center;width:100%;font-size:1.45rem}
+  .svc .foot .price small{font-size:.77rem!important;max-width:30ch!important;margin:7px auto 0;line-height:1.55}
+  .svc .foot .link{width:100%;justify-content:center;gap:10px;font-size:.93rem;padding:14px}
+  .svc .foot .link .icon{margin:0}
+  .demo-banner{text-align:center;justify-content:center!important;padding:24px!important;gap:18px!important}.demo-banner h3{font-size:1.23rem}.demo-banner p{font-size:.9rem;line-height:1.65}.demo-banner .btn{width:100%}
+  .process{gap:0}.step,.step:first-child{padding:22px 0;border-left:0;text-align:center}.step h3{font-size:1.3rem}.step p{font-size:.92rem;max-width:33ch;margin:0 auto;line-height:1.65}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:0}.stat{display:block;text-align:center;padding:16px 8px;border-bottom:0;border-right:1px solid var(--line)}.stat:last-child{border:0}
+  .stat .k{font-size:.61rem;letter-spacing:.02em;margin-bottom:12px}.stat .v{font-size:2.1rem}.stat p{font-size:.72rem;line-height:1.5;margin-top:12px}
+  .histoire h2{font-size:1.85rem;text-align:center;max-width:20ch;margin:12px auto 0!important}.histoire .eyebrow{display:flex;justify-content:center}.histoire p{font-size:.95rem;line-height:1.7}
+  .faq summary{font-size:.96rem;line-height:1.4}.faq details{padding:18px 2px}
+  .contact-item{align-items:center;padding:18px}.contact-item p{overflow-wrap:anywhere}.contact-form h3,.contact-form .sub{text-align:center}.contact-form{padding:26px 20px}.contact-form h3{font-size:1.4rem}
+  footer{padding:42px 0 28px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 16px;text-align:center}.footer-brand,.footer-grid>div:last-child{grid-column:1/-1}.footer-brand .brand{justify-content:center}.footer-brand p{max-width:32ch;margin:16px auto 0;font-size:.89rem}.footer-grid ul a,.footer-grid ul button{font-size:.88rem}.footer-bottom{align-items:center;text-align:center;gap:12px}.footer-bottom p{font-size:.72rem;letter-spacing:0;line-height:1.6}
+  .proposal-a{padding:10px 45px 52px 0;min-height:308px;margin:10px 0 30px}.web-a{height:221px}.web-a iframe{transform:scale(.32)}.device-phone{width:123px;right:-4px;bottom:6px;border-width:6px;border-radius:23px}.phone-a{height:231px}.phone-a iframe{transform:scale(.282)}.visual-tag{left:8px;bottom:-5px;font-size:.72rem;padding:9px 12px}.proposal-a .proposal-caption{bottom:-35px;font-size:.7rem}
+}
+@media(max-width:350px){.pillars{grid-template-columns:1fr}.pillar p{font-size:.93rem}.proposal-a .device-phone{width:111px}.phone-a iframe{transform:scale(.252)}}
+
+.proposal-a{max-width:560px;width:100%;margin-left:auto;margin-right:auto}
+.proposal-caption a{text-underline-offset:3px}
+
 </style>
 </head>
 <body>
@@ -1304,30 +1364,12 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
       </div>
     </div>
 
-    <aside class="studio-card reveal reveal-delay-2" aria-label="Aperçu du studio">
-      <div class="row">
-        <span>YC Digital</span>
-        <span>Une équipe de deux</span>
-      </div>
-      <h3>Une petite équipe,<br>un échange direct.</h3>
-      <div class="services-mini">
-        <div>
-          <span class="k"><span class="icon" data-icon="web"></span> Sites internet</span>
-          <span class="v">Présenter votre activité</span>
-        </div>
-        <div>
-          <span class="k"><span class="icon" data-icon="app"></span> Applications</span>
-          <span class="v">Android · Windows</span>
-        </div>
-        <div>
-          <span class="k"><span class="icon" data-icon="cpu"></span> Montage PC</span>
-          <span class="v">Conseil et montage à Bordeaux</span>
-        </div>
-      </div>
-      <div class="foot">
-        <span>Votre projet commence par un échange</span>
-      </div>
-    </aside>
+    <aside class="proposal-visual proposal-a" aria-label="Aperçu d'une vitrine sur ordinateur et mobile">
+  <div class="device-browser"><div class="browser-toolbar"><i></i><i></i><i></i><span>Exemple de vitrine</span></div><div class="iframe-crop web-a"><iframe sandbox="allow-same-origin" src="/static/demos/artisan.html" title="Exemple fictif sur ordinateur" tabindex="-1" aria-hidden="true"></iframe></div></div>
+  <div class="device-phone"><div class="iframe-crop phone-a"><iframe sandbox="allow-same-origin" src="/static/demos/artisan.html" title="Exemple fictif sur téléphone" tabindex="-1" aria-hidden="true"></iframe></div></div>
+  <div class="visual-tag"><span class="icon" data-icon="check"></span>Un site soigné, sur tous les écrans</div>
+  <p class="proposal-caption">Exemple fictif de vitrine · <a href="/static/demos/artisan.html">Découvrir le site complet</a></p>
+</aside>
   </div>
 </section>
 
@@ -1350,25 +1392,25 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
       <div class="pillar reveal">
         <div class="num">01</div>
         <span class="icon-pill"><span class="icon" data-icon="target"></span></span>
-        <h3>Un projet à votre mesure</h3>
+        <h3>Sur mesure</h3>
         <p>Nous adaptons le site ou l'application à votre activité et vous livrons les sources. Les fonctionnalités, les livrables et les droits associés sont précisés dans le devis.</p>
       </div>
       <div class="pillar reveal reveal-delay-1">
         <div class="num">02</div>
         <span class="icon-pill"><span class="icon" data-icon="bolt"></span></span>
-        <h3>Un échange direct</h3>
+        <h3>À votre écoute</h3>
         <p>Un premier échange simple, une réponse sous 48h, un suivi transparent du premier échange à la livraison.</p>
       </div>
       <div class="pillar reveal reveal-delay-2">
         <div class="num">03</div>
         <span class="icon-pill"><span class="icon" data-icon="handshake"></span></span>
-        <h3>Un suivi après la livraison</h3>
+        <h3>Après livraison</h3>
         <p>Nous vous aidons à prendre en main votre site ou votre application. L'hébergement, la maintenance et les évolutions sont précisés séparément.</p>
       </div>
       <div class="pillar reveal reveal-delay-3">
         <div class="num">04</div>
         <span class="icon-pill"><span class="icon" data-icon="shield"></span></span>
-        <h3>Un devis détaillé</h3>
+        <h3>Devis détaillé</h3>
         <p>Avant de commencer, vous savez ce qui est inclus, ce qui est en option et ce que coûte le suivi. Le calendrier est confirmé dans le devis.</p>
       </div>
     </div>
@@ -1441,10 +1483,10 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
         </div>
       </article>
     </div>
-    <div class="reveal" style="margin-top:28px;padding:24px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+    <div class="reveal demo-banner" style="margin-top:28px;padding:24px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
       <div style="max-width:62ch;">
-        <h3 style="margin-bottom:8px;">À quoi peut ressembler une vitrine simple ?</h3>
-        <p>Un exemple de présentation pour un artisan : ses services, ses réalisations et un contact facile. Il s'agit d'une démonstration fictive, sans client associé.</p>
+        <h3 style="margin-bottom:8px;">Explorez un exemple de site artisan</h3>
+        <p>Services détaillés, projets illustrés, méthode et formulaire : découvrez une présentation complète sur ordinateur et téléphone. Démonstration fictive, sans client associé ; le périmètre d'un site est défini au devis.</p>
       </div>
       <a class="btn btn-outline" href="/static/demos/artisan.html" target="_blank" rel="noopener">Voir la démonstration <span class="icon" data-icon="arrow-right"></span></a>
     </div>
@@ -2262,5 +2304,22 @@ window.soumettre = soumettre;
 /* Fermer modal avec Escape */
 document.addEventListener('keydown', (e) => { if(e.key === 'Escape') fermerQuestionnaire(); });
 </script>
+
+<script>
+// Les deux aperçus suivent la largeur disponible sans déborder sur mobile.
+document.querySelectorAll('.proposal-a .iframe-crop').forEach(function(crop){
+  var frame=crop.querySelector('iframe');
+  var isPhone=crop.classList.contains('phone-a');
+  function fit(){
+    var scale=crop.clientWidth/(isPhone?390:960);
+    frame.style.transform='scale('+scale+')';
+    crop.style.height=(scale*(isPhone?820:660))+'px';
+  }
+  fit();
+  if(window.ResizeObserver){new ResizeObserver(fit).observe(crop);}
+  else{window.addEventListener('resize',fit);}
+});
+</script>
+
 </body>
 </html>
