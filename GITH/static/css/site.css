@@ -1273,7 +1273,7 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
   .svc .foot .link{width:100%;justify-content:center;gap:10px;font-size:.93rem;padding:14px}
   .svc .foot .link .icon{margin:0}
   .demo-banner{text-align:center;justify-content:center!important;padding:24px!important;gap:18px!important}.demo-banner h3{font-size:1.23rem}.demo-banner p{font-size:.9rem;line-height:1.65}.demo-banner .btn{width:100%}
-  .process{gap:0}.step,.step:first-child{padding:22px 0;border-left:0;text-align:center}.step h3{font-size:1.3rem}.step p{font-size:.92rem;max-width:33ch;margin:0 auto;line-height:1.65}
+  .process{gap:0}.step,.step:first-child{padding:22px 0;border-left:0;text-align:center}.step .k{justify-content:center}.step h3{font-size:1.3rem}.step p{font-size:.92rem;max-width:33ch;margin:0 auto;line-height:1.65}
   .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:0}.stat{display:block;text-align:center;padding:16px 8px;border-bottom:0;border-right:1px solid var(--line)}.stat:last-child{border:0}
   .stat .k{font-size:.61rem;letter-spacing:.02em;margin-bottom:12px}.stat .v{font-size:2.1rem}.stat p{font-size:.72rem;line-height:1.5;margin-top:12px}
   .histoire h2{font-size:1.85rem;text-align:center;max-width:20ch;margin:12px auto 0!important}.histoire .eyebrow{display:flex;justify-content:center}.histoire p{font-size:.95rem;line-height:1.7}
