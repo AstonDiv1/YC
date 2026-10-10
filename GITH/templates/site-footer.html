@@ -30,7 +30,7 @@
         <ul>
           <li>{% if legal_page %}<a href="/#contact">Demander un devis</a>{% else %}<button onclick="ouvrirQuestionnaire()">Demander un devis</button>{% endif %}</li>
           <li><a href="{% if legal_page %}/{% endif %}#contact">{% if contact_email_only %}Contact par e-mail{% else %}Formulaire de contact{% endif %}</a></li>
-          <li><a href="mailto:yc.digital33@gmail.com">yc.digital33@gmail.com</a></li>
+          <li><a href="mailto:{{ public_contact_email }}">{{ public_contact_email }}</a></li>
           <li><a href="https://instagram.com/yc_digital33" target="_blank" rel="noopener"><span class="icon" data-icon="instagram" style="vertical-align:middle;margin-right:6px;"></span>@yc_digital33</a></li>
         </ul>
       </div>

@@ -951,6 +951,7 @@ def send_email_notification(subject: str, body_text: str, *, reply_to=None, atta
         "from": cfg["from"],
         "to": cfg["admin_email"],
         "subject": subject,
+        "text": body_text,
         "html": html_body,
     }
     if reply_to:
