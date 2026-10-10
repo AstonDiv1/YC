@@ -1300,4 +1300,3 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
   .footer-brand .site-brand-logo{ width:252px; margin-inline:auto; }
 }
 @media(max-width:360px){ header .site-brand-logo{ width:174px; } }
-
