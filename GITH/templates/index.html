@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YC Digital — Création de sites internet et applications à Bordeaux</title>
+<title>Numéryl — Création de sites internet et applications à Bordeaux</title>
 <meta name="description" content="Sites internet pour présenter votre activité et faciliter les demandes de devis. Applications Android et Windows sur-mesure. Accompagnement en France à distance.">
 <link rel="canonical" href="{{ public_site_url }}/">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:site_name" content="YC Digital">
-<meta property="og:title" content="YC Digital — Création de sites internet et d'applications">
+<meta property="og:site_name" content="Numéryl">
+<meta property="og:title" content="Numéryl — Création de sites internet et d'applications">
 <meta property="og:description" content="Une équipe de deux pour votre site internet ou votre application Android et Windows. À Bordeaux et à distance en France.">
 <meta property="og:url" content="{{ public_site_url }}/">
-<meta property="og:image" content="{{ public_site_url }}/static/img/brand-mark.png">
+<meta property="og:image" content="{{ public_site_url }}/static/img/numeryl-social.png">
 {% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
 <script type="application/ld+json">{{ website_schema | tojson }}</script>
 <meta name="theme-color" content="#0B1229">
-<link rel="icon" href="/static/img/logo-icon.png" type="image/png">
+<link rel="icon" href="/static/img/numeryl-symbol.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/static/css/site.css?v=20261009">
+<link rel="stylesheet" href="/static/css/site.css?v=20261010-numeryl">
 </head>
 <body>
 
@@ -261,7 +261,7 @@
     <div class="reveal">
       <div class="eyebrow">Le studio</div>
       <h2 style="margin-top:14px;">Deux personnes pour vous accompagner.</h2>
-      <p style="margin-top:24px;">YC Digital est un projet en lancement. Nous travaillons à deux, avec des rôles complémentaires : le développement et la gestion du projet d'un côté, les échanges et le suivi de l'autre.</p>
+      <p style="margin-top:24px;">Numéryl est un projet en lancement. Nous travaillons à deux, avec des rôles complémentaires : le développement et la gestion du projet d'un côté, les échanges et le suivi de l'autre.</p>
       <p>Nous nous adressons aux artisans, indépendants et petites entreprises qui souhaitent un site ou un outil adapté à leur activité. Le premier échange nous permet de voir ce dont vous avez besoin et si nous pouvons vous aider.</p>
       <p>Nous pouvons travailler à distance partout en France. À Bordeaux, nous proposons aussi du conseil et du montage informatique.</p>
     </div>
@@ -299,7 +299,7 @@
     </div>
     <div class="faq reveal">
       <details>
-        <summary>Combien coûte réellement un projet chez YC Digital ?</summary>
+        <summary>Combien coûte réellement un projet chez Numéryl ?</summary>
         <p>Nos prix de départ concernent un périmètre simple : site vitrine à partir de 250 €, application Android ou Windows à partir de 450 €, montage PC à partir de 100 € hors composants. Les options, le nombre de pages et les fonctionnalités font l'objet d'un devis. L'e-commerce et les outils métier nécessitent un cadrage spécifique. Le nom de domaine, l'hébergement et la maintenance sont chiffrés séparément. Le devis précise le montant final et la TVA applicable.</p>
       </details>
       <details>
@@ -320,10 +320,10 @@
       </details>
       <details>
         <summary>Le code du projet m'appartient-il vraiment ?</summary>
-        <p>Oui, à 100 %. Contrairement aux plateformes type Wix, Squarespace ou Shopify où votre site "loue" une infrastructure fermée, nous développons vos projets en code natif (HTML, CSS, JavaScript, Python selon les besoins). À la livraison, nous vous fournissons l'intégralité des sources : vous pouvez les héberger où vous voulez, les faire évoluer par un autre prestataire, ou les archiver. Aucun verrou technique, aucune dépendance à YC Digital.</p>
+        <p>Oui, à 100 %. Contrairement aux plateformes type Wix, Squarespace ou Shopify où votre site "loue" une infrastructure fermée, nous développons vos projets en code natif (HTML, CSS, JavaScript, Python selon les besoins). À la livraison, nous vous fournissons l'intégralité des sources : vous pouvez les héberger où vous voulez, les faire évoluer par un autre prestataire, ou les archiver. Aucun verrou technique, aucune dépendance à Numéryl.</p>
       </details>
       <details>
-        <summary>Où en est YC Digital aujourd'hui ?</summary>
+        <summary>Où en est Numéryl aujourd'hui ?</summary>
         <p>Nous préparons le lancement de notre activité. Vous pouvez nous présenter votre besoin et échanger avec nous sans engagement. Le cadre professionnel et les conditions de réalisation seront précisés avant toute commande ; aucun paiement n'est demandé à ce stade.</p>
       </details>
     </div>
@@ -417,7 +417,7 @@
 
 <script>
 /* ============================================================
-   YC DIGITAL — JS
+   NUMÉRYL — JS
    Toute la logique parle au back-end Flask via /api/config,
    /api/submit et /api/contact. Aucun changement de contrat.
    ============================================================ */
@@ -616,7 +616,7 @@ async function chargerConfig(){
     const j = await r.json();
     CONFIG = j && j.services ? j : FALLBACK_CONFIG;
   } catch(e){
-    console.warn('[YC] /api/config indisponible, utilisation du fallback local.', e);
+    console.warn('[Numéryl] /api/config indisponible, utilisation du fallback local.', e);
     CONFIG = FALLBACK_CONFIG;
   }
   return CONFIG;
@@ -631,7 +631,7 @@ async function ouvrirQuestionnaire(serviceForce){
   const validForced = key && CONFIG.services && CONFIG.services[key];
   QSTATE = { service: validForced ? key : null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced: !!validForced };
   const ov = document.getElementById('overlay');
-  if(!ov){ console.error('[YC] #overlay introuvable'); return; }
+  if(!ov){ console.error('[Numéryl] #overlay introuvable'); return; }
   ov.classList.add('actif');
   document.body.style.overflow = 'hidden';
   renderStep();
@@ -797,7 +797,7 @@ function renderNav(showPrev, showNext, showSubmit){
 
 function choisirService(k){
   const key = normalizeServiceKey(k);
-  if(!CONFIG || !CONFIG.services || !CONFIG.services[key]){ console.warn('[YC] Service inconnu:', k); return; }
+  if(!CONFIG || !CONFIG.services || !CONFIG.services[key]){ console.warn('[Numéryl] Service inconnu:', k); return; }
   QSTATE.service = key; QSTATE.step = 0; QSTATE._svcForced = false;
   renderStep();
 }
@@ -897,7 +897,7 @@ async function soumettre(){
       </div>`;
     injectIcons(document.getElementById('modalContent'));
   } catch(err){
-    console.error('[YC] /api/submit a échoué', err);
+    console.error('[Numéryl] /api/submit a échoué', err);
     if(msg){ msg.textContent = err.message || 'Une erreur est survenue.'; msg.className='form-msg err'; msg.style.display='block'; }
   }
 }

@@ -67,7 +67,7 @@ if (_public_origin.scheme != "https" or not _public_origin.hostname
         or _public_origin.username or _public_origin.password
         or _public_origin.path or _public_origin.query or _public_origin.fragment):
     raise ValueError("PUBLIC_SITE_URL doit être une origine HTTPS sans chemin ni identifiants.")
-# Public proof supplied by Search Console for the YC Digital account (not a secret).
+# Public proof supplied by Search Console for the Numéryl account (not a secret).
 GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "gxXhVr42bB7PUHCqtEVOZbIkh2FBbsm6MEVsSFQdhzI")
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
@@ -193,7 +193,7 @@ def _inject_template_helpers():
         "google_site_verification": GOOGLE_SITE_VERIFICATION,
         "website_schema": {
             "@context": "https://schema.org", "@type": "WebSite",
-            "name": "YC Digital", "alternateName": "YC DIGITAL",
+            "name": "Numéryl", "alternateName": "NUMÉRYL",
             "url": PUBLIC_SITE_URL + "/", "inLanguage": "fr-FR",
         },
     }
@@ -282,7 +282,7 @@ def _handle_not_found(_exc):
         return _json_error("Ressource introuvable.", 404)
     html = (
         "<!doctype html><html lang='fr'><head><meta charset='utf-8'>"
-        "<title>Page introuvable — YC Digital</title>"
+        "<title>Page introuvable — Numéryl</title>"
         "<meta name='viewport' content='width=device-width,initial-scale=1'>"
         "<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;"
         "background:#FBF9F4;color:#0B1229;display:flex;align-items:center;justify-content:center;"
@@ -309,7 +309,7 @@ def _handle_internal_error(exc):
         )
     html = (
         "<!doctype html><html lang='fr'><head><meta charset='utf-8'>"
-        "<title>Erreur — YC Digital</title>"
+        "<title>Erreur — Numéryl</title>"
         "<meta name='viewport' content='width=device-width,initial-scale=1'>"
         "<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;"
         "background:#FBF9F4;color:#0B1229;display:flex;align-items:center;justify-content:center;"
