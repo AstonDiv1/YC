@@ -1,8 +1,7 @@
 <header id="siteHeader">
   <div class="container nav">
-    <a href="{% if legal_page %}/{% endif %}#top" class="brand">
-      <span class="brand-mark"><img src="/static/img/brand-mark.png" alt="" width="44" height="44"></span>
-      <span>YC Digital<small>Studio digital</small></span>
+    <a href="{% if legal_page %}/{% endif %}#top" class="brand" aria-label="Numéryl, accueil">
+      {% with brand_inverse=false %}{% include 'brand-logo.html' %}{% endwith %}
     </a>
     <nav class="nav-links" aria-label="Navigation principale">
       <a href="{% if legal_page %}/{% endif %}#services">Services</a>
@@ -30,3 +29,4 @@
     <a href="{% if legal_page %}/{% endif %}#contact" onclick="toggleMobileNav()">Contact</a>
   </div>
 </header>
+

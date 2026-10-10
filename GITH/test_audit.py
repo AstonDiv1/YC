@@ -30,7 +30,7 @@ class AuditTests(unittest.TestCase):
         cls.temp.cleanup()
 
     def test_public_pages_and_logo(self):
-        for url in ("/", "/conditions-utilisation", "/healthz", "/api/config", "/static/img/brand-mark.png"):
+        for url in ("/", "/conditions-utilisation", "/healthz", "/api/config", "/static/img/numeryl-logo.png"):
             with self.subTest(url=url):
                 with self.client.get(url) as response:
                     self.assertEqual(response.status_code, 200)
@@ -139,7 +139,7 @@ class AuditTests(unittest.TestCase):
 
     def test_legal_page_reuses_brand_and_has_working_project_links(self):
         html = self.client.get("/conditions-utilisation").get_data(as_text=True)
-        self.assertIn('src="/static/img/brand-mark.png"', html)
+        self.assertIn('src="/static/img/numeryl-logo.png"', html)
         self.assertIn('href="/#contact"', html)
         self.assertNotIn("ouvrirQuestionnaire", html)
         self.assertIn('name="robots" content="noindex,follow"', html)
@@ -151,3 +151,4 @@ class AuditTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

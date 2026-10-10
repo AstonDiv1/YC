@@ -1,5 +1,5 @@
 /* ============================================================
-   YC DIGITAL — Design system
+   NUMÉRYL — Design system
    Palette : off-white ivory / navy encre / accent sapphire
    Typo    : Fraunces (display, serif contemporain)
              Inter (texte)
@@ -1192,7 +1192,7 @@ a, button, .btn, summary, .option-item{
 
 
 /* Logo unique (dédupliqué depuis base64 x2) */
-:root{ --yc-logo: url("/static/img/brand-mark.png"); }
+:root{ --yc-logo: url("/static/img/numeryl-symbol.png"); }
 .brand-mark{ background-image: var(--yc-logo); background-size: contain; background-repeat: no-repeat; background-position: center; }
 
 /* Ajustements de lisibilité — palette et composition existantes conservées. */
@@ -1286,3 +1286,18 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
 
 .proposal-a{max-width:560px;width:100%;margin-left:auto;margin-right:auto}
 .proposal-caption a{text-underline-offset:3px}
+
+/* Numéryl: approved ribbon identity, shared across public pages. */
+:root{ --header-h: 80px; }
+.site-brand-logo{ display:block; position:relative; width:216px; flex:0 0 auto; }
+.site-brand-logo img{ display:block; width:100%; height:auto; }
+.site-brand-logo--inverse .site-brand-logo-image{ filter:brightness(0) invert(1); }
+.site-brand-logo .site-brand-logo-colour{ position:absolute; inset:0; width:100%; height:100%; clip-path:inset(0 68% 0 0); }
+.footer-brand .site-brand-logo{ width:270px; max-width:100%; }
+@media(max-width:720px){
+  :root{ --header-h:72px; }
+  header .site-brand-logo{ width:192px; }
+  .footer-brand .site-brand-logo{ width:252px; margin-inline:auto; }
+}
+@media(max-width:360px){ header .site-brand-logo{ width:174px; } }
+

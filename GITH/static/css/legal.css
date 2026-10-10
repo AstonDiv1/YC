@@ -1,4 +1,4 @@
-/* Legal page uses the shared YC Digital design system. */
+/* Legal page uses the shared Numéryl design system. */
 .legal-hero{padding-top:64px;padding-bottom:64px}
 .legal-back{display:block;width:fit-content;color:var(--muted);font-size:.88rem;margin-bottom:38px}
 .legal-hero .accent{color:var(--accent)}
@@ -33,3 +33,4 @@
 @media(max-width:1000px){.legal-layout{grid-template-columns:220px minmax(0,1fr);gap:32px}.legal-highlights>a{padding:22px}}
 @media(max-width:700px){.legal-hero{padding-top:32px;padding-bottom:36px;text-align:center}.legal-back{margin-bottom:28px}.legal-hero h1{font-size:2.55rem;margin:20px auto}.legal-intro{font-size:1rem}.legal-date{font-size:.66rem;margin:20px 0 28px}.legal-highlights{grid-template-columns:1fr;gap:12px;text-align:left}.legal-highlights>a{padding:20px 22px}.legal-highlights h2{font-size:1.25rem;margin:10px 0 6px}.legal-highlights p{font-size:.9rem}.legal-layout{grid-template-columns:1fr;gap:28px;padding-bottom:52px}.legal-toc{position:static;padding:20px 22px;border:1px solid var(--line);border-radius:16px;background:var(--ivory)}.legal-toc summary{margin:0}.legal-toc details[open] summary{margin-bottom:14px}.legal-toc ul{grid-template-columns:1fr 1fr;gap:0 14px}.legal-toc li a{font-size:.75rem;padding:9px 0}.legal-toc-contact{margin-top:16px;padding-top:16px}.legal-content section{padding:26px 0;scroll-margin-top:96px}.legal-content h2{font-size:1.4rem;gap:12px}.legal-content p,.legal-content li{font-size:.94rem;line-height:1.8}.legal-content .callout{padding:16px}.legal-content th,.legal-content td{padding:12px;font-size:.82rem}.legal-end{width:100%;justify-content:center}}
 @media(max-width:350px){.legal-hero h1{font-size:2.2rem}.legal-toc ul{grid-template-columns:1fr}.legal-content h2{font-size:1.25rem}}
+

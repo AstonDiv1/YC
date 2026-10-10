@@ -3,8 +3,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="brand" style="color: var(--paper);">
-          <span class="brand-mark" style="background-color: var(--paper);"><img src="/static/img/brand-mark.png" alt="" width="44" height="44"></span>
-          <span>YC Digital<small style="color: rgba(244,241,234,0.5);">Studio digital</small></span>
+          {% with brand_inverse=true %}{% include 'brand-logo.html' %}{% endwith %}
         </div>
         <p>Sites internet et applications Android et Windows pour les petites entreprises. Conseil et montage PC à Bordeaux. Une équipe de deux, en lancement.</p>
       </div>
@@ -37,7 +36,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© <span id="year"></span> YC Digital — Tous droits réservés.</p>
+      <p>© <span id="year"></span> Numéryl — Tous droits réservés.</p>
       <p>
         <a href="/conditions-utilisation"
            style="color: rgba(244,241,234,0.75); text-decoration: none; border-bottom: 1px solid rgba(244,241,234,0.25); padding-bottom: 2px; transition: color .2s, border-color .2s;"
@@ -46,8 +45,9 @@
           Conditions d'utilisation
         </a>
         <span style="color: rgba(244,241,234,0.3); margin: 0 10px;">·</span>
-        Conçu par YC Digital.
+        Conçu par Numéryl.
       </p>
     </div>
   </div>
 </footer>
+
