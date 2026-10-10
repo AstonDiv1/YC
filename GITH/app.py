@@ -62,6 +62,7 @@ MAX_EMAIL_ATTACHMENT_BYTES = 16 * 1024 * 1024
 
 # Use the configured public origin, never the incoming Host header, for indexing.
 PUBLIC_SITE_URL = os.environ.get("PUBLIC_SITE_URL", "https://yc-digital.onrender.com").rstrip("/")
+CANONICAL_REDIRECT_ENABLED = os.environ.get("CANONICAL_REDIRECT_ENABLED", "0").lower() in {"1", "true", "yes"}
 _public_origin = urlsplit(PUBLIC_SITE_URL)
 if (_public_origin.scheme != "https" or not _public_origin.hostname
         or _public_origin.username or _public_origin.password
@@ -71,6 +72,9 @@ if (_public_origin.scheme != "https" or not _public_origin.hostname
 GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "gxXhVr42bB7PUHCqtEVOZbIkh2FBbsm6MEVsSFQdhzI")
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+PUBLIC_CONTACT_EMAIL = os.environ.get("PUBLIC_CONTACT_EMAIL", "yc.digital33@gmail.com").strip()
+if not EMAIL_RE.fullmatch(PUBLIC_CONTACT_EMAIL):
+    raise ValueError("PUBLIC_CONTACT_EMAIL doit être une adresse e-mail valide.")
 
 # ---------------------------------------------------------------------------
 # CONFIGURATION ADMIN
@@ -190,6 +194,7 @@ def _inject_template_helpers():
     return {
         "csrf_token": _csrf_token,
         "public_site_url": PUBLIC_SITE_URL,
+        "public_contact_email": PUBLIC_CONTACT_EMAIL,
         "google_site_verification": GOOGLE_SITE_VERIFICATION,
         "website_schema": {
             "@context": "https://schema.org", "@type": "WebSite",
@@ -324,6 +329,17 @@ def _handle_internal_error(exc):
 
 
 @app.before_request
+def _redirect_public_pages_to_canonical_domain():
+    # Enable only after the custom domain's DNS and HTTPS have been verified.
+    # POST requests and API clients must never lose a submitted form through a redirect.
+    if (CANONICAL_REDIRECT_ENABLED and request.method in {"GET", "HEAD"}
+            and request.path != "/healthz" and not request.path.startswith("/api/")
+            and request.host.lower() != urlsplit(PUBLIC_SITE_URL).netloc.lower()):
+        path = request.full_path if request.query_string else request.path
+        return redirect(PUBLIC_SITE_URL + path, code=301)
+
+
+@app.before_request
 def _ensure_db():
     logic.init_db()
 
@@ -375,9 +391,9 @@ def api_config():
 @app.route("/api/submit", methods=["POST"])
 def api_submit():
     if CONTACT_EMAIL_ONLY:
-        return _json_error("Contactez-nous par e-mail : yc.digital33@gmail.com.", 503)
+        return _json_error(f"Contactez-nous par e-mail : {PUBLIC_CONTACT_EMAIL}.", 503)
     if REQUIRE_EMAIL_DELIVERY and not logic.email_notifications_configured():
-        return _json_error("L'envoi est momentanément indisponible. Écrivez-nous à yc.digital33@gmail.com.", 503)
+        return _json_error(f"L'envoi est momentanément indisponible. Écrivez-nous à {PUBLIC_CONTACT_EMAIL}.", 503)
     allowed, retry_after = _check_public_rate_limit()
     if not allowed:
         return _json_error(
@@ -464,7 +480,7 @@ def api_submit():
 
     notified = logic.notify_new_booking(booking_id, service, contact, recommandation, fichiers_sauves, reponses)
     if REQUIRE_EMAIL_DELIVERY and not notified:
-        return _json_error("Votre demande n'a pas pu être transmise par e-mail. Merci de réessayer ou de nous écrire à yc.digital33@gmail.com.", 503)
+        return _json_error(f"Votre demande n'a pas pu être transmise par e-mail. Merci de réessayer ou de nous écrire à {PUBLIC_CONTACT_EMAIL}.", 503)
 
     return jsonify({
         "booking_id": booking_id,
@@ -480,9 +496,9 @@ def api_submit():
 @app.route("/api/contact", methods=["POST"])
 def api_contact():
     if CONTACT_EMAIL_ONLY:
-        return _json_error("Contactez-nous par e-mail : yc.digital33@gmail.com.", 503)
+        return _json_error(f"Contactez-nous par e-mail : {PUBLIC_CONTACT_EMAIL}.", 503)
     if REQUIRE_EMAIL_DELIVERY and not logic.email_notifications_configured():
-        return _json_error("L'envoi est momentanément indisponible. Écrivez-nous à yc.digital33@gmail.com.", 503)
+        return _json_error(f"L'envoi est momentanément indisponible. Écrivez-nous à {PUBLIC_CONTACT_EMAIL}.", 503)
     allowed, retry_after = _check_public_rate_limit()
     if not allowed:
         return _json_error(
@@ -506,7 +522,7 @@ def api_contact():
     message_id = logic.save_contact_message(nom, email, message)
     notified = logic.notify_new_message(message_id, nom, email, message)
     if REQUIRE_EMAIL_DELIVERY and not notified:
-        return _json_error("Votre message n'a pas pu être transmis par e-mail. Merci de réessayer ou de nous écrire à yc.digital33@gmail.com.", 503)
+        return _json_error(f"Votre message n'a pas pu être transmis par e-mail. Merci de réessayer ou de nous écrire à {PUBLIC_CONTACT_EMAIL}.", 503)
 
     return jsonify({"message_id": message_id})
 

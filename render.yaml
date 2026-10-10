@@ -28,8 +28,15 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_FROM
-        value: "YC Digital <onboarding@resend.dev>"
+        value: "Numéryl <onboarding@resend.dev>"
       - key: ADMIN_EMAIL
         value: yc.digital33@gmail.com
+      # Keep these working defaults until the new domain and mailbox pass the launch checks.
+      - key: PUBLIC_SITE_URL
+        value: https://yc-digital.onrender.com
+      - key: PUBLIC_CONTACT_EMAIL
+        value: yc.digital33@gmail.com
+      - key: CANONICAL_REDIRECT_ENABLED
+        value: "0"
       - key: LOG_LEVEL
         value: INFO

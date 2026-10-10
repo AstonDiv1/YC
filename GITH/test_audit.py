@@ -112,6 +112,7 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(result.status_code,200)
         payload = sender.call_args.args[0]
         self.assertIn("Portfolio de menuiserie",payload["html"])
+        self.assertIn("Portfolio de menuiserie",payload["text"])
         self.assertIn("Après 18h",payload["html"])
         self.assertEqual(payload["reply_to"],"test@example.com")
         self.assertEqual(payload["attachments"][0]["filename"],"test.pdf")
@@ -147,6 +148,28 @@ class AuditTests(unittest.TestCase):
             with self.client.get(asset) as response:
                 self.assertEqual(response.status_code, 200)
                 self.assertIn("text/css", response.content_type)
+
+    def test_custom_domain_redirect_preserves_url_and_keeps_forms_and_health_available(self):
+        with patch.object(self.module, "PUBLIC_SITE_URL", "https://numeryl.fr"), patch.object(self.module, "CANONICAL_REDIRECT_ENABLED", True):
+            response = self.client.get("/conditions-utilisation?source=test", base_url="https://yc-digital.onrender.com")
+            self.assertEqual(response.status_code, 301)
+            self.assertEqual(response.headers["Location"], "https://numeryl.fr/conditions-utilisation?source=test")
+            self.assertEqual(self.client.head("/", base_url="https://www.numeryl.fr").status_code, 301)
+            self.assertEqual(self.client.get("/", base_url="https://numeryl.fr").status_code, 200)
+            for path in ("/healthz", "/api/config"):
+                self.assertEqual(self.client.get(path, base_url="https://yc-digital.onrender.com").status_code, 200)
+            self.assertEqual(self.client.post("/api/contact", json={}, base_url="https://yc-digital.onrender.com").status_code, 400)
+
+    def test_mailbox_switch_updates_pages_and_failure_contact_together(self):
+        with patch.object(self.module, "PUBLIC_CONTACT_EMAIL", "contact@numeryl.fr"):
+            for path in ("/", "/conditions-utilisation"):
+                html = self.client.get(path).get_data(as_text=True)
+                self.assertIn("mailto:contact@numeryl.fr", html)
+                self.assertNotIn("yc.digital33@gmail.com", html)
+            with patch.object(self.module, "REQUIRE_EMAIL_DELIVERY", True), patch.object(self.module.logic, "email_notifications_configured", return_value=False):
+                response = self.client.post("/api/contact", json={})
+                self.assertEqual(response.status_code, 503)
+                self.assertIn("contact@numeryl.fr", response.json["erreur"])
 
 
 if __name__ == "__main__":
