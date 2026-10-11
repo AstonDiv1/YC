@@ -457,7 +457,7 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
             profil = "Sur-mesure"
             fourchette = "Sur devis après définition des fonctionnalités"
         elif profil == "Starter":
-            fourchette = "À partir de 250 € pour une vitrine simple ; périmètre à confirmer"
+            fourchette = "À partir de 490 € pour une page vitrine, contenus fournis ; frais récurrents séparés et périmètre à confirmer"
         else:
             fourchette += " (indicatif, à confirmer par devis)"
 
