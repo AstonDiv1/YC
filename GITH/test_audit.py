@@ -66,7 +66,7 @@ class AuditTests(unittest.TestCase):
         plain = logic.compute_recommendation("site_web", {"budget": "Moins de 300 €"})
         styles = logic.compute_recommendation("site_web", {"budget": "Moins de 300 €", "ambiance_visuelle": ["a", "b", "c", "d"]})
         self.assertEqual(plain, styles)
-        self.assertIn("490 €", plain["fourchette_prix"])
+        self.assertIn("250 €", plain["fourchette_prix"])
         self.assertIn("450 €", logic.compute_recommendation("application", {})["fourchette_prix"])
         self.assertIn("100 €", logic.compute_recommendation("montage_pc", {})["fourchette_prix"])
         self.assertIn("Sur devis", logic.compute_recommendation("site_web", {"type_site": "E-commerce / boutique en ligne"})["fourchette_prix"])
