@@ -369,6 +369,14 @@ def robots_txt():
                     + PUBLIC_SITE_URL + "/sitemap.xml\n", mimetype="text/plain")
 
 
+@app.get("/indexnow-key.txt")
+def indexnow_key():
+    # Optional, public ownership proof for compatible search engines.
+    key = (os.environ.get("INDEXNOW_KEY") or "").strip()
+    if not re.fullmatch(r"[A-Za-z0-9-]{8,128}", key):
+        return Response(status=404)
+    return Response(key + "\n", mimetype="text/plain")
+
 @app.get("/sitemap.xml")
 def sitemap_xml():
     # Only the real studio homepage is indexed; the fictive demo stays excluded.
