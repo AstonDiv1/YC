@@ -66,10 +66,34 @@ class AuditTests(unittest.TestCase):
         plain = logic.compute_recommendation("site_web", {"budget": "Moins de 300 €"})
         styles = logic.compute_recommendation("site_web", {"budget": "Moins de 300 €", "ambiance_visuelle": ["a", "b", "c", "d"]})
         self.assertEqual(plain, styles)
-        self.assertIn("250 €", plain["fourchette_prix"])
-        self.assertIn("450 €", logic.compute_recommendation("application", {})["fourchette_prix"])
-        self.assertIn("100 €", logic.compute_recommendation("montage_pc", {})["fourchette_prix"])
+        self.assertIn("490 € HT", plain["fourchette_prix"])
+        self.assertIn("Sur devis", logic.compute_recommendation("application", {})["fourchette_prix"])
+        self.assertIn("Sur devis", logic.compute_recommendation("montage_pc", {})["fourchette_prix"])
         self.assertIn("Sur devis", logic.compute_recommendation("site_web", {"type_site": "E-commerce / boutique en ligne"})["fourchette_prix"])
+
+    def test_same_site_scope_keeps_same_price_independent_of_budget(self):
+        logic = self.module.logic
+        for pages, price in (("1 page", "490 € HT"), ("3 pages", "790 € HT")):
+            for budget in ("Moins de 300 €", "Plus de 5000 €"):
+                with self.subTest(pages=pages, budget=budget):
+                    result = logic.compute_recommendation("site_web", {"nb_pages": pages, "budget": budget})
+                    self.assertIn(price, result["fourchette_prix"])
+
+    def test_editor_and_extended_scope_require_a_quote(self):
+        logic = self.module.logic
+        for answers in (
+            {"nb_pages": "1 page", "fonctionnalites": ["CMS / modification des contenus"]},
+            {"nb_pages": "Plus de 3 pages / à préciser"},
+            {"type_site": "E-commerce / boutique en ligne"},
+        ):
+            with self.subTest(answers=answers):
+                self.assertIn("Sur devis", logic.compute_recommendation("site_web", answers)["fourchette_prix"])
+
+    def test_public_catalog_matches_demonstrated_web_services(self):
+        config = self.client.get("/api/config").json["services"]
+        self.assertEqual(set(config), {"site_web", "application"})
+        self.assertEqual(config["application"]["label"], "Outil web métier")
+        self.assertTrue(config["application"]["questions"][0]["required"])
 
     def test_admin_data_requires_authentication(self):
         self.assertEqual(self.client.get("/api/bookings").status_code, 401)
