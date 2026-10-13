@@ -353,6 +353,16 @@ def index():
     return render_template("index.html", contact_email_only=CONTACT_EMAIL_ONLY)
 
 
+from portfolio_demo import portfolio_demo
+app.register_blueprint(portfolio_demo)
+
+
+@app.get("/portfolio")
+def portfolio():
+    return render_template("portfolio.html", legal_page=True, portfolio_page=True,
+                           contact_email_only=CONTACT_EMAIL_ONLY)
+
+
 @app.route("/healthz")
 def healthz():
     return jsonify({"status": "ok"})
@@ -379,11 +389,12 @@ def indexnow_key():
 
 @app.get("/sitemap.xml")
 def sitemap_xml():
-    # Only the real studio homepage is indexed; the fictive demo stays excluded.
+    # Index the real studio pages, while fictive demos remain excluded.
     from xml.etree.ElementTree import Element, SubElement, tostring
     root = Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
-    entry = SubElement(root, "url")
-    SubElement(entry, "loc").text = PUBLIC_SITE_URL + "/"
+    for path in ("/", "/portfolio"):
+        entry = SubElement(root, "url")
+        SubElement(entry, "loc").text = PUBLIC_SITE_URL + path
     return Response(tostring(root, encoding="utf-8", xml_declaration=True), mimetype="application/xml")
 
 

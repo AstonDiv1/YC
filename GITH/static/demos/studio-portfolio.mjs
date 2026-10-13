@@ -1,0 +1,10 @@
+import {enhanceDisclosures,revealElements} from './demo-motion.mjs';
+window.toggleMobileNav=()=>{const menu=document.getElementById('mobileNav');const open=menu.classList.toggle('actif');document.querySelector('.menu-toggle').setAttribute('aria-expanded',String(open));};
+const toggle=document.querySelector('.menu-toggle');toggle.setAttribute('aria-controls','mobileNav');toggle.setAttribute('aria-expanded','false');document.getElementById('year').textContent=new Date().getFullYear();
+window.addEventListener('scroll',()=>document.getElementById('siteHeader').classList.toggle('scrolled',scrollY>8),{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('mobileNav').classList.remove('actif');toggle.setAttribute('aria-expanded','false');}});
+const icons={menu:'<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>','arrow-right':'<svg viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>',instagram:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>'};document.querySelectorAll('[data-icon]').forEach(el=>{el.innerHTML=icons[el.dataset.icon]||'';el.setAttribute('aria-hidden','true');});
+document.querySelectorAll('[data-portfolio-filter]').forEach(button=>button.addEventListener('click',()=>{const kind=button.dataset.portfolioFilter;let count=0;document.querySelectorAll('[data-portfolio-kind]').forEach(card=>{card.hidden=kind!=='all'&&card.dataset.portfolioKind!==kind;if(!card.hidden)count++;});document.querySelectorAll('[data-portfolio-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));document.getElementById('portfolio-filter-status').textContent=`${count} projet${count>1?'s':''} de démonstration affiché${count>1?'s':''}`;}));
+
+enhanceDisclosures();revealElements('.portfolio-card,.depth-grid article,.method-grid article,.portfolio-end');
+document.querySelectorAll('[data-portfolio-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelector('.portfolio-grid').dataset.filter=button.dataset.portfolioFilter;}));

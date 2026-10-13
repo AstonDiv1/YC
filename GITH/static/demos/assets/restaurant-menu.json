@@ -1,0 +1,117 @@
+[
+  {
+    "id": "betterave",
+    "category": "entree",
+    "name": "Betterave, noisette & chèvre",
+    "description": "Betteraves rôties, chèvre frais, noisettes torréfiées et vinaigrette de pomme.",
+    "price": 950,
+    "vegetarian": true,
+    "allergens": [
+      "Lait",
+      "Fruits à coque"
+    ],
+    "note": "Un jeu de textures, entre douceur de la betterave et croquant de la noisette."
+  },
+  {
+    "id": "veloute",
+    "category": "entree",
+    "name": "Velouté de courge",
+    "description": "Courge de saison, crème légère, graines grillées et huile de persil.",
+    "price": 850,
+    "vegetarian": true,
+    "allergens": [
+      "Lait"
+    ],
+    "note": "Une entrée chaleureuse, servie dans une céramique aux tons naturels."
+  },
+  {
+    "id": "truite",
+    "category": "entree",
+    "name": "Truite, pomme & fenouil",
+    "description": "Truite fumée, pomme acidulée, fenouil croquant et herbes fraîches.",
+    "price": 1200,
+    "vegetarian": false,
+    "allergens": [
+      "Poisson"
+    ],
+    "note": "Fraîcheur et relief, avec une garniture fine et acidulée."
+  },
+  {
+    "id": "courge",
+    "category": "plat",
+    "name": "Courge rôtie, lentilles & sauge",
+    "description": "Courge caramélisée, lentilles vertes, crème de céleri et sauge croustillante.",
+    "price": 1900,
+    "vegetarian": true,
+    "allergens": [
+      "Lait",
+      "Céleri"
+    ],
+    "note": "Le plat végétarien de la saison, imaginé autour du végétal et du contraste."
+  },
+  {
+    "id": "poulet",
+    "category": "plat",
+    "name": "Volaille, champignons & jus court",
+    "description": "Volaille dorée, champignons de saison, purée maison et jus de cuisson.",
+    "price": 2400,
+    "vegetarian": false,
+    "allergens": [
+      "Lait"
+    ],
+    "note": "Une assiette généreuse, avec un jus concentré et une garniture de saison."
+  },
+  {
+    "id": "poisson",
+    "category": "plat",
+    "name": "Poisson, poireau & citron",
+    "description": "Filet de poisson, poireau fondant, pommes de terre et beurre citronné.",
+    "price": 2500,
+    "vegetarian": false,
+    "allergens": [
+      "Poisson",
+      "Lait"
+    ],
+    "note": "Une recette sobre qui laisse leur place aux ingrédients."
+  },
+  {
+    "id": "poire",
+    "category": "dessert",
+    "name": "Poire pochée & vanille",
+    "description": "Poire pochée, crème vanillée, crumble d’amande et sirop léger.",
+    "price": 850,
+    "vegetarian": true,
+    "allergens": [
+      "Lait",
+      "Gluten",
+      "Fruits à coque"
+    ],
+    "note": "Fruit, parfum et texture : une fin de repas tout en douceur."
+  },
+  {
+    "id": "chocolat",
+    "category": "dessert",
+    "name": "Chocolat & fleur de sel",
+    "description": "Crémeux chocolat, biscuit croustillant et pointe de fleur de sel.",
+    "price": 900,
+    "vegetarian": true,
+    "allergens": [
+      "Lait",
+      "Gluten",
+      "Œufs"
+    ],
+    "note": "Un contraste de textures et une touche salée qui révèle le chocolat."
+  },
+  {
+    "id": "pomme",
+    "category": "dessert",
+    "name": "Pomme au four & caramel",
+    "description": "Pomme fondante, caramel léger et crème fraîche.",
+    "price": 800,
+    "vegetarian": true,
+    "allergens": [
+      "Lait"
+    ],
+    "note": "Le plaisir d’un dessert simple, servi tiède dans cet exemple."
+  }
+]

@@ -1,0 +1,5 @@
+.disclosure-icon{width:28px;height:28px;flex:0 0 28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #aebfac80;border-radius:50%;color:inherit;transition:transform .28s,background .28s;align-self:center}
+.disclosure-icon svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+summary[aria-expanded=true] .disclosure-icon{transform:rotate(45deg);background:#bfd1ba30}
+summary:after{display:none!important}
+@media(prefers-reduced-motion:reduce){.disclosure-icon{transition:none}}
