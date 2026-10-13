@@ -79,164 +79,96 @@ class UploadValidationError(ValueError):
 # 1. STRUCTURE DU QUESTIONNAIRE
 # ---------------------------------------------------------------------------
 
-SERVICES = {
-    "site_web": {
-        "label": "Création de site internet",
-        "description": "Vitrine, e-commerce, blog, application web sur-mesure.",
-        "icone": "web",
-        "questions": [
-            {
-                "id": "type_site",
-                "label": "Quel type de site souhaitez-vous ?",
-                "type": "choix_unique",
-                "options": [
-                    "Site vitrine",
-                    "E-commerce / boutique en ligne",
-                    "Blog",
-                    "Application web (avec compte utilisateur)",
-                    "Autre / je ne sais pas encore",
-                ],
-                "required": True,
-            },
-            {
-                "id": "fonctionnalites",
-                "label": "Quelles fonctionnalités sont indispensables ?",
-                "type": "choix_multiple",
-                "options": [
-                    "Système de réservation / prise de rendez-vous",
-                    "Paiement en ligne",
-                    "Espace client / connexion",
-                    "Multilingue",
-                    "Blog intégré",
-                    "Référencement SEO avancé",
-                    "Newsletter",
-                    "Formulaire de contact avancé",
-                    "Galerie / portfolio",
-                    "Intégration Google Maps",
-                    "Chat en direct",
-                    "Import / export de données",
-                ],
-                "required": False,
-            },
-            {
-                "id": "nb_pages",
-                "label": "Nombre de pages estimé",
-                "type": "select",
-                "options": ["1 à 3 pages", "4 à 8 pages", "9 à 15 pages", "15+ pages"],
-                "required": True,
-            },
-        ],
-    },
-    "application": {
-        "label": "Création d'application",
-        "description": "Applications Android et Windows Desktop, sur-mesure.",
-        "icone": "app",
-        "questions": [
-            {
-                "id": "plateforme",
-                "label": "Sur quelle(s) plateforme(s) ?",
-                "type": "choix_multiple",
-                # On ne fait ni iOS/macOS, ni PWA / application web.
-                # Les prestations proposées se limitent à Android et Windows Desktop.
-                "options": [
-                    "Android",
-                    "Desktop Windows",
-                ],
-                "required": True,
-            },
-            {
-                "id": "fonctionnalites_app",
-                "label": "Quelles fonctionnalités sont nécessaires ?",
-                "type": "choix_multiple",
-                # Liste resserrée : on retire les fonctionnalités qui sont
-                # systématiquement du sur-mesure et qui n'ont pas leur place
-                # dans un questionnaire standard (paiement intégré, back-office,
-                # rôles/permissions, statistiques, géolocalisation, API externes).
-                # Ces prestations sont proposées directement dans le devis.
-                "options": [
-                    "Compte utilisateur / connexion",
-                    "Notifications push",
-                    "Mode hors-ligne",
-                    "Chat / messagerie interne",
-                    "Upload / gestion de fichiers",
-                    "Génération de PDF / documents",
-                    "Import / export de données (CSV, Excel)",
-                    "Recherche avancée / filtres",
-                    "Multilingue",
-                    "Notifications par e-mail",
-                ],
-                "required": False,
-            },
-            {
-                "id": "existant_app",
-                "label": "Où en êtes-vous dans votre projet ?",
-                "type": "choix_unique",
-                "options": [
-                    "Projet entièrement nouveau, à partir de zéro",
-                    "J'ai déjà des maquettes ou une idée très précise",
-                    "Je pars d'une idée générale à structurer avec vous",
-                ],
-                "required": True,
-            },
-        ],
-    },
-    "montage_pc": {
-        "label": "Montage & optimisation PC",
-        "description": "Montage à domicile, choix des composants, optimisation.",
-        "icone": "pc",
-        "questions": [
-            {
-                "id": "usage_pc",
-                "label": "Usage principal du PC",
-                "type": "choix_unique",
-                "options": [
-                    "Gaming",
-                    "Montage vidéo / photo / 3D",
-                    "Bureautique / usage quotidien",
-                    "Développement / programmation",
-                    "Serveur / usage professionnel intensif",
-                ],
-                "required": True,
-            },
-            {
-                "id": "type_prestation",
-                "label": "De quoi avez-vous besoin ?",
-                "type": "choix_multiple",
-                "options": [
-                    "Montage d'un PC neuf",
-                    "Choix des composants (conseil)",
-                    "Optimisation d'un PC existant",
-                    "Mise à niveau (upgrade) de composants",
-                    "Nettoyage / maintenance",
-                ],
-                "required": True,
-            },
-            {
-                "id": "a_domicile",
-                "label": "Souhaitez-vous une intervention à domicile ?",
-                "type": "choix_unique",
-                "options": [
-                    "Oui",
-                    "Non, je peux me déplacer ou envoyer le matériel",
-                ],
-                "required": True,
-            },
-            {
-                "id": "composants_deja_achetes",
-                "label": "Avez-vous déjà des composants ?",
-                "type": "choix_unique",
-                "options": ["Oui, tout est acheté", "Partiellement", "Non, rien"],
-                "required": True,
-            },
-        ],
-    },
-}
+SERVICES = {'site_web': {'label': 'Création de site internet',
+              'description': 'Une page ou trois pages, contenu accompagné et contact.',
+              'icone': 'web',
+              'questions': [{'id': 'type_site',
+                             'label': 'Quel projet souhaitez-vous ?',
+                             'type': 'choix_unique',
+                             'options': ['Une page de présentation',
+                                         'Site vitrine de 3 pages',
+                                         'Refonte d’un site existant',
+                                         'Autre besoin à cadrer'],
+                             'required': True},
+                            {'id': 'fonctionnalites',
+                             'label': 'Quelles fonctions sont utiles ?',
+                             'type': 'choix_multiple',
+                             'options': ['Galerie / portfolio',
+                                         'Formulaire de contact',
+                                         'CMS / modification des contenus',
+                                         'Réservation / prise de rendez-vous',
+                                         'Paiement en ligne',
+                                         'Espace client / connexion',
+                                         'Multilingue',
+                                         'Import / export de données',
+                                         'Connexion à un outil existant'],
+                             'required': False},
+                            {'id': 'nb_pages',
+                             'label': 'Nombre de pages envisagé',
+                             'type': 'select',
+                             'options': ['1 page', '3 pages', 'Plus de 3 pages / à préciser'],
+                             'required': True}]},
+ 'application': {'label': 'Outil web métier',
+                 'description': 'Une interface dans le navigateur pour simplifier une tâche.',
+                 'icone': 'app',
+                 'questions': [{'id': 'objectif_outil',
+                                'label': 'Quelle tâche voulez-vous simplifier, et comment la '
+                                         'faites-vous aujourd’hui ?',
+                                'type': 'zone_texte',
+                                'required': True},
+                               {'id': 'fonctionnalites_app',
+                                'label': 'Quelles fonctions seraient utiles ?',
+                                'type': 'choix_multiple',
+                                'options': ['Formulaire / collecte d’informations',
+                                            'Suivi de demandes ou de tâches',
+                                            'Recherche / filtres',
+                                            'Import / export de données',
+                                            'Génération de documents',
+                                            'Connexion à un outil existant',
+                                            'Comptes / accès partagés'],
+                                'required': False},
+                               {'id': 'existant_app',
+                                'label': 'Que souhaitez-vous améliorer ?',
+                                'type': 'choix_unique',
+                                'options': ['Une tâche aujourd’hui manuelle',
+                                            'Un fichier ou un tableur existant',
+                                            'Un outil déjà utilisé',
+                                            'Une idée à définir ensemble'],
+                                'required': True}]},
+ 'montage_pc': {'label': 'Montage & optimisation PC',
+                'description': 'Montage à domicile, choix des composants, optimisation.',
+                'icone': 'pc',
+                'questions': [{'id': 'usage_pc',
+                               'label': 'Usage principal du PC',
+                               'type': 'choix_unique',
+                               'options': ['Gaming',
+                                           'Montage vidéo / photo / 3D',
+                                           'Bureautique / usage quotidien',
+                                           'Développement / programmation',
+                                           'Serveur / usage professionnel intensif'],
+                               'required': True},
+                              {'id': 'type_prestation',
+                               'label': 'De quoi avez-vous besoin ?',
+                               'type': 'choix_multiple',
+                               'options': ["Montage d'un PC neuf",
+                                           'Choix des composants (conseil)',
+                                           "Optimisation d'un PC existant",
+                                           'Mise à niveau (upgrade) de composants',
+                                           'Nettoyage / maintenance'],
+                               'required': True},
+                              {'id': 'a_domicile',
+                               'label': 'Souhaitez-vous une intervention à domicile ?',
+                               'type': 'choix_unique',
+                               'options': ['Oui', 'Non, je peux me déplacer ou envoyer le matériel'],
+                               'required': True},
+                              {'id': 'composants_deja_achetes',
+                               'label': 'Avez-vous déjà des composants ?',
+                               'type': 'choix_unique',
+                               'options': ['Oui, tout est acheté', 'Partiellement', 'Non, rien'],
+                               'required': True}],
+                'public': False}}
 
-# ---------------------------------------------------------------------------
-# Questions communes injectées EN FIN de service. On distingue trois queues
-# de questions selon la nature du projet, pour éviter d'imposer les mêmes
-# questions à un site web et à un montage PC.
-# ---------------------------------------------------------------------------
+# Questions communes, ajoutées selon le service.
 
 _Q_BUDGET = {
     "id": "budget",
@@ -380,6 +312,7 @@ CONTACT_FIELDS = [
 ]
 
 
+
 def get_public_config():
     """Renvoie la config du questionnaire, telle que consommée par le front.
 
@@ -390,6 +323,8 @@ def get_public_config():
     """
     services_out = {}
     for key, svc in SERVICES.items():
+        if not svc.get("public", True):
+            continue
         svc_copy = copy.deepcopy(svc)
         tail = COMMON_TAILS.get(key, COMMON_TAIL_WEB)
         svc_copy["questions"] = list(svc_copy.get("questions", [])) + copy.deepcopy(tail)
@@ -432,52 +367,43 @@ def _compter_fonctionnalites(reponses: dict) -> int:
 
 
 def compute_recommendation(service: str, reponses: dict) -> dict:
-    budget_label = reponses.get("budget", "Je ne sais pas encore")
-    score_budget = BUDGET_SCORE.get(budget_label, 2)
-    nb_fonctionnalites = _compter_fonctionnalites(reponses)
+    # Le budget déclaré ne fait pas varier le prix d'un même livrable.
     urgent = DELAI_URGENCE.get(reponses.get("delai"), False)
-
-    score_total = score_budget + (nb_fonctionnalites // 2)
-    if score_total <= 2:
-        profil, fourchette = "Starter", "300 € - 800 €"
-    elif score_total <= 4:
-        profil, fourchette = "Pro", "800 € - 2500 €"
-    else:
-        profil, fourchette = "Sur-mesure", "2500 € et plus (devis détaillé nécessaire)"
-
+    profil = "À cadrer"
+    fourchette = "Sur devis après définition du périmètre"
     if service == "montage_pc":
-        profil = "Montage & optimisation PC"
-        fourchette = "À partir de 100 € hors composants ; devis selon la prestation"
+        profil = "Demande informatique à étudier"
+        fourchette = "Sur devis ; disponibilité de la prestation à confirmer"
     elif service == "application":
-        fourchette = "À partir de 450 € pour un outil simple ; devis selon les fonctionnalités"
+        profil = "Outil web métier"
+        fourchette = "Sur devis après étude de la tâche, des accès et du fonctionnement"
     elif service == "site_web":
-        if reponses.get("type_site") in {
-            "E-commerce / boutique en ligne", "Application web (avec compte utilisateur)"
-        }:
-            profil = "Sur-mesure"
-            fourchette = "Sur devis après définition des fonctionnalités"
-        elif profil == "Starter":
-            fourchette = "À partir de 250 € pour une page vitrine, contenus fournis ; frais récurrents séparés et périmètre à confirmer"
+        features = reponses.get("fonctionnalites", [])
+        if not isinstance(features, list):
+            features = []
+        basics = {"Galerie / portfolio", "Formulaire de contact"}
+        advanced = any(feature not in basics for feature in features)
+        kind = reponses.get("type_site", "")
+        pages = reponses.get("nb_pages", "")
+        if advanced or kind in {"E-commerce / boutique en ligne", "Application web (avec compte utilisateur)", "Autre besoin à cadrer"} or pages in {"4 à 8 pages", "9 à 15 pages", "15+ pages", "Plus de 3 pages / à préciser"}:
+            profil = "Projet à cadrer"
+            fourchette = "Sur devis après définition des pages et des fonctionnalités"
+        elif kind == "Site vitrine de 3 pages" or pages == "3 pages":
+            profil = "Vitrine structurée"
+            fourchette = "Dès 790 € HT pour trois pages, rédaction accompagnée ; frais de fonctionnement séparés"
         else:
-            fourchette += " (indicatif, à confirmer par devis)"
-
-    delai_estime = (
-        "à définir en priorité avec vous" if urgent
-        else "confirmé au devis selon le périmètre, les contenus et notre disponibilité"
-    )
-
-    messages = {
-        "site_web": "Merci pour ces précisions sur votre site internet.",
-        "application": "Merci pour ces précisions sur votre application.",
-        "montage_pc": "Merci pour ces précisions sur votre configuration PC.",
-    }
-
+            profil = "Vitrine essentielle"
+            fourchette = "490 € HT pour une page, rédaction accompagnée ; frais de fonctionnement séparés"
     return {
         "profil": profil,
         "fourchette_prix": fourchette,
-        "delai_estime": delai_estime,
+        "delai_estime": "à définir en priorité avec vous" if urgent else "confirmé au devis selon le périmètre, les contenus et notre disponibilité",
         "urgent": urgent,
-        "message": messages.get(service, "Merci pour ces précisions."),
+        "message": {
+            "site_web": "Merci pour ces précisions sur votre site internet.",
+            "application": "Merci pour ces précisions sur la tâche à simplifier.",
+            "montage_pc": "Merci pour ces précisions.",
+        }.get(service, "Merci pour ces précisions."),
     }
 
 
