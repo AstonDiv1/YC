@@ -22,8 +22,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/static/css/site.css?v=20261010-numeryl">
-</head>
+<link rel="stylesheet" href="/static/css/site.css?v=20261012-portfolio">
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -57,8 +57,8 @@
     </div>
 
     <aside class="proposal-visual proposal-a" aria-label="Aperçu d'une vitrine sur ordinateur et mobile">
-  <div class="device-browser"><div class="browser-toolbar"><i></i><i></i><i></i><span>Exemple de vitrine</span></div><div class="iframe-crop web-a"><iframe sandbox="allow-same-origin" src="/static/demos/artisan.html" title="Exemple fictif sur ordinateur" tabindex="-1" aria-hidden="true"></iframe></div></div>
-  <div class="device-phone"><div class="iframe-crop phone-a"><iframe sandbox="allow-same-origin" src="/static/demos/artisan.html" title="Exemple fictif sur téléphone" tabindex="-1" aria-hidden="true"></iframe></div></div>
+  <div class="device-browser"><div class="browser-toolbar"><i></i><i></i><i></i><span>Exemple de vitrine</span></div><div class="device-screen desktop-screen"><img src="/static/demos/assets/artisan-desktop.jpg" alt="Aperçu réel de notre démonstration de menuiserie sur ordinateur." width="1440" height="1000"></div></div>
+  <div class="device-phone"><div class="device-screen phone-screen"><img src="/static/demos/assets/artisan-mobile.jpg" alt="Le même site de démonstration dans un écran de téléphone." width="390" height="844"></div></div>
   <div class="visual-tag"><span class="icon" data-icon="check"></span>Un site soigné, sur tous les écrans</div>
   <p class="proposal-caption">Exemple fictif de vitrine · <a href="/static/demos/artisan.html">Découvrir le site complet</a></p>
 </aside>
@@ -177,10 +177,10 @@
     </div>
     <div class="reveal demo-banner" style="margin-top:28px;padding:24px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
       <div style="max-width:62ch;">
-        <h3 style="margin-bottom:8px;">Explorez un exemple de site artisan</h3>
-        <p>Services détaillés, projets illustrés, méthode et formulaire : découvrez une présentation complète sur ordinateur et téléphone. Démonstration fictive, sans client associé ; le périmètre d'un site est défini au devis.</p>
+        <h3 style="margin-bottom:8px;">Trois univers à explorer</h3>
+        <p>Un site artisan, un restaurant avec réservation de démonstration et une application de gestion de projets : découvrez nos interfaces et leurs interactions sur ordinateur et téléphone. Projets de portfolio fictifs, sans client associé ; le périmètre d'un vrai projet est défini au devis.</p>
       </div>
-      <a class="btn btn-outline" href="/static/demos/artisan.html" target="_blank" rel="noopener">Voir la démonstration <span class="icon" data-icon="arrow-right"></span></a>
+      <a class="btn btn-outline" href="/portfolio">Explorer le portfolio <span class="icon" data-icon="arrow-right"></span></a>
     </div>
   </div>
 </section>
@@ -478,7 +478,7 @@ injectIcons(document);
 })();
 
 /* -------- NAV MOBILE -------- */
-function toggleMobileNav(){ const el=document.getElementById('mobileNav'); if(el) el.classList.toggle('actif'); }
+function toggleMobileNav(){const el=document.getElementById('mobileNav');if(!el)return;const open=el.classList.toggle('actif');document.querySelector('.menu-toggle')?.setAttribute('aria-expanded',String(open));}
 
 const YC_ALLOWED_FILE_EXTENSIONS = ['jpg','jpeg','png','webp','gif','heic','heif','avif','pdf'];
 const YC_ALLOWED_FILE_MIMES = ['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif','image/avif','application/pdf'];
@@ -610,6 +610,7 @@ const FALLBACK_CONFIG = {
 };
 
 let CONFIG = null;
+let questionnaireOpener=null, questionnaireInert=[];
 let QSTATE = { service:null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced:false };
 
 async function chargerConfig(){
@@ -636,13 +637,19 @@ async function ouvrirQuestionnaire(serviceForce){
   QSTATE = { service: validForced ? key : null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced: !!validForced };
   const ov = document.getElementById('overlay');
   if(!ov){ console.error('[Numéryl] #overlay introuvable'); return; }
+  questionnaireOpener=document.activeElement;
+  questionnaireInert=[...document.body.children].filter(el=>el!==ov&&!['SCRIPT','STYLE','LINK'].includes(el.tagName)).map(el=>({el,inert:el.inert}));
+  questionnaireInert.forEach(({el})=>{el.inert=true;});
   ov.classList.add('actif');
   document.body.style.overflow = 'hidden';
   renderStep();
+  document.querySelector('#modal .close-btn')?.focus();
 }
 function fermerQuestionnaire(){
-  const ov = document.getElementById('overlay'); if(ov) ov.classList.remove('actif');
+  const ov = document.getElementById('overlay');if(!ov?.classList.contains('actif'))return;ov.classList.remove('actif');
+  questionnaireInert.forEach(({el,inert})=>{el.inert=inert;});questionnaireInert=[];
   document.body.style.overflow = '';
+  questionnaireOpener?.focus();
 }
 function setProgress(pct){ const p=document.getElementById('progress'); if(p) p.style.width = pct + '%'; }
 
@@ -715,7 +722,7 @@ function renderQuestion(q){
   } else {
     inner += `<input type="text" value="${escapeHtml(val||'')}" oninput="setReponse('${q.id}', this.value)">`;
   }
-  return `<div class="question-block"><label class="q-label">${label}</label>${inner}</div>`;
+  return `<div class="question-block" role="group" aria-label="${escapeHtml(q.label||q.id)}"><label class="q-label">${label}</label>${inner}</div>`;
 }
 
 function isAnswered(q){
@@ -723,6 +730,11 @@ function isAnswered(q){
   if(!q.required) return true;
   if(q.type === 'choix_multiple') return Array.isArray(v) && v.length > 0;
   return v !== undefined && v !== null && String(v).trim() !== '';
+}
+
+function wireQuestionLabels(content){
+  content.querySelectorAll('.question-block,.form-row').forEach((block,i)=>{const label=block.querySelector('label'),control=block.querySelector('input:not([type=checkbox]):not([type=radio]),textarea,select');if(!label||!control)return;control.id=control.id||'question_'+QSTATE.step+'_'+i;label.htmlFor=control.id;});
+  const first=content.querySelector('input:not([type=file]),select,textarea,button.service-choice');if(document.getElementById('overlay')?.classList.contains('actif'))first?.focus();
 }
 
 function renderStep(){
@@ -739,14 +751,15 @@ function renderStep(){
       const nom = v.label || v.nom || k;
       const desc = v.description || '';
       const ic = v.icone || v.icon || 'globe';
-      html += `<div class="service-choice" onclick="choisirService('${k}')">
+      html += `<button type="button" class="service-choice" aria-label="${escapeHtml(nom)}" onclick="choisirService('${k}')">
         <span class="icon" data-icon="${escapeHtml(ic)}"></span>
-        <div><h4>${escapeHtml(nom)}</h4><p>${escapeHtml(desc)}</p></div>
-      </div>`;
+        <span class="service-choice-copy"><strong>${escapeHtml(nom)}</strong><span>${escapeHtml(desc)}</span></span>
+      </button>`;
     }
     html += '</div>';
     content.innerHTML = html;
     injectIcons(content);
+    wireQuestionLabels(content);
     return;
   }
 
@@ -763,6 +776,7 @@ function renderStep(){
     html += renderNav(true, true, false);
     content.innerHTML = html;
     injectIcons(content);
+    wireQuestionLabels(content);
     return;
   }
 
@@ -789,6 +803,7 @@ function renderStep(){
   html += renderNav(true, false, true);
   content.innerHTML = html;
   injectIcons(content);
+    wireQuestionLabels(content);
 }
 
 function renderNav(showPrev, showNext, showSubmit){
@@ -946,24 +961,10 @@ window.prevStep = prevStep;
 window.soumettre = soumettre;
 
 /* Fermer modal avec Escape */
-document.addEventListener('keydown', (e) => { if(e.key === 'Escape') fermerQuestionnaire(); });
+document.addEventListener('keydown', (e) => {if(!document.getElementById('overlay')?.classList.contains('actif'))return;if(e.key==='Escape'){e.preventDefault();fermerQuestionnaire();return;}if(e.key!=='Tab')return;const fields=[...document.querySelectorAll('#modal button,#modal input,#modal textarea,#modal select,#modal a[href],[tabindex="0"]')].filter(el=>!el.disabled&&el.closest('#modal')&&el.getClientRects().length);if(!fields.length)return;const first=fields[0],last=fields[fields.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
 </script>
 
-<script>
-// Les deux aperçus suivent la largeur disponible sans déborder sur mobile.
-document.querySelectorAll('.proposal-a .iframe-crop').forEach(function(crop){
-  var frame=crop.querySelector('iframe');
-  var isPhone=crop.classList.contains('phone-a');
-  function fit(){
-    var scale=crop.clientWidth/(isPhone?390:960);
-    frame.style.transform='scale('+scale+')';
-    crop.style.height=(scale*(isPhone?820:660))+'px';
-  }
-  fit();
-  if(window.ResizeObserver){new ResizeObserver(fit).observe(crop);}
-  else{window.addEventListener('resize',fit);}
-});
-</script>
+
 
 </body>
 </html>

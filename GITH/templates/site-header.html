@@ -5,6 +5,7 @@
     </a>
     <nav class="nav-links" aria-label="Navigation principale">
       <a href="{% if legal_page %}/{% endif %}#services">Services</a>
+      <a href="/portfolio"{% if portfolio_page %} aria-current="page"{% endif %}>Portfolio</a>
       <a href="{% if legal_page %}/{% endif %}#fonctionnement">Méthode</a>
       <a href="{% if legal_page %}/{% endif %}#histoire">Studio</a>
       <a href="{% if legal_page %}/{% endif %}#faq">FAQ</a>
@@ -16,13 +17,14 @@
       </a>{% else %}<button class="btn btn-primary" onclick="ouvrirQuestionnaire()">
         Démarrer un projet <span class="icon" data-icon="arrow-right"></span>
       </button>{% endif %}
-      <button class="menu-toggle" aria-label="Menu" onclick="toggleMobileNav()">
+      <button class="menu-toggle" aria-label="Menu" aria-controls="mobileNav" aria-expanded="false" onclick="toggleMobileNav()">
         <span class="icon" data-icon="menu"></span>
       </button>
     </div>
   </div>
   <div class="mobile-nav" id="mobileNav">
     <a href="{% if legal_page %}/{% endif %}#services" onclick="toggleMobileNav()">Services</a>
+    <a href="/portfolio" onclick="toggleMobileNav()">Portfolio</a>
     <a href="{% if legal_page %}/{% endif %}#fonctionnement" onclick="toggleMobileNav()">Méthode</a>
     <a href="{% if legal_page %}/{% endif %}#histoire" onclick="toggleMobileNav()">Studio</a>
     <a href="{% if legal_page %}/{% endif %}#faq" onclick="toggleMobileNav()">FAQ</a>

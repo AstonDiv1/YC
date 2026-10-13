@@ -131,12 +131,29 @@ class AuditTests(unittest.TestCase):
         sitemap = self.client.get("/sitemap.xml", headers={"Host": "untrusted.example"})
         self.assertEqual(sitemap.status_code, 200)
         locations = ElementTree.fromstring(sitemap.data).findall(".//{*}loc")
-        self.assertEqual([node.text for node in locations], [origin + "/"])
+        self.assertEqual([node.text for node in locations], [origin + "/", origin + "/portfolio"])
         robots = self.client.get("/robots.txt").get_data(as_text=True)
         self.assertIn("Sitemap: " + origin + "/sitemap.xml", robots)
-        for path in ("/api/bookings", "/healthz", "/static/demos/artisan.html", "/not-found"):
+        for path in ("/api/bookings", "/healthz", "/static/demos/artisan.html", "/static/demos/restaurant.html", "/static/demos/cobalt.html", "/not-found"):
             with self.client.get(path) as response:
                 self.assertIn("noindex", response.headers["X-Robots-Tag"])
+
+    def test_portfolio_is_real_brand_page_with_fictive_demos_separated(self):
+        response = self.client.get("/portfolio")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("noindex", response.headers.get("X-Robots-Tag", ""))
+        html = response.get_data(as_text=True)
+        self.assertIn('name="robots" content="index,follow"', html)
+        self.assertIn('rel="canonical" href="https://yc-digital.onrender.com/portfolio"', html)
+        self.assertIn('src="/static/img/numeryl-logo.png"', html)
+        self.assertIn('href="/#contact"', html)
+        self.assertIn("pas des réalisations clients", html)
+        for name in ("artisan", "restaurant", "cobalt"):
+            self.assertIn('/static/demos/' + name + '.html', html)
+        for path in ("/static/demos/restaurant.mjs", "/static/demos/cobalt.mjs"):
+            with self.client.get(path) as asset:
+                self.assertEqual(asset.status_code, 200)
+                self.assertIn("javascript", asset.content_type)
 
     def test_legal_page_reuses_brand_and_has_working_project_links(self):
         html = self.client.get("/conditions-utilisation").get_data(as_text=True)
