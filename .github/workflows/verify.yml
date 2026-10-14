@@ -12,4 +12,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r GITH/requirements.txt
-      - run: python -m unittest discover -s GITH -p test_audit.py -v
+      - run: python -m unittest discover -s GITH -p 'test*.py' -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test GITH/test_dossier_model.mjs GITH/test_portfolio.mjs
