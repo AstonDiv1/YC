@@ -5,3 +5,14 @@
 .comparison{background:#f5f7fb;padding:12px;border-radius:8px;margin-top:14px}.comparison table{table-layout:fixed;width:100%;border-collapse:collapse;font-size:10px}.comparison th,.comparison td{text-align:left;padding:8px 5px;border-bottom:1px solid #dce2ed;vertical-align:top;overflow-wrap:anywhere}.comparison th{font-weight:600}.comparison .text-button{padding:10px 0}.history .text-button{padding:7px 0}.comparison .tiny-label{font-size:8px}
 @media(max-width:680px){.text-button{min-height:40px}.comparison table{font-size:11px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* Parcours explicite, proposition locale du 14 octobre. */
+.intro-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.intro-actions .button{font-size:12px;padding:13px 16px}
+.try-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;padding:0 0 28px;margin:0;list-style:none}
+.try-steps li{display:flex;align-items:flex-start;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+.try-steps li>span{background:#eaf0fc;color:var(--blue);border-radius:50%;width:28px;height:28px;display:grid;place-items:center;flex-shrink:0;font-weight:700;font-size:12px}
+.try-steps strong{display:block;font-size:12px}.try-steps small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.project-heading:focus{outline:0}.view-switch button{font-size:11px;min-height:40px}
+@media(max-width:680px){.try-steps{grid-template-columns:1fr;gap:12px;padding-bottom:24px}.try-steps li{padding-top:12px}.try-steps strong{font-size:13px}.try-steps small{font-size:12px}.intro-actions{display:grid}.intro-actions .button{justify-content:space-between;font-size:13px}.desk-bar{flex-direction:column;align-items:stretch}.view-switch{width:100%;flex-shrink:1}.view-switch button{flex:1;min-width:0;font-size:11px;padding:10px 6px}.project-heading{flex-wrap:wrap}.project-heading p{font-size:12px;max-width:52ch}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress-track span{transition:none}}
