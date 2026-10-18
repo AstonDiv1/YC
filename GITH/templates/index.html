@@ -24,7 +24,7 @@
 
 <link rel="stylesheet" href="/static/css/site.css?v=20261012-portfolio">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261016"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261016"></script></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261016"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261016"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-brief.mjs?v=20261018"></script></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -34,7 +34,7 @@
 <section class="hero" id="top">
   <div class="container hero-grid">
     <div>
-      <div class="eyebrow reveal">Sites professionnels · France entière à distance</div>
+      <div class="eyebrow reveal">Sites et outils web · France entière à distance</div>
       <h1 class="reveal reveal-delay-1" style="margin-top:20px;">
         Présentez votre savoir-faire.<br>
         <span class="accent">Facilitez les demandes.</span>
@@ -42,11 +42,11 @@
       <p class="lead reveal reveal-delay-2">
         Vos prestations, vos réalisations et vos coordonnées, réunies dans un site clair.
         Nous vous aidons à écrire et à organiser votre contenu, puis construisons
-        une interface adaptée à votre activité.
+        une interface adaptée à votre activité. Pour une tâche métier, nous concevons aussi des outils web sur mesure.
       </p>
       <div class="hero-actions reveal reveal-delay-3">
         <a href="#contact" class="btn btn-primary">
-          Parler de mon site <span class="icon" data-icon="arrow-right"></span>
+          Parler de mon projet <span class="icon" data-icon="arrow-right"></span>
         </a>
         <a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a>
       </div>
@@ -149,7 +149,7 @@
         <span class="index">03</span><span class="offer-kicker">Une tâche métier à simplifier</span>
         <span class="icon-pill"><span class="icon" data-icon="app"></span></span>
         <h3>Outils web sur mesure</h3>
-        <p class="desc">Une interface pour regrouper des demandes, suivre des étapes, retrouver des informations ou préparer un document.</p>
+        <p class="desc">Un outil construit autour de votre façon de travailler : demandes, suivi, documents et accès partagés. Nous définissons les fonctions utiles avec vous.</p>
         <ul>
           <li><span class="icon" data-icon="check"></span> Formulaires et parcours de collecte</li>
           <li><span class="icon" data-icon="check"></span> Tableaux de bord et suivi de tâches</li>
@@ -164,6 +164,8 @@
     <div class="reveal demo-banner commercial-projects"><div><h3>Le travail du studio, à explorer.</h3><p>Une menuiserie, un restaurant et un outil de gestion : parcourez les interfaces, testez les interactions et découvrez les fonctions réellement présentes.</p><small>Projets originaux d’exploration · identités et données d’exemple.</small></div><a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a></div>
   </div>
 </section>
+
+{% include 'pc-advice.html' %}
 
 <!-- ============= PROCESS ============= -->
 <section class="section section-dark" id="fonctionnement">
@@ -208,6 +210,12 @@
   </div>
 </section>
 
+<!-- ============= OUTILS SUR MESURE ============= -->
+<section class="section tools-detail" id="outils-sur-mesure"><div class="container">
+  <div class="service-heading"><h2>Votre organisation.<br>Votre outil web.</h2><p>Un formulaire, un tableur et des messages peuvent finir par disperser le travail. Nous pouvons réunir une tâche précise dans une interface accessible depuis le navigateur.</p></div>
+  <div class="tools-examples"><article><span class="service-label">Réunir les demandes</span><h3>Les bonnes informations,<br>au bon endroit.</h3><p>Questions conditionnelles, documents à prévoir, récapitulatif et historique : le parcours suit les informations réellement utiles à votre métier.</p><a class="link" href="/static/demos/dossier-atelier.html">Tester la demande guidée <span aria-hidden="true">↗</span></a></article><article><span class="service-label">Suivre le travail</span><h3>Des étapes lisibles,<br>des actions concrètes.</h3><p>Suivi des dossiers, recherche, filtres, tableaux de bord ou exports. Les accès, sauvegardes et connexions à vos services se définissent au cadrage.</p><a class="link" href="/static/demos/cobalt.html">Explorer l’outil de gestion <span aria-hidden="true">↗</span></a></article></div>
+  <div class="tools-scope"><p><strong>Un périmètre précis avant de développer.</strong> Nous commençons par votre tâche, ses utilisateurs et ses données. Vous validez les fonctions, un premier écran et les coûts de fonctionnement. Les démonstrations du portfolio restent fictives et leurs limites sont indiquées.</p><button class="btn btn-primary" onclick="ouvrirQuestionnaire('application')">Décrire mon besoin métier <span class="icon" data-icon="arrow-right"></span></button></div>
+</div></section>
 <!-- ============= PARCOURS METIER ============= -->
 <section class="section"><div class="container">
   <div class="section-head reveal"><div><div class="eyebrow">Au-delà d’une vitrine</div><h2 style="margin-top:14px;">Des demandes de devis<br>mieux préparées.</h2></div><p class="side">Pour un atelier de menuiserie ou d’agencement, le site peut guider une demande : réunir le besoin, les repères et les choix, puis montrer ce qui manque avant le premier échange.</p></div>
@@ -785,11 +793,17 @@ async function chargerConfig(){
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function normalizeServiceKey(k){ if(!k) return null; if(CONFIG && CONFIG.services && CONFIG.services[k]) return k; return SERVICE_ALIAS[k] || k; }
 
-async function ouvrirQuestionnaire(serviceForce, siteFormat){
+async function ouvrirQuestionnaire(serviceForce, siteFormat, initialAnswers){
   await chargerConfig();
   const key = normalizeServiceKey(serviceForce);
   const validForced = key && CONFIG.services && CONFIG.services[key];
   QSTATE = { service: validForced ? key : null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced: !!validForced };
+  if(validForced && key==='montage_pc' && initialAnswers && typeof initialAnswers==='object'){
+    for(const field of ['type_prestation','usage_pc','budget_materiel']){
+      const question=CONFIG.services[key].questions.find(q=>q.id===field);
+      if(question?.options.includes(initialAnswers[field]))QSTATE.reponses[field]=initialAnswers[field];
+    }
+  }
   if(validForced && key==='site_web' && ['essential','structured'].includes(siteFormat)){
     QSTATE.reponses.type_site=siteFormat==='structured'?'Site vitrine de 3 pages':'Une page de présentation';
     QSTATE.reponses.nb_pages=siteFormat==='structured'?'3 pages':'1 page';
