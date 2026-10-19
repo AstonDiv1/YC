@@ -1,0 +1,38 @@
+/* One shared axis for the studio rows; separators keep their own vertical space. */
+.quick-project,.mobile-preview{display:none}
+.founders{gap:0;padding:28px}
+.founder{display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:18px;padding:24px 0;min-width:0;transform:none}
+.founder:hover{transform:none}
+.founder:first-child{padding-top:2px}
+.founder>div{min-width:0}
+.founder .avatar{flex-shrink:0;transition:transform .22s var(--ease),background .22s var(--ease),border-color .22s var(--ease)}
+.founder h4{line-height:1.4;margin:0 0 7px;letter-spacing:.06em;transition:color .22s var(--ease)}
+.founder small{display:block;line-height:1.8;letter-spacing:.07em;overflow-wrap:break-word}
+.founder-note{display:block;padding:24px 0 0}
+.founder-note h4{font:500 1.15rem/1.4 var(--font-display);letter-spacing:0}
+.founder-note small{font:.9rem/1.8 var(--font-body);text-transform:none;letter-spacing:0;color:var(--ink-soft)}
+@media(min-width:768px) and (hover:hover) and (pointer:fine){
+  .founder:not(.founder-note):hover{transform:none}
+  .founder:not(.founder-note):hover .avatar{background:var(--accent-soft);border-color:#b8c8e2;transform:translateY(-2px)}
+  .founder:not(.founder-note):hover h4{color:var(--accent-ink)}
+}
+@media(max-width:900px){
+  #siteHeader .nav{gap:10px}
+  #siteHeader .nav-cta{gap:8px;flex-shrink:0}
+  #siteHeader .brand{min-width:0}
+  #siteHeader .site-brand-logo{width:clamp(130px,42vw,174px)}
+  #siteHeader .nav-cta .quick-project{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 12px;font-size:.76rem;line-height:1.2;border-radius:10px;white-space:nowrap}
+}
+@media(max-width:767px){
+  .pillar .mobile-preview{display:block;margin:8px 0 0 49px;width:calc(100% - 49px);max-width:none;font-size:.82rem;line-height:1.75;color:var(--muted)}
+  .pillar .mobile-detail>summary{padding-top:10px}
+  .founders{padding:22px;gap:0}
+  .founder{grid-template-columns:42px minmax(0,1fr);column-gap:14px;padding:22px 0}
+  .founder:first-child{padding-top:2px}
+  .founder h4{font-size:.95rem;margin-bottom:7px}
+  .founder small{font-size:.7rem;line-height:1.85;letter-spacing:.045em}
+  .founder-note{padding-top:22px;padding-bottom:0}
+  .founder-note h4{font-size:1.2rem;letter-spacing:0}
+  .founder-note small{font-size:.87rem;line-height:1.8;letter-spacing:0}
+}
+@media(prefers-reduced-motion:reduce){.founder .avatar,.founder h4{transition:none!important}.founder:not(.founder-note):hover .avatar{transform:none}}

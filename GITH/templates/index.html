@@ -24,7 +24,7 @@
 
 <link rel="stylesheet" href="/static/css/site.css?v=20261019">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261016"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261019-studio"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -85,24 +85,28 @@
         <div class="num">01</div>
         <span class="icon-pill"><span class="icon" data-icon="target"></span></span>
         <h3>Un contenu clair</h3>
+        <p class="mobile-preview">Vos textes, vos photos et un contact facile à trouver.</p>
         <p>Vous apportez vos informations et vos photos. Nous pouvons rédiger les textes avec vous et organiser les prestations, les réalisations et le contact. Pas de facturation au mot.</p>
       </div>
       <div class="pillar reveal reveal-delay-1">
         <div class="num">02</div>
         <span class="icon-pill"><span class="icon" data-icon="bolt"></span></span>
         <h3>Des étapes lisibles</h3>
+        <p class="mobile-preview">Un objectif défini, une proposition écrite et des retours regroupés.</p>
         <p>Un échange pour définir l’objectif, une proposition écrite et deux séries de retours regroupés pour les offres vitrine. Vous validez le contenu et les étapes.</p>
       </div>
       <div class="pillar reveal reveal-delay-2">
         <div class="num">03</div>
         <span class="icon-pill"><span class="icon" data-icon="handshake"></span></span>
         <h3>Après livraison</h3>
+        <p class="mobile-preview">Les sources, les accès et les repères pour prendre la suite.</p>
         <p>Vous recevez les sources, les accès convenus et une fiche de prise en main. Les coûts de domaine, d’hébergement, d’entretien et les évolutions sont définis séparément.</p>
       </div>
       <div class="pillar reveal reveal-delay-3">
         <div class="num">04</div>
         <span class="icon-pill"><span class="icon" data-icon="shield"></span></span>
         <h3>Devis détaillé</h3>
+        <p class="mobile-preview">Les prestations et les frais de fonctionnement, précisés avant de commencer.</p>
         <p>Avant de commencer, vous savez ce qui est inclus, ce qui est en option et ce que coûte le suivi. Le calendrier est confirmé dans le devis.</p>
       </div>
     </div>
@@ -250,10 +254,10 @@
           <small>Gestion de la Clientèle & Administration</small>
         </div>
       </div>
-      <div class="founder" style="border-top:1px solid var(--line); padding-top:16px;">
-        <div style="flex:1;">
-          <h4 style="font-family:var(--font-display); font-size:1.15rem; font-weight:500;">Basés en France</h4>
-          <small style="text-transform:none; letter-spacing:0; font-family:var(--font-body); color:var(--ink-soft); font-size:0.9rem;">Des échanges et un suivi à distance, partout en France.</small>
+      <div class="founder founder-note">
+        <div>
+          <h4>Basés en France</h4>
+          <small>Des échanges et un suivi à distance, partout en France.</small>
         </div>
       </div>
     </div>
@@ -303,7 +307,7 @@
         </div>
         <div class="contact-item" style="background: var(--ink); color: var(--paper); border-color: var(--ink);">
           <span class="icon-pill on-dark"><span class="icon" data-icon="sparkles"></span></span>
-          <div style="flex:1;">
+          <div>
             <h4 style="color:var(--paper);">Votre projet, simplement</h4>
             <p style="color: rgba(244,241,234,0.72); margin-bottom: 12px;">{% if contact_email_only %}Envoyez votre objectif par e-mail : nous vous aidons à définir les prochaines étapes.{% else %}Votre projet est déjà défini ? Précisez les fonctionnalités pour préparer le devis. Questions guidées, photos et documents facultatifs.{% endif %}</p>
             <button class="btn btn-outline" style="border-color: var(--paper); color: var(--paper);" onclick="ouvrirQuestionnaire()">
@@ -858,6 +862,9 @@ window.toggleReponseMulti = toggleReponseMulti;
 window.nextStep = nextStep;
 window.prevStep = prevStep;
 window.soumettre = soumettre;
+
+/* Direct entry from the mobile header on secondary pages. */
+if(location.hash === "#questionnaire") ouvrirQuestionnaire();
 
 /* Fermer modal avec Escape */
 document.addEventListener('keydown', (e) => {if(!document.getElementById('overlay')?.classList.contains('actif'))return;if(e.key==='Escape'){e.preventDefault();fermerQuestionnaire();return;}if(e.key!=='Tab')return;const fields=[...document.querySelectorAll('#modal button,#modal input,#modal textarea,#modal select,#modal a[href],[tabindex="0"]')].filter(el=>!el.disabled&&el.closest('#modal')&&el.getClientRects().length);if(!fields.length)return;const first=fields[0],last=fields[fields.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});

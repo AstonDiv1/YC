@@ -18,7 +18,7 @@ function fold(parent, nodes, label) {
   disclosures.push(details);
 }
 document.querySelectorAll('.pillars .pillar, .process .step').forEach(card => {
-  fold(card, [...card.querySelectorAll(':scope > p')], 'Voir le détail');
+  fold(card, [...card.querySelectorAll(':scope > p:not(.mobile-preview)')], 'Voir le détail');
 });
 document.querySelectorAll('.services-grid .svc').forEach(card => {
   fold(card, [card.querySelector(':scope > ul')], 'Voir ce qui est inclus');
