@@ -144,7 +144,8 @@ header#siteHeader.scrolled{
   transition: opacity .18s var(--ease), transform .18s var(--ease);
   z-index: 55;
 }
-.mobile-nav.actif{ opacity:1; transform:none; pointer-events:auto; }
+.mobile-nav{ visibility:hidden; }
+.mobile-nav.actif{ visibility:visible; opacity:1; transform:none; pointer-events:auto; }
 .mobile-nav a{ display:block; padding: 12px 0; border-bottom:1px solid var(--line); font-size:1rem; }
 .mobile-nav a:last-child{ border-bottom:0; }
 
