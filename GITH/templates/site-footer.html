@@ -23,6 +23,7 @@
         <ul>
           <li>{% if legal_page %}<a href="/#contact">Sites internet</a>{% else %}<button onclick="ouvrirQuestionnaire('site')">Sites internet</button>{% endif %}</li>
           <li>{% if legal_page %}<a href="/#contact">Outils web</a>{% else %}<button onclick="ouvrirQuestionnaire('application')">Outils web</button>{% endif %}</li>
+          <li>{% if legal_page %}<a href="/#questionnaire-mobile">Applications mobiles</a>{% else %}<button onclick="ouvrirQuestionnaire('mobile')">Applications mobiles</button>{% endif %}</li>
           <li>{% if legal_page %}<a href="/#questionnaire-pc">Configuration PC &amp; Windows</a>{% else %}<button type="button" data-pc-questionnaire>Configuration PC &amp; Windows</button>{% endif %}</li>
         </ul>
       </div>

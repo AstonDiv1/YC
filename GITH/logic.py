@@ -154,6 +154,19 @@ SERVICES = {'site_web': {'label': 'Création de site internet',
                      'options': ['Famille', 'Pro', 'À définir ensemble', 'Pas de besoin Windows']}
                 ], 'public': True}}
 
+SERVICES['mobile'] = {
+    'label': 'Application mobile',
+    'description': 'Parcours et V1 pour Android ou iOS, après étude du mode de diffusion.',
+    'icone': 'app',
+    'questions': [
+        {'id': 'objectif_mobile', 'label': 'Quel problème votre application doit-elle résoudre ?', 'type': 'zone_texte', 'required': True},
+        {'id': 'plateformes_mobile', 'label': 'Quels appareils souhaitez-vous cibler ?', 'type': 'choix_multiple', 'options': ['Android', 'iOS (iPhone / iPad)', 'À définir ensemble'], 'required': True},
+        {'id': 'public_mobile', 'label': 'À qui s’adresse l’application ?', 'type': 'choix_unique', 'options': ['Mes clients', 'Mon équipe', 'Les deux', 'Autre public à préciser'], 'required': True},
+        {'id': 'fonctions_mobile', 'label': 'Quelles fonctions sont prioritaires ?', 'type': 'choix_multiple', 'options': ['Catalogue / recherche', 'Formulaires / demandes', 'Comptes / droits d’accès', 'Suivi et statuts', 'Photos / documents', 'Notifications à étudier', 'Utilisation hors connexion à étudier', 'Connexion à un outil existant'], 'required': False},
+        {'id': 'diffusion_mobile', 'label': 'Comment imaginez-vous la diffusion ?', 'type': 'choix_unique', 'description': 'Une application web installable et une application mobile dédiée ont des possibilités et des coûts différents. Les tests sur appareils, les comptes développeur, les frais et les règles des boutiques se définissent avant engagement.', 'options': ['Application web installable depuis le navigateur', 'Application mobile dédiée', 'À choisir selon le besoin'], 'required': True}
+    ], 'public': True
+}
+
 PC_OFFERS = {
     'configuration': {'label': 'Configuration commentée', 'price': 39,
                       'duration': 'Échange de 30 min et proposition écrite',
@@ -295,6 +308,7 @@ COMMON_TAIL_PC = [_Q_BUDGET_PC, _Q_DELAI, _Q_CONTEXTE_PC, _Q_ESTHETIQUE_PC, _Q_F
 COMMON_TAILS = {
     "site_web": COMMON_TAIL_WEB,
     "application": COMMON_TAIL_APP,
+    "mobile": COMMON_TAIL_APP,
     "montage_pc": COMMON_TAIL_PC,
 }
 
@@ -393,6 +407,9 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
             fourchette = "Licence Windows 11 sur devis après vérification de l’édition et des conditions" if selected else "Sur devis après définition du besoin"
         else:
             fourchette = f"{selected['price']} € TTC pour le conseil de configuration ; matériel et licence Windows séparés"
+    elif service == "mobile":
+        profil = "Application mobile à cadrer"
+        fourchette = "Sur devis après définition des plateformes, fonctions, tests et mode de diffusion"
     elif service == "application":
         profil = "Outil web métier"
         fourchette = "Sur devis après étude de la tâche, des accès et du fonctionnement"

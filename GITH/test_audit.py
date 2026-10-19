@@ -93,9 +93,15 @@ class AuditTests(unittest.TestCase):
 
     def test_public_catalog_matches_demonstrated_web_services(self):
         config = self.client.get("/api/config").json["services"]
-        self.assertEqual(set(config), {"site_web", "application", "montage_pc"})
+        self.assertEqual(set(config), {"site_web", "application", "mobile", "montage_pc"})
         self.assertEqual(config["application"]["label"], "Outil web métier")
         self.assertTrue(config["application"]["questions"][0]["required"])
+        self.assertEqual(config["mobile"]["label"], "Application mobile")
+        platforms = next(q for q in config["mobile"]["questions"] if q["id"] == "plateformes_mobile")
+        self.assertTrue(platforms["required"])
+        self.assertIn("Android", platforms["options"])
+        self.assertIn("iOS (iPhone / iPad)", platforms["options"])
+        self.assertIn("Sur devis", self.module.logic.compute_recommendation("mobile", {})["fourchette_prix"])
 
     def test_pc_service_is_remote_and_separates_hardware_budget(self):
         service = self.client.get("/api/config").json["services"]["montage_pc"]
@@ -167,7 +173,7 @@ class AuditTests(unittest.TestCase):
 
     def test_booking_email_contains_answers_and_attachment(self):
         logic = self.module.logic
-        for service in ("site_web", "montage_pc"):
+        for service in ("site_web", "montage_pc", "mobile"):
             with self.subTest(service=service):
                 with patch.dict(os.environ,{"RESEND_API_KEY":"test-only-key", "ADMIN_EMAIL":"test@example.com"}), patch.object(logic.resend.Emails,"send",return_value={"id":"mock-email"}) as sender, patch.object(self.module,"REQUIRE_EMAIL_DELIVERY",True):
                     result = self.client.post("/api/submit",data={
