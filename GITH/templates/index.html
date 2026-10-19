@@ -24,7 +24,7 @@
 
 <link rel="stylesheet" href="/static/css/site.css?v=20261019">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261019-studio"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261019-questionnaire"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261019-studio"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261019-mobile"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -164,6 +164,10 @@
         <div class="foot"><span class="price">Sur devis<small>Après étude de votre organisation</small></span><button class="link" onclick="ouvrirQuestionnaire('application')">Décrire la tâche <span class="icon" data-icon="arrow-right"></span></button></div>
       </article>
     </div>
+    <article class="mobile-service" aria-labelledby="mobile-service-title">
+      <div><h3 id="mobile-service-title">Applications mobiles.</h3><p>Un catalogue, un formulaire ou un suivi d’activité dans une interface pensée pour le téléphone. Nous cadrons le parcours et une première version selon votre besoin.</p><details><summary>Choisir le bon format</summary><p>Application web installable ou application mobile dédiée : les fonctions, les tests sur appareils et le mode de diffusion sont définis avant accord. Comptes développeur et frais de boutique éventuels sont séparés.</p></details></div>
+      <div class="mobile-service-action"><div class="platform-labels" aria-label="Plateformes à étudier"><span><img src="/static/icons/android-logo.svg" alt="" width="24" height="24">Android</span><span><img src="/static/icons/apple-logo.svg" alt="" width="24" height="24">iOS</span></div><p>Sur étude du périmètre et des plateformes.</p><button class="btn btn-outline" type="button" onclick="ouvrirQuestionnaire('mobile')">Décrire mon application <span class="icon" data-icon="arrow-right"></span></button></div>
+    </article>
     <div class="offer-running-costs reveal"><span class="icon" data-icon="file"></span><p><strong>Le coût complet avant accord.</strong> Domaine, hébergement, messagerie et entretien sont séparés du prix de conception. Un espace de gestion, une réservation ou une intégration spécifique se chiffre selon le besoin. Le montant final et la TVA applicable sont précisés avant tout engagement.</p></div>
     {% include 'pc-advice.html' %}
     <div class="reveal demo-banner commercial-projects"><div><h3>Le travail du studio, à explorer.</h3><p>Une menuiserie, un restaurant et un outil de gestion : parcourez les interfaces, testez les interactions et découvrez les fonctions réellement présentes.</p><small>Projets originaux d’exploration · identités et données d’exemple.</small></div><a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a></div>
@@ -649,16 +653,17 @@ function renderStep(){
     setProgress(10);
     const services = (CONFIG && CONFIG.services) || {};
     let html = '<p style="color:var(--ink-soft); margin-bottom:20px; font-size:0.95rem;">Choisissez le service qui correspond à votre besoin.</p><div class="service-choice-grid">';
-    const serviceOrder = ['site_web','application','montage_pc'];
+    const serviceOrder = ['site_web','application','mobile','montage_pc'];
     const orderedKeys = [...serviceOrder.filter(k=>services[k]), ...Object.keys(services).filter(k=>!serviceOrder.includes(k))];
     for(const k of orderedKeys){
       const v = services[k];
       const nom = v.label || v.nom || k;
       const desc = v.description || '';
       const ic = v.icone || v.icon || 'globe';
+      const platforms = k==='mobile'?'<span class="platform-labels"><span><img src="/static/icons/android-logo.svg" alt="" width="16" height="16">Android</span><span><img src="/static/icons/apple-logo.svg" alt="" width="16" height="16">iOS</span></span>':'';
       html += `<button type="button" class="service-choice" aria-label="${escapeHtml(nom)}" onclick="choisirService('${k}')">
         <span class="icon" data-icon="${escapeHtml(ic)}"></span>
-        <span class="service-choice-copy"><strong>${escapeHtml(nom)}</strong><span>${escapeHtml(desc)}</span></span>
+        <span class="service-choice-copy"><strong>${escapeHtml(nom)}</strong><span>${escapeHtml(desc)}</span>${platforms}</span>
       </button>`;
     }
     html += '</div>';
@@ -868,6 +873,7 @@ window.soumettre = soumettre;
 /* Direct entry from the mobile header on secondary pages. */
 if(location.hash === "#questionnaire") ouvrirQuestionnaire();
 if(location.hash === "#questionnaire-pc") ouvrirQuestionnaire("montage_pc");
+if(location.hash === "#questionnaire-mobile") ouvrirQuestionnaire("mobile");
 
 /* Fermer modal avec Escape */
 document.addEventListener('keydown', (e) => {if(!document.getElementById('overlay')?.classList.contains('actif'))return;if(e.key==='Escape'){e.preventDefault();fermerQuestionnaire();return;}if(e.key!=='Tab')return;const fields=[...document.querySelectorAll('#modal button,#modal input,#modal textarea,#modal select,#modal a[href],[tabindex="0"]')].filter(el=>!el.disabled&&el.closest('#modal')&&el.getClientRects().length);if(!fields.length)return;const first=fields[0],last=fields[fields.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
