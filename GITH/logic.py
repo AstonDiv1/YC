@@ -272,7 +272,7 @@ _Q_CONTEXTE_PC = {
 
 _Q_FICHIERS_PC = {
     "id": "fichiers",
-    "label": "Ajoutez si besoin une photo de votre setup actuel, une liste de composants ou une référence de boîtier",
+    "label": "Photos ou documents utiles (facultatif, sans clé Windows ni mot de passe)",
     "type": "fichiers",
     "required": False,
 }
@@ -287,7 +287,7 @@ COMMON_TAIL_APP = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE, _Q_INSPIRATIONS,
 _Q_BUDGET_PC = {'id': 'budget_materiel', 'label': 'Budget du matériel, hors accompagnement',
                 'type': 'select', 'required': True,
                 'options': ['Moins de 600 €', '600 à 1 000 €', '1 000 à 1 500 €', '1 500 à 2 000 €', 'Plus de 2 000 €', 'À définir ensemble']}
-COMMON_TAIL_PC = [_Q_BUDGET_PC, _Q_DELAI, _Q_CONTEXTE_PC, _Q_ESTHETIQUE_PC]
+COMMON_TAIL_PC = [_Q_BUDGET_PC, _Q_DELAI, _Q_CONTEXTE_PC, _Q_ESTHETIQUE_PC, _Q_FICHIERS_PC]
 
 COMMON_TAILS = {
     "site_web": COMMON_TAIL_WEB,
