@@ -22,9 +22,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/static/css/site.css?v=20261012-portfolio">
+<link rel="stylesheet" href="/static/css/site.css?v=20261019">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261016"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-brief.mjs?v=20261018"></script></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -34,7 +34,7 @@
 <section class="hero" id="top">
   <div class="container hero-grid">
     <div>
-      <div class="eyebrow reveal">Sites professionnels · France entière à distance</div>
+      <div class="eyebrow reveal">Sites et outils web · France entière à distance</div>
       <h1 class="reveal reveal-delay-1" style="margin-top:20px;">
         Présentez votre savoir-faire.<br>
         <span class="accent">Facilitez les demandes.</span>
@@ -42,11 +42,11 @@
       <p class="lead reveal reveal-delay-2">
         Vos prestations, vos réalisations et vos coordonnées, réunies dans un site clair.
         Nous vous aidons à écrire et à organiser votre contenu, puis construisons
-        une interface adaptée à votre activité.
+        une interface adaptée à votre activité. Pour une tâche métier, nous concevons aussi des outils web sur mesure.
       </p>
       <div class="hero-actions reveal reveal-delay-3">
         <a href="#contact" class="btn btn-primary">
-          Parler de mon site <span class="icon" data-icon="arrow-right"></span>
+          Parler de mon projet <span class="icon" data-icon="arrow-right"></span>
         </a>
         <a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a>
       </div>
@@ -149,7 +149,7 @@
         <span class="index">03</span><span class="offer-kicker">Une tâche métier à simplifier</span>
         <span class="icon-pill"><span class="icon" data-icon="app"></span></span>
         <h3>Outils web sur mesure</h3>
-        <p class="desc">Une interface pour regrouper des demandes, suivre des étapes, retrouver des informations ou préparer un document.</p>
+        <p class="desc">Un outil construit autour de votre façon de travailler : demandes, suivi, documents et accès partagés. Nous définissons les fonctions utiles avec vous.</p>
         <ul>
           <li><span class="icon" data-icon="check"></span> Formulaires et parcours de collecte</li>
           <li><span class="icon" data-icon="check"></span> Tableaux de bord et suivi de tâches</li>
@@ -164,6 +164,8 @@
     <div class="reveal demo-banner commercial-projects"><div><h3>Le travail du studio, à explorer.</h3><p>Une menuiserie, un restaurant et un outil de gestion : parcourez les interfaces, testez les interactions et découvrez les fonctions réellement présentes.</p><small>Projets originaux d’exploration · identités et données d’exemple.</small></div><a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a></div>
   </div>
 </section>
+
+{% include 'pc-advice.html' %}
 
 <!-- ============= PROCESS ============= -->
 <section class="section section-dark" id="fonctionnement">
@@ -208,6 +210,12 @@
   </div>
 </section>
 
+<!-- ============= OUTILS SUR MESURE ============= -->
+<section class="section tools-detail" id="outils-sur-mesure"><div class="container">
+  <div class="service-heading"><h2>Votre organisation.<br>Votre outil web.</h2><p>Un formulaire, un tableur et des messages peuvent finir par disperser le travail. Nous pouvons réunir une tâche précise dans une interface accessible depuis le navigateur.</p></div>
+  <div class="tools-examples"><article><span class="service-label">Réunir les demandes</span><h3>Les bonnes informations,<br>au bon endroit.</h3><p>Questions conditionnelles, documents à prévoir, récapitulatif et historique : le parcours suit les informations réellement utiles à votre métier.</p><a class="link" href="/static/demos/dossier-atelier.html">Tester la demande guidée <span aria-hidden="true">↗</span></a></article><article><span class="service-label">Suivre le travail</span><h3>Des étapes lisibles,<br>des actions concrètes.</h3><p>Suivi des dossiers, recherche, filtres, tableaux de bord ou exports. Les accès, sauvegardes et connexions à vos services se définissent au cadrage.</p><a class="link" href="/static/demos/cobalt.html">Explorer l’outil de gestion <span aria-hidden="true">↗</span></a></article></div>
+  <div class="tools-scope"><p><strong>Un périmètre précis avant de développer.</strong> Nous commençons par votre tâche, ses utilisateurs et ses données. Vous validez les fonctions, un premier écran et les coûts de fonctionnement. Les démonstrations du portfolio restent fictives et leurs limites sont indiquées.</p><button class="btn btn-primary" onclick="ouvrirQuestionnaire('application')">Décrire mon besoin métier <span class="icon" data-icon="arrow-right"></span></button></div>
+</div></section>
 <!-- ============= PARCOURS METIER ============= -->
 <section class="section"><div class="container">
   <div class="section-head reveal"><div><div class="eyebrow">Au-delà d’une vitrine</div><h2 style="margin-top:14px;">Des demandes de devis<br>mieux préparées.</h2></div><p class="side">Pour un atelier de menuiserie ou d’agencement, le site peut guider une demande : réunir le besoin, les repères et les choix, puis montrer ce qui manque avant le premier échange.</p></div>
@@ -223,7 +231,7 @@
     <div class="reveal">
       <div class="eyebrow">Le studio</div>
       <h2 style="margin-top:14px;">Les fondateurs du studio.</h2>
-      <p style="margin-top:24px;">Numéryl est porté par Ilhan Yilmaz et Flavio Coret. Le studio associe développement, organisation du projet et suivi des échanges pour construire des sites professionnels et des outils web adaptés à votre activité.</p>
+      <p style="margin-top:24px;">Numéryl est porté par YILMAZ et CORET. Le studio associe développement, organisation du projet et suivi des échanges pour construire des sites professionnels et des outils web adaptés à votre activité.</p>
       <p>Nous nous adressons aux artisans, indépendants et petites entreprises qui souhaitent un site ou un outil adapté à leur activité. Le premier échange nous permet de voir ce dont vous avez besoin et si nous pouvons vous aider.</p>
       <p>Nous travaillons à distance partout en France. Les projets présentés dans le portfolio permettent d’examiner notre approche avant un premier échange.</p>
     </div>
@@ -231,14 +239,14 @@
       <div class="founder">
         <div class="avatar">Y</div>
         <div>
-          <h4>Ilhan Yilmaz</h4>
+          <h4>YILMAZ</h4>
           <small>Programmation & Gestion de Projet</small>
         </div>
       </div>
       <div class="founder">
         <div class="avatar">C</div>
         <div>
-          <h4>Flavio Coret</h4>
+          <h4>CORET</h4>
           <small>Gestion de la Clientèle & Administration</small>
         </div>
       </div>
@@ -262,7 +270,7 @@
 <details><summary>Sous quel délai pouvez-vous livrer ?</summary><p>Le calendrier dépend du projet, de notre disponibilité et de la réception de vos informations. Il est confirmé avant le démarrage. Si vous avez une date impérative, indiquez-la dès le premier échange.</p></details>
 <details><summary>Je n’ai pas encore de logo ou de photos : comment avancer ?</summary><p>Nous pouvons définir une direction visuelle et organiser le contenu avec vous. La photographie et une identité de marque complète font l’objet d’un périmètre séparé. Nous utilisons des ressources dont les droits sont établis, sans inventer de photos de vos réalisations.</p></details>
 <details><summary>Que montrent les projets du portfolio ?</summary><p>Ce sont des projets originaux créés par le studio pour explorer des sites et des outils web. Les identités et les données sont fictives. Chaque projet explique ses interactions, ses fonctions simulées et ses limites ; il ne constitue pas une référence de commande client.</p></details>
-<details><summary>Comment commencer un projet ?</summary><p>Décrivez votre activité et votre objectif en quelques lignes. Le premier échange est sans engagement. Numéryl est actuellement un projet en lancement, non encore immatriculé. Le cadre professionnel, le devis et les conditions seront établis avant toute commande payante.</p></details>
+<details><summary>Comment commencer un projet ?</summary><p>Décrivez votre activité et votre objectif en quelques lignes. Le premier échange est sans engagement. Numéryl est en lancement : les formalités ont été déposées et l’immatriculation est en cours. Le cadre professionnel, le devis et les conditions seront établis avant toute commande payante.</p></details>
 </div></div></section>
 
 <!-- ============= CONTACT ============= -->
@@ -493,303 +501,32 @@ const SERVICE_ALIAS = { site: 'site_web', 'site-web': 'site_web', web: 'site_web
                         app: 'application', mobile: 'application',
                         pc: 'montage_pc', 'montage-pc': 'montage_pc', montage: 'montage_pc' };
 
-const FALLBACK_CONFIG = {
-  "services": {
-    "site_web": {
-      "label": "Création de site internet",
-      "description": "Une page ou trois pages, contenu accompagné et contact.",
-      "icone": "web",
-      "questions": [
-        {
-          "id": "type_site",
-          "label": "Quel projet souhaitez-vous ?",
-          "type": "choix_unique",
-          "options": [
-            "Une page de présentation",
-            "Site vitrine de 3 pages",
-            "Refonte d’un site existant",
-            "Autre besoin à cadrer"
-          ],
-          "required": true
-        },
-        {
-          "id": "fonctionnalites",
-          "label": "Quelles fonctions sont utiles ?",
-          "type": "choix_multiple",
-          "options": [
-            "Galerie / portfolio",
-            "Formulaire de contact",
-            "CMS / modification des contenus",
-            "Réservation / prise de rendez-vous",
-            "Paiement en ligne",
-            "Espace client / connexion",
-            "Multilingue",
-            "Import / export de données",
-            "Connexion à un outil existant"
-          ],
-          "required": false
-        },
-        {
-          "id": "nb_pages",
-          "label": "Nombre de pages envisagé",
-          "type": "select",
-          "options": [
-            "1 page",
-            "3 pages",
-            "Plus de 3 pages / à préciser"
-          ],
-          "required": true
-        },
-        {
-          "id": "budget",
-          "label": "Quel budget envisagez-vous ?",
-          "type": "select",
-          "options": [
-            "Moins de 300 €",
-            "300 € - 800 €",
-            "800 € - 2000 €",
-            "2000 € - 5000 €",
-            "Plus de 5000 €",
-            "Je ne sais pas encore"
-          ],
-          "required": true
-        },
-        {
-          "id": "delai",
-          "label": "Dans quel délai souhaitez-vous être livré ?",
-          "type": "choix_unique",
-          "options": [
-            "Urgent — dès que possible",
-            "Sous 1 à 2 semaines",
-            "Sous 2 à 3 semaines",
-            "Pas de contrainte particulière"
-          ],
-          "required": true
-        },
-        {
-          "id": "contexte",
-          "label": "Décrivez votre projet en quelques mots (contexte, objectif, cible)",
-          "type": "zone_texte",
-          "required": false
-        },
-        {
-          "id": "inspirations",
-          "label": "Avez-vous des références ou sites qui vous plaisent ? (liens, exemples)",
-          "type": "zone_texte",
-          "required": false
-        },
-        {
-          "id": "ambiance_visuelle",
-          "label": "Quelle ambiance visuelle imaginez-vous ?",
-          "type": "choix_multiple",
-          "options": [
-            "Épurée / minimaliste",
-            "Chaleureuse / naturelle",
-            "Élégante / haut de gamme",
-            "Dynamique / colorée",
-            "Technique / corporate",
-            "Créative / artistique",
-            "Je ne sais pas encore — orientez-moi"
-          ],
-          "required": false
-        },
-        {
-          "id": "charte_existante",
-          "label": "Avez-vous déjà un logo ou une charte graphique ?",
-          "type": "choix_unique",
-          "options": [
-            "Oui, tout est prêt (logo + couleurs + typos)",
-            "J'ai seulement un logo",
-            "Non, rien pour le moment"
-          ],
-          "required": false
-        },
-        {
-          "id": "fichiers",
-          "label": "Ajoutez tout document utile (cahier des charges, maquettes, logo, photos, exemples…)",
-          "type": "fichiers",
-          "required": false
-        }
-      ]
-    },
-    "application": {
-      "label": "Outil web métier",
-      "description": "Une interface dans le navigateur pour simplifier une tâche.",
-      "icone": "app",
-      "questions": [
-        {
-          "id": "objectif_outil",
-          "label": "Quelle tâche voulez-vous simplifier, et comment la faites-vous aujourd’hui ?",
-          "type": "zone_texte",
-          "required": true
-        },
-        {
-          "id": "fonctionnalites_app",
-          "label": "Quelles fonctions seraient utiles ?",
-          "type": "choix_multiple",
-          "options": [
-            "Formulaire / collecte d’informations",
-            "Suivi de demandes ou de tâches",
-            "Recherche / filtres",
-            "Import / export de données",
-            "Génération de documents",
-            "Connexion à un outil existant",
-            "Comptes / accès partagés"
-          ],
-          "required": false
-        },
-        {
-          "id": "existant_app",
-          "label": "Que souhaitez-vous améliorer ?",
-          "type": "choix_unique",
-          "options": [
-            "Une tâche aujourd’hui manuelle",
-            "Un fichier ou un tableur existant",
-            "Un outil déjà utilisé",
-            "Une idée à définir ensemble"
-          ],
-          "required": true
-        },
-        {
-          "id": "budget",
-          "label": "Quel budget envisagez-vous ?",
-          "type": "select",
-          "options": [
-            "Moins de 300 €",
-            "300 € - 800 €",
-            "800 € - 2000 €",
-            "2000 € - 5000 €",
-            "Plus de 5000 €",
-            "Je ne sais pas encore"
-          ],
-          "required": true
-        },
-        {
-          "id": "delai",
-          "label": "Dans quel délai souhaitez-vous être livré ?",
-          "type": "choix_unique",
-          "options": [
-            "Urgent — dès que possible",
-            "Sous 1 à 2 semaines",
-            "Sous 2 à 3 semaines",
-            "Pas de contrainte particulière"
-          ],
-          "required": true
-        },
-        {
-          "id": "contexte",
-          "label": "Décrivez votre projet en quelques mots (contexte, objectif, cible)",
-          "type": "zone_texte",
-          "required": false
-        },
-        {
-          "id": "inspirations",
-          "label": "Avez-vous des références ou sites qui vous plaisent ? (liens, exemples)",
-          "type": "zone_texte",
-          "required": false
-        },
-        {
-          "id": "ambiance_visuelle",
-          "label": "Quelle ambiance visuelle imaginez-vous ?",
-          "type": "choix_multiple",
-          "options": [
-            "Épurée / minimaliste",
-            "Chaleureuse / naturelle",
-            "Élégante / haut de gamme",
-            "Dynamique / colorée",
-            "Technique / corporate",
-            "Créative / artistique",
-            "Je ne sais pas encore — orientez-moi"
-          ],
-          "required": false
-        },
-        {
-          "id": "charte_existante",
-          "label": "Avez-vous déjà un logo ou une charte graphique ?",
-          "type": "choix_unique",
-          "options": [
-            "Oui, tout est prêt (logo + couleurs + typos)",
-            "J'ai seulement un logo",
-            "Non, rien pour le moment"
-          ],
-          "required": false
-        },
-        {
-          "id": "fichiers",
-          "label": "Ajoutez tout document utile (cahier des charges, maquettes, logo, photos, exemples…)",
-          "type": "fichiers",
-          "required": false
-        }
-      ]
-    }
-  },
-  "questions_communes": [],
-  "contact_fields": [
-    {
-      "id": "nom",
-      "label": "Nom complet",
-      "type": "texte",
-      "required": true
-    },
-    {
-      "id": "email",
-      "label": "Adresse e-mail",
-      "type": "texte",
-      "required": true
-    },
-    {
-      "id": "telephone",
-      "label": "Téléphone",
-      "type": "texte",
-      "required": false
-    },
-    {
-      "id": "ville",
-      "label": "Ville",
-      "type": "texte",
-      "required": false
-    },
-    {
-      "id": "disponibilite",
-      "label": "Meilleur moment pour vous contacter",
-      "type": "texte",
-      "required": false
-    },
-    {
-      "id": "message",
-      "label": "Un détail à ajouter ? (optionnel)",
-      "type": "zone_texte",
-      "required": false
-    }
-  ]
-};
+const FALLBACK_CONFIG = {{ public_config | tojson }};
 
-let CONFIG = null;
+let CONFIG = FALLBACK_CONFIG;
 let questionnaireOpener=null, questionnaireInert=[];
 let QSTATE = { service:null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced:false };
 
 async function chargerConfig(){
-  if(CONFIG) return CONFIG;
-  try{
-    const r = await fetch('/api/config', { headers:{'Accept':'application/json'} });
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const j = await r.json();
-    CONFIG = j && j.services ? j : FALLBACK_CONFIG;
-  } catch(e){
-    console.warn('[Numéryl] /api/config indisponible, utilisation du fallback local.', e);
-    CONFIG = FALLBACK_CONFIG;
-  }
+  // Embedded from the same public catalogue as /api/config; no second request.
+  CONFIG = CONFIG || FALLBACK_CONFIG;
   return CONFIG;
 }
 
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function normalizeServiceKey(k){ if(!k) return null; if(CONFIG && CONFIG.services && CONFIG.services[k]) return k; return SERVICE_ALIAS[k] || k; }
 
-async function ouvrirQuestionnaire(serviceForce, siteFormat){
+async function ouvrirQuestionnaire(serviceForce, siteFormat, initialAnswers){
   await chargerConfig();
   const key = normalizeServiceKey(serviceForce);
   const validForced = key && CONFIG.services && CONFIG.services[key];
   QSTATE = { service: validForced ? key : null, step:0, reponses:{}, contact:{}, fichiers:[], _svcForced: !!validForced };
+  if(validForced && key==='montage_pc' && initialAnswers && typeof initialAnswers==='object'){
+    for(const field of ['type_prestation','usage_pc','budget_materiel']){
+      const question=CONFIG.services[key].questions.find(q=>q.id===field);
+      if(question?.options.includes(initialAnswers[field]))QSTATE.reponses[field]=initialAnswers[field];
+    }
+  }
   if(validForced && key==='site_web' && ['essential','structured'].includes(siteFormat)){
     QSTATE.reponses.type_site=siteFormat==='structured'?'Site vitrine de 3 pages':'Une page de présentation';
     QSTATE.reponses.nb_pages=siteFormat==='structured'?'3 pages':'1 page';
@@ -906,7 +643,10 @@ function renderStep(){
     setProgress(10);
     const services = (CONFIG && CONFIG.services) || {};
     let html = '<p style="color:var(--ink-soft); margin-bottom:20px; font-size:0.95rem;">Choisissez le service qui correspond à votre besoin.</p><div class="service-choice-grid">';
-    for(const [k,v] of Object.entries(services)){
+    const serviceOrder = ['site_web','application','montage_pc'];
+    const orderedKeys = [...serviceOrder.filter(k=>services[k]), ...Object.keys(services).filter(k=>!serviceOrder.includes(k))];
+    for(const k of orderedKeys){
+      const v = services[k];
       const nom = v.label || v.nom || k;
       const desc = v.description || '';
       const ic = v.icone || v.icon || 'globe';

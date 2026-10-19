@@ -1,6 +1,8 @@
 """Regression tests run against temporary storage, never a live service."""
 import os
 import io
+import json
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -91,9 +93,47 @@ class AuditTests(unittest.TestCase):
 
     def test_public_catalog_matches_demonstrated_web_services(self):
         config = self.client.get("/api/config").json["services"]
-        self.assertEqual(set(config), {"site_web", "application"})
+        self.assertEqual(set(config), {"site_web", "application", "montage_pc"})
         self.assertEqual(config["application"]["label"], "Outil web métier")
         self.assertTrue(config["application"]["questions"][0]["required"])
+
+    def test_pc_service_is_remote_and_separates_hardware_budget(self):
+        service = self.client.get("/api/config").json["services"]["montage_pc"]
+        self.assertIn("distance", service["label"])
+        ids = {q["id"] for q in service["questions"]}
+        self.assertIn("budget_materiel", ids)
+        self.assertNotIn("a_domicile", ids)
+        self.assertNotIn("budget", ids)
+        self.assertNotIn("fichiers", ids)
+
+    def test_page_embeds_the_current_public_questionnaire_without_extra_fetch(self):
+        html = self.client.get("/").text
+        match = re.search(r"const FALLBACK_CONFIG = (\{[^\n]*\});", html)
+        self.assertIsNotNone(match)
+        self.assertEqual(json.loads(match.group(1)), self.client.get("/api/config").json)
+        self.assertNotIn("fetch('/api/config'", html)
+
+    def test_pc_package_price_does_not_follow_hardware_budget(self):
+        for label, price in (("Configuration commentée", "39 € TTC"),
+                             ("Accompagnement au montage", "69 € TTC"),
+                             ("Aide Windows", "29 € TTC")):
+            for budget in ("Moins de 600 €", "Plus de 2 000 €"):
+                result = self.module.logic.compute_recommendation("montage_pc", {
+                    "type_prestation": label, "budget_materiel": budget,
+                    "windows_pc": "Je souhaite une proposition de licence séparée"})
+                self.assertIn(price, result["fourchette_prix"])
+                self.assertIn("licence Windows séparés", result["fourchette_prix"])
+
+    def test_pc_request_preserves_remote_scope_and_selected_offer(self):
+        answers = {"type_prestation": "Accompagnement au montage", "usage_pc": "Jeux vidéo",
+                   "budget_materiel": "600 à 1 000 €", "windows_pc": "Je possède déjà une licence"}
+        with patch.object(self.module.logic, "notify_new_booking"):
+            response = self.client.post("/api/submit", json={"service":"montage_pc", "reponses":answers,
+                "contact":{"nom":"Test PC local", "email":"test@example.com"}},
+                environ_overrides={"REMOTE_ADDR":"192.0.2.98"})
+        self.assertEqual(response.status_code, 200)
+        saved = next(b for b in self.module.logic.list_bookings() if b["id"] == response.json["booking_id"])
+        self.assertEqual(saved["reponses"], answers)
 
     def test_admin_data_requires_authentication(self):
         self.assertEqual(self.client.get("/api/bookings").status_code, 401)

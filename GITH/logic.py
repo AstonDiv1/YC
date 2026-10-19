@@ -135,38 +135,34 @@ SERVICES = {'site_web': {'label': 'Création de site internet',
                                             'Un outil déjà utilisé',
                                             'Une idée à définir ensemble'],
                                 'required': True}]},
- 'montage_pc': {'label': 'Montage & optimisation PC',
-                'description': 'Montage à domicile, choix des composants, optimisation.',
+ 'montage_pc': {'label': 'Conseil PC à distance',
+                'description': 'Configuration, accompagnement au montage et aide Windows, à distance.',
                 'icone': 'pc',
-                'questions': [{'id': 'usage_pc',
-                               'label': 'Usage principal du PC',
-                               'type': 'choix_unique',
-                               'options': ['Gaming',
-                                           'Montage vidéo / photo / 3D',
-                                           'Bureautique / usage quotidien',
-                                           'Développement / programmation',
-                                           'Serveur / usage professionnel intensif'],
-                               'required': True},
-                              {'id': 'type_prestation',
-                               'label': 'De quoi avez-vous besoin ?',
-                               'type': 'choix_multiple',
-                               'options': ["Montage d'un PC neuf",
-                                           'Choix des composants (conseil)',
-                                           "Optimisation d'un PC existant",
-                                           'Mise à niveau (upgrade) de composants',
-                                           'Nettoyage / maintenance'],
-                               'required': True},
-                              {'id': 'a_domicile',
-                               'label': 'Souhaitez-vous une intervention à domicile ?',
-                               'type': 'choix_unique',
-                               'options': ['Oui', 'Non, je peux me déplacer ou envoyer le matériel'],
-                               'required': True},
-                              {'id': 'composants_deja_achetes',
-                               'label': 'Avez-vous déjà des composants ?',
-                               'type': 'choix_unique',
-                               'options': ['Oui, tout est acheté', 'Partiellement', 'Non, rien'],
-                               'required': True}],
-                'public': False}}
+                'questions': [
+                    {'id': 'type_prestation', 'label': 'Quel accompagnement souhaitez-vous ?',
+                     'type': 'choix_unique', 'required': True,
+                     'options': ['Configuration commentée', 'Accompagnement au montage', 'Aide Windows', 'À préciser ensemble']},
+                    {'id': 'usage_pc', 'label': 'Votre usage principal', 'type': 'choix_unique', 'required': True,
+                     'options': ['Jeux vidéo', 'Photo / vidéo / création', 'Bureautique / usage quotidien', 'Développement / programmation', 'Plusieurs usages à préciser']},
+                    {'id': 'composants_deja_achetes', 'label': 'Avez-vous déjà des composants ?',
+                     'type': 'choix_unique', 'required': True,
+                     'options': ['Oui, tout est acheté', 'Partiellement', 'Non, rien']},
+                    {'id': 'composants_pc', 'label': 'Références des composants ou liste déjà envisagée',
+                     'type': 'zone_texte', 'required': False},
+                    {'id': 'windows_pc', 'label': 'Pour Windows, où en êtes-vous ?',
+                     'type': 'choix_unique', 'required': True,
+                     'options': ['Je possède déjà une licence', 'Je souhaite un conseil sur la licence', 'Je souhaite une proposition de licence séparée', 'Pas de besoin Windows']}
+                ], 'public': True}}
+
+PC_OFFERS = {
+    'configuration': {'label': 'Configuration commentée', 'price': 39, 'duration': 'Échange de 30 min et proposition écrite',
+                      'detail': 'Choix des composants selon votre usage et votre budget, points de compatibilité expliqués et une série de retours.'},
+    'accompagnement': {'label': 'Accompagnement au montage', 'price': 69, 'duration': 'Une séance à distance jusqu’à 90 min',
+                       'detail': 'Préparation du matériel, lecture des notices et accompagnement des étapes. Vous effectuez les manipulations ; aucun montage en atelier.'},
+    'windows': {'label': 'Aide Windows', 'price': 29, 'duration': 'Une séance à distance jusqu’à 45 min',
+                'detail': 'Préparation du support officiel, installation et vérification de l’activation avec une licence adaptée. Licence facturée séparément si nécessaire.'}
+}
+
 
 # Questions communes, ajoutées selon le service.
 
@@ -288,8 +284,10 @@ COMMON_TAIL_WEB = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE, _Q_INSPIRATIONS,
 COMMON_TAIL_APP = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE, _Q_INSPIRATIONS,
                    _Q_AMBIANCE, _Q_CHARTE, _Q_FICHIERS]
 
-COMMON_TAIL_PC = [_Q_BUDGET, _Q_DELAI, _Q_CONTEXTE_PC,
-                  _Q_ESTHETIQUE_PC, _Q_FICHIERS_PC]
+_Q_BUDGET_PC = {'id': 'budget_materiel', 'label': 'Budget du matériel, hors accompagnement',
+                'type': 'select', 'required': True,
+                'options': ['Moins de 600 €', '600 à 1 000 €', '1 000 à 1 500 €', '1 500 à 2 000 €', 'Plus de 2 000 €', 'À définir ensemble']}
+COMMON_TAIL_PC = [_Q_BUDGET_PC, _Q_DELAI, _Q_CONTEXTE_PC, _Q_ESTHETIQUE_PC]
 
 COMMON_TAILS = {
     "site_web": COMMON_TAIL_WEB,
@@ -372,8 +370,10 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
     profil = "À cadrer"
     fourchette = "Sur devis après définition du périmètre"
     if service == "montage_pc":
-        profil = "Demande informatique à étudier"
-        fourchette = "Sur devis ; disponibilité de la prestation à confirmer"
+        profil = "Conseil PC à distance"
+        selected = next((offer for offer in PC_OFFERS.values() if offer['label'] == reponses.get('type_prestation')), None)
+        fourchette = (f"{selected['price']} € TTC pour {selected['label'].lower()} ; matériel et licence Windows séparés"
+                      if selected else "Sur devis après choix de l’accompagnement ; matériel et licence Windows séparés")
     elif service == "application":
         profil = "Outil web métier"
         fourchette = "Sur devis après étude de la tâche, des accès et du fonctionnement"

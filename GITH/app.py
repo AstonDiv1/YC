@@ -350,7 +350,8 @@ def _ensure_db():
 
 @app.route("/")
 def index():
-    return render_template("index.html", contact_email_only=CONTACT_EMAIL_ONLY)
+    return render_template("index.html", contact_email_only=CONTACT_EMAIL_ONLY,
+                           pc_offers=logic.PC_OFFERS, public_config=logic.get_public_config())
 
 
 from portfolio_demo import portfolio_demo

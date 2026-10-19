@@ -19,7 +19,9 @@ class ReservationSystemTests(unittest.TestCase):
         day=self.module.now_paris().date()+timedelta(days=1)
         while day.weekday() in (0,6):day+=timedelta(days=1)
         self.day=day.isoformat()
-        slots=self.client.get('/api/portfolio-demo/slots',query_string={'day':self.day,'party':2,'service':'dinner'}).json['slots']
+        # The capacity scenario starts with six guests. Some demo slots accept
+        # two guests but intentionally reject large parties, depending on date.
+        slots=self.client.get('/api/portfolio-demo/slots',query_string={'day':self.day,'party':6,'service':'dinner'}).json['slots']
         self.slot=next(s['time'] for s in slots if s['available'])
     def payload(self,party=2):return {'day':self.day,'party':party,'service':'dinner','slot':self.slot,'first_name':'Camille Demo','demo_ack':True,'client_key':str(uuid.uuid4())}
     def test_capacity_changes_and_cancellation_restores_it(self):
