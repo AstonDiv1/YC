@@ -920,7 +920,10 @@ function renderStep(){
     setProgress(10);
     const services = (CONFIG && CONFIG.services) || {};
     let html = '<p style="color:var(--ink-soft); margin-bottom:20px; font-size:0.95rem;">Choisissez le service qui correspond à votre besoin.</p><div class="service-choice-grid">';
-    for(const [k,v] of Object.entries(services)){
+    const serviceOrder = ['site_web','application','montage_pc'];
+    const orderedKeys = [...serviceOrder.filter(k=>services[k]), ...Object.keys(services).filter(k=>!serviceOrder.includes(k))];
+    for(const k of orderedKeys){
+      const v = services[k];
       const nom = v.label || v.nom || k;
       const desc = v.description || '';
       const ic = v.icone || v.icon || 'globe';
