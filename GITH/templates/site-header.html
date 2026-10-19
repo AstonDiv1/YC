@@ -12,6 +12,7 @@
       <a href="{% if legal_page %}/{% endif %}#contact">Contact</a>
     </nav>
     <div class="nav-cta">
+      {% if legal_page %}<a class="btn btn-primary quick-project" href="/#questionnaire" aria-label="Ouvrir le questionnaire de projet">Devis</a>{% else %}<button class="btn btn-primary quick-project" type="button" onclick="ouvrirQuestionnaire()" aria-label="Ouvrir le questionnaire de projet">Devis</button>{% endif %}
       {% if legal_page %}<a class="btn btn-primary" href="/#contact">
         Démarrer un projet <span class="icon" data-icon="arrow-right"></span>
       </a>{% else %}<button class="btn btn-primary" onclick="ouvrirQuestionnaire()">
