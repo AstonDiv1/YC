@@ -24,7 +24,7 @@
 
 <link rel="stylesheet" href="/static/css/site.css?v=20261019">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261016"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-brief.mjs?v=20261018"></script></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261016"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -305,7 +305,7 @@
           <span class="icon-pill on-dark"><span class="icon" data-icon="sparkles"></span></span>
           <div style="flex:1;">
             <h4 style="color:var(--paper);">Votre projet, simplement</h4>
-            <p style="color: rgba(244,241,234,0.72); margin-bottom: 12px;">{% if contact_email_only %}Envoyez votre objectif par e-mail : nous vous aidons à définir les prochaines étapes.{% else %}Votre projet est déjà défini ? Précisez les fonctionnalités pour préparer le devis.{% endif %}</p>
+            <p style="color: rgba(244,241,234,0.72); margin-bottom: 12px;">{% if contact_email_only %}Envoyez votre objectif par e-mail : nous vous aidons à définir les prochaines étapes.{% else %}Votre projet est déjà défini ? Précisez les fonctionnalités pour préparer le devis. Questions guidées, photos et documents facultatifs.{% endif %}</p>
             <button class="btn btn-outline" style="border-color: var(--paper); color: var(--paper);" onclick="ouvrirQuestionnaire()">
               {% if contact_email_only %}Parler de mon projet{% else %}Lancer le questionnaire{% endif %} <span class="icon" data-icon="arrow-right"></span>
             </button>

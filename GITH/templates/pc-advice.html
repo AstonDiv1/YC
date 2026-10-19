@@ -4,21 +4,17 @@
     <div class="pc-advice-grid">
       <div class="pc-offers" aria-label="Les accompagnements PC">
         {% for key, offer in pc_offers.items() %}
-        <article class="pc-offer"><div><h3>{{ offer.label }}</h3><p class="pc-duration">{{ offer.duration }}</p><details><summary>Ce qui est prévu</summary><p>{{ offer.detail }}</p></details></div><p class="pc-price">{{ offer.price }} €<small>TTC · lancement</small></p></article>
+        <article class="pc-offer"><div><h3>{{ offer.label }}</h3><p class="pc-duration">{{ offer.duration }}</p><details><summary>Ce qui est prévu</summary><p>{{ offer.detail }}</p></details><button class="link pc-offer-choice" type="button" data-pc-questionnaire data-pc-offer="{{ offer.label }}">Choisir cet accompagnement <span aria-hidden="true">↗</span></button></div><p class="pc-price">{{ offer.price }} €<small>TTC · lancement</small></p></article>
         {% endfor %}
         <p class="pc-scope">Matériel et licence Windows séparés. L’accompagnement au montage se fait en visio : vous manipulez les composants. Les montages complexes et les pannes matérielles nécessitent une étude distincte.</p>
       </div>
-      <form id="pc-brief" class="pc-brief" aria-labelledby="pc-brief-title">
-        <h3 id="pc-brief-title">Préparons votre besoin.</h3><p>Trois repères pour commencer. Vous pourrez compléter ensuite.</p>
-        <label for="pc-offer">Votre accompagnement</label><select id="pc-offer" name="type_prestation">{% for key, offer in pc_offers.items() %}<option value="{{ offer.label }}" data-price="{{ offer.price }}">{{ offer.label }}</option>{% endfor %}</select>
-        <label for="pc-usage">Votre usage principal</label><select id="pc-usage" name="usage_pc"><option>Jeux vidéo</option><option>Photo / vidéo / création</option><option>Bureautique / usage quotidien</option><option>Développement / programmation</option><option>Plusieurs usages à préciser</option></select>
-        <label for="pc-budget">Budget du matériel</label><select id="pc-budget" name="budget_materiel"><option>Moins de 600 €</option><option selected>600 à 1 000 €</option><option>1 000 à 1 500 €</option><option>1 500 à 2 000 €</option><option>Plus de 2 000 €</option><option>À définir ensemble</option></select>
-        <div class="pc-brief-summary" role="status" aria-live="polite"><strong id="pc-brief-price">Accompagnement : 39 € TTC</strong><span id="pc-brief-context">Configuration commentée · Jeux vidéo</span><small>Le budget du matériel ne change pas le prix de cet accompagnement.</small></div>
-        <button class="btn btn-primary" type="submit">Compléter ma demande <span aria-hidden="true">↗</span></button>
-        <button class="pc-save" id="pc-save" type="button">Garder ces repères en fichier texte</button>
-        <p class="pc-feedback" id="pc-feedback" role="status">Aucune commande ni aucun paiement sur cette page.</p>
-        <noscript><p><a href="#contact">Contactez-nous pour préparer votre demande.</a></p></noscript>
-      </form>
+      <div class="pc-start" aria-labelledby="pc-start-title">
+        <h3 id="pc-start-title">Un conseil bien préparé.</h3>
+        <p>Le questionnaire réunit votre usage, les composants déjà prévus et les points à vérifier. Vous pouvez y joindre des photos ou des documents.</p>
+        <button class="btn btn-primary" type="button" data-pc-questionnaire>Préparer mon conseil PC <span aria-hidden="true">↗</span></button>
+        <small>Questions guidées, pièces jointes facultatives et récapitulatif. Aucun paiement sur cette page.</small>
+        <p id="pc-open-status" class="pc-feedback" role="status"></p>
+      </div>
     </div>
     <details class="pc-license"><summary>Windows : conseil, installation et licence</summary><p>Vous pouvez utiliser une licence que vous possédez déjà. Si vous souhaitez une proposition de licence, son prix, son édition et ses conditions d’utilisation seront précisés séparément après vérification auprès de notre fournisseur. Ne communiquez aucune clé produit dans le formulaire. L’assistance utilise les supports d’installation officiels de Microsoft.</p></details>
   </div>

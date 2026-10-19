@@ -104,7 +104,8 @@ class AuditTests(unittest.TestCase):
         self.assertIn("budget_materiel", ids)
         self.assertNotIn("a_domicile", ids)
         self.assertNotIn("budget", ids)
-        self.assertNotIn("fichiers", ids)
+        self.assertIn("fichiers", ids)
+        self.assertFalse(next(q for q in service["questions"] if q["id"]=="fichiers")["required"])
 
     def test_page_embeds_the_current_public_questionnaire_without_extra_fetch(self):
         html = self.client.get("/").text
@@ -167,19 +168,21 @@ class AuditTests(unittest.TestCase):
 
     def test_booking_email_contains_answers_and_attachment(self):
         logic = self.module.logic
-        with patch.dict(os.environ,{"RESEND_API_KEY":"test-only-key", "ADMIN_EMAIL":"test@example.com"}), patch.object(logic.resend.Emails,"send",return_value={"id":"mock-email"}) as sender, patch.object(self.module,"REQUIRE_EMAIL_DELIVERY",True):
-            result = self.client.post("/api/submit",data={
-                "service":"site_web", "reponses":'{"contexte":"Portfolio de menuiserie"}',
-                "contact":'{"nom":"Test audit","email":"test@example.com","disponibilite":"Après 18h"}',
-                "fichiers":(io.BytesIO(b"%PDF-1.4\nTest local"),"test.pdf")
-            },content_type="multipart/form-data",environ_overrides={"REMOTE_ADDR":"192.0.2.31"})
-        self.assertEqual(result.status_code,200)
-        payload = sender.call_args.args[0]
-        self.assertIn("Portfolio de menuiserie",payload["html"])
-        self.assertIn("Portfolio de menuiserie",payload["text"])
-        self.assertIn("Après 18h",payload["html"])
-        self.assertEqual(payload["reply_to"],"test@example.com")
-        self.assertEqual(payload["attachments"][0]["filename"],"test.pdf")
+        for service in ("site_web", "montage_pc"):
+            with self.subTest(service=service):
+                with patch.dict(os.environ,{"RESEND_API_KEY":"test-only-key", "ADMIN_EMAIL":"test@example.com"}), patch.object(logic.resend.Emails,"send",return_value={"id":"mock-email"}) as sender, patch.object(self.module,"REQUIRE_EMAIL_DELIVERY",True):
+                    result = self.client.post("/api/submit",data={
+                        "service":service, "reponses":'{"contexte":"Repères du projet"}',
+                        "contact":'{"nom":"Test audit","email":"test@example.com","disponibilite":"Après 18h"}',
+                        "fichiers":(io.BytesIO(b"%PDF-1.4\nTest local"),"test.pdf")
+                    },content_type="multipart/form-data",environ_overrides={"REMOTE_ADDR":"192.0.2.31"})
+                self.assertEqual(result.status_code,200)
+                payload = sender.call_args.args[0]
+                self.assertIn("Repères du projet",payload["html"])
+                self.assertIn("Repères du projet",payload["text"])
+                self.assertIn("Après 18h",payload["html"])
+                self.assertEqual(payload["reply_to"],"test@example.com")
+                self.assertEqual(payload["attachments"][0]["filename"],"test.pdf")
 
     def test_booking_notification_failure_is_not_reported_as_success(self):
         with patch.object(self.module,"REQUIRE_EMAIL_DELIVERY",True), patch.object(self.module.logic,"email_notifications_configured",return_value=True), patch.object(self.module.logic,"notify_new_booking",return_value=False):

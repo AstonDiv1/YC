@@ -1,0 +1,30 @@
+/* A quiet mobile layer. Desktop tokens, type and layout stay in site.css. */
+@media(max-width:767px){
+  html{scroll-behavior:auto}
+  .reveal{transform:translateY(6px);transition-duration:.32s;transition-delay:0s}
+  .reveal.visible{transform:none}
+  .hero .reveal{opacity:1;transform:none;transition:none}
+  .pillar,.svc,.contact-item,.founder{transition:none}
+  .pillar:hover,.svc:hover,.contact-item:hover,.founder:hover{transform:none;box-shadow:none;border-color:var(--line)}
+  .pillar:hover{background:transparent}
+  .pillar:hover::after,.svc:hover::after{transform:scaleX(0)}
+  .pillar:hover .icon-pill,.svc:hover .icon-pill{background:var(--ivory);color:var(--ink);border-color:var(--line);transform:none}
+  .btn{transition:background .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease),transform .14s var(--ease)}
+  .btn-primary:hover{transform:none;box-shadow:var(--shadow-2)}
+  .btn:active{transform:translateY(1px)}
+  .link:hover{gap:8px}
+  .mobile-detail>summary:after{content:'+';transition:transform .22s var(--ease)}
+  .mobile-detail[open]>summary:after{content:'+'}
+  .mobile-detail>summary[aria-expanded=true]:after{transform:rotate(45deg)}
+  .mobile-nav{transform:translateY(-5px);transition:opacity .18s var(--ease),transform .22s var(--ease),visibility 0s linear .22s}
+  .mobile-nav.actif{transform:none;transition-delay:0s}
+  .overlay{backdrop-filter:none;transition-duration:.22s}
+  .modal{animation:none!important;transform:translateY(12px);transition:transform .26s var(--ease),opacity .22s var(--ease)}
+  .overlay.actif .modal{transform:none}
+  .service-choice:hover,.option-item:hover{transform:none;box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal,.mobile-nav,.modal,.btn,.mobile-detail>summary:after{transition:none!important;animation:none!important}
+  .reveal{opacity:1;transform:none}
+  .btn:active{transform:none}
+}
