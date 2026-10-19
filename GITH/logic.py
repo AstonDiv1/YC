@@ -136,12 +136,12 @@ SERVICES = {'site_web': {'label': 'Création de site internet',
                                             'Une idée à définir ensemble'],
                                 'required': True}]},
  'montage_pc': {'label': 'Conseil PC à distance',
-                'description': 'Configuration, accompagnement au montage et aide Windows, à distance.',
+                'description': 'Conseils de configuration et demande de licence Windows 11, sans montage ni assistance.',
                 'icone': 'pc',
                 'questions': [
-                    {'id': 'type_prestation', 'label': 'Quel accompagnement souhaitez-vous ?',
+                    {'id': 'type_prestation', 'label': 'De quoi avez-vous besoin ?',
                      'type': 'choix_unique', 'required': True,
-                     'options': ['Configuration commentée', 'Accompagnement au montage', 'Aide Windows', 'À préciser ensemble']},
+                     'options': ['Configuration commentée', 'Licence Windows 11', 'Configuration et licence Windows', 'À préciser ensemble']},
                     {'id': 'usage_pc', 'label': 'Votre usage principal', 'type': 'choix_unique', 'required': True,
                      'options': ['Jeux vidéo', 'Photo / vidéo / création', 'Bureautique / usage quotidien', 'Développement / programmation', 'Plusieurs usages à préciser']},
                     {'id': 'composants_deja_achetes', 'label': 'Avez-vous déjà des composants ?',
@@ -149,18 +149,21 @@ SERVICES = {'site_web': {'label': 'Création de site internet',
                      'options': ['Oui, tout est acheté', 'Partiellement', 'Non, rien']},
                     {'id': 'composants_pc', 'label': 'Références des composants ou liste déjà envisagée',
                      'type': 'zone_texte', 'required': False},
-                    {'id': 'windows_pc', 'label': 'Pour Windows, où en êtes-vous ?',
-                     'type': 'choix_unique', 'required': True,
-                     'options': ['Je possède déjà une licence', 'Je souhaite un conseil sur la licence', 'Je souhaite une proposition de licence séparée', 'Pas de besoin Windows']}
+                    {'id': 'windows_edition', 'label': 'Quelle édition de Windows 11 vous intéresse ?',
+                     'type': 'choix_unique', 'required': False,
+                     'options': ['Famille', 'Pro', 'À définir ensemble', 'Pas de besoin Windows']}
                 ], 'public': True}}
 
 PC_OFFERS = {
-    'configuration': {'label': 'Configuration commentée', 'price': 39, 'duration': 'Échange de 30 min et proposition écrite',
-                      'detail': 'Choix des composants selon votre usage et votre budget, points de compatibilité expliqués et une série de retours.'},
-    'accompagnement': {'label': 'Accompagnement au montage', 'price': 69, 'duration': 'Une séance à distance jusqu’à 90 min',
-                       'detail': 'Préparation du matériel, lecture des notices et accompagnement des étapes. Vous effectuez les manipulations ; aucun montage en atelier.'},
-    'windows': {'label': 'Aide Windows', 'price': 29, 'duration': 'Une séance à distance jusqu’à 45 min',
-                'detail': 'Préparation du support officiel, installation et vérification de l’activation avec une licence adaptée. Licence facturée séparément si nécessaire.'}
+    'configuration': {'label': 'Configuration commentée', 'price': 39,
+                      'duration': 'Échange de 30 min et proposition écrite',
+                      'detail': 'Choix des composants selon votre usage et votre budget, compatibilité expliquée et une série de retours. Sans montage ni assistance technique.'},
+    'licence': {'label': 'Licence Windows 11', 'price': None,
+                'duration': 'Édition et conditions précisées avant accord',
+                'detail': 'Demande de licence Famille ou Pro. Fourniture après vérification de la provenance et des droits associés. Sans installation ni dépannage.'},
+    'ensemble': {'label': 'Configuration et licence Windows', 'price': 39,
+                 'duration': 'Conseil de configuration, licence chiffrée séparément',
+                 'detail': 'Configuration commentée et proposition de licence adaptée. Prix de la licence confirmé séparément avant accord. Sans montage ni assistance.'}
 }
 
 
@@ -327,15 +330,19 @@ def get_public_config():
         if key == "montage_pc":
             for question in svc_copy.get("questions", []):
                 if question["id"] == "type_prestation":
-                    question["description"] = "Tarifs de lancement TTC. Matériel et licence Windows séparés. Votre demande ne déclenche aucun paiement ni réservation."
+                    question["description"] = "Conseil de configuration : tarif de lancement TTC. Matériel et licence séparés ; le prix de la licence sera confirmé sur devis. Aucun montage, assistance, paiement ou réservation dans ce parcours."
                     question["option_details"] = {
-                        offer["label"]: {"price": f"{offer['price']} € TTC", "duration": offer["duration"], "description": offer["detail"]}
+                        offer["label"]: {"price": ("Sur devis" if offer["price"] is None else f"{offer['price']} € TTC" + (" + licence" if offer["label"] == "Configuration et licence Windows" else "")), "duration": offer["duration"], "description": offer["detail"]}
                         for offer in PC_OFFERS.values()
                     }
-                elif question["id"] == "windows_pc":
-                    question["description"] = "Vous pouvez utiliser votre licence existante. Si vous demandez une licence, son prix, son édition et ses conditions seront précisés séparément après vérification auprès de notre fournisseur. Ne communiquez aucune clé produit. Les supports d’installation utilisés sont ceux de Microsoft."
+                elif question["id"] == "windows_edition":
+                    question["description"] = "Si vous possédez déjà une licence adaptée, vous pouvez la conserver. Une nouvelle licence est proposée après vérification de sa provenance, de son édition, de son type et de ses conditions. Aucun prix de licence n’est fixé ici. Ne transmettez aucune clé produit. Nous ne proposons pas d’installation ou d’assistance."
         tail = COMMON_TAILS.get(key, COMMON_TAIL_WEB)
         svc_copy["questions"] = list(svc_copy.get("questions", [])) + copy.deepcopy(tail)
+        if key == "montage_pc":
+            for question in svc_copy["questions"]:
+                if question["id"] in {"usage_pc", "composants_deja_achetes", "composants_pc", "budget_materiel", "esthetique_pc"}:
+                    question["visible_for"] = ["Configuration commentée", "Configuration et licence Windows", "À préciser ensemble"]
         services_out[key] = svc_copy
     return {
         "services": services_out,
@@ -382,8 +389,10 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
     if service == "montage_pc":
         profil = "Conseil PC à distance"
         selected = next((offer for offer in PC_OFFERS.values() if offer['label'] == reponses.get('type_prestation')), None)
-        fourchette = (f"{selected['price']} € TTC pour {selected['label'].lower()} ; matériel et licence Windows séparés"
-                      if selected else "Sur devis après choix de l’accompagnement ; matériel et licence Windows séparés")
+        if not selected or selected["price"] is None:
+            fourchette = "Licence Windows 11 sur devis après vérification de l’édition et des conditions" if selected else "Sur devis après définition du besoin"
+        else:
+            fourchette = f"{selected['price']} € TTC pour le conseil de configuration ; matériel et licence Windows séparés"
     elif service == "application":
         profil = "Outil web métier"
         fourchette = "Sur devis après étude de la tâche, des accès et du fonctionnement"

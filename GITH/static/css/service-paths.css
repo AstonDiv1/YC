@@ -23,7 +23,7 @@
 .option-detailed>input{flex:0 0 auto;margin-top:5px}
 .option-copy{display:grid;gap:8px;min-width:0;flex:1}
 .option-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;font-size:.94rem;line-height:1.5}
-.option-title>strong{font-size:.87rem;color:var(--ink);white-space:nowrap}
+.option-title>strong{font-size:.87rem;color:var(--ink);white-space:normal;max-width:100%}
 .option-duration{font-size:.8rem;line-height:1.65;font-weight:500;color:var(--ink-soft)}
 .option-description{font-size:.8rem;line-height:1.75;font-weight:400;color:var(--ink-soft)}
 @media(max-width:767px){.pc-service-entry{gap:2px 18px}.option-item.option-detailed{padding:15px 13px}.option-title{font-size:.9rem}}

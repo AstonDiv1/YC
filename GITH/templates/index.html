@@ -99,8 +99,8 @@
         <div class="num">03</div>
         <span class="icon-pill"><span class="icon" data-icon="handshake"></span></span>
         <h3>Après livraison</h3>
-        <p class="mobile-preview">Les sources, les accès et les repères pour prendre la suite.</p>
-        <p>Vous recevez les sources, les accès convenus et une fiche de prise en main. Les coûts de domaine, d’hébergement, d’entretien et les évolutions sont définis séparément.</p>
+        <p class="mobile-preview">Les sources, les accès et des retouches simples après livraison.</p>
+        <p>Vous recevez les sources, les accès convenus et une fiche de prise en main. Des retouches ponctuelles de textes, photos ou coordonnées sont offertes sur le site livré, selon notre <a href="/suivi-et-retouches">charte de suivi</a>. Hébergement, entretien technique et évolutions sont définis séparément.</p>
       </div>
       <div class="pillar reveal reveal-delay-3">
         <div class="num">04</div>
@@ -207,7 +207,7 @@
         <div class="k">Étape</div>
         <span class="icon-pill on-dark"><span class="icon" data-icon="rocket"></span></span>
         <h3>Livraison & suivi</h3>
-        <p>Livraison du projet finalisé. Évolutions et maintenance disponibles en forfait dédié.</p>
+        <p>Livraison du projet finalisé, sources et prise en main. Les retouches mineures sont offertes dans le cadre de notre charte ; les évolutions et la maintenance technique font l’objet d’un périmètre distinct.</p>
       </div>
     </div>
   </div>
@@ -268,7 +268,7 @@
 <details><summary>Combien coûte un site chez Numéryl ?</summary><p>La Vitrine essentielle est proposée à 490 € HT pour une page. La Vitrine structurée commence à 790 € HT pour trois pages de contenu. Ces tarifs de lancement concernent la conception ; le devis définit les livrables, les options, les coûts de fonctionnement et la TVA applicable. Les outils web et les fonctions spécifiques se chiffrent après étude.</p></details>
 <details><summary>Les textes sont-ils inclus ?</summary><p>Vous pouvez fournir les textes que vous souhaitez utiliser. Nous pouvons aussi les rédiger avec vous à partir de vos informations, puis les organiser pour le site. Il n’y a pas de facturation au mot. Vous validez les faits ; nous définissons les pages et les fonctionnalités avant de commencer. L’ajout de pages ou d’une nouvelle prestation se discute dans le périmètre du projet.</p></details>
 <details><summary>Que comprend la Vitrine essentielle ?</summary><p>Une page avec votre activité, vos prestations, vos réalisations et un formulaire de contact ; l’affichage sur ordinateur et mobile ; les titres et descriptions ; deux séries de retours regroupés ; la mise en ligne sur l’hébergement convenu, les sources et une fiche de prise en main. Domaine, hébergement, messagerie et entretien sont chiffrés séparément.</p></details>
-<details><summary>Puis-je modifier moi-même mon site ?</summary><p>Les offres de base ne comprennent pas d’éditeur de contenu. Si vous souhaitez changer régulièrement vos photos, textes ou actualités, nous définissons un espace de gestion adapté et le chiffrons avant accord. Vous connaissez ainsi les possibilités de modification et les coûts associés.</p></details>
+<details><summary>Puis-je modifier moi-même mon site ?</summary><p>Les offres de base ne comprennent pas d’éditeur de contenu. Si vous souhaitez changer régulièrement vos photos, textes ou actualités, nous définissons un espace de gestion adapté et le chiffrons avant accord. Vous connaissez ainsi les possibilités de modification et les coûts associés. Sans éditeur, vous pouvez aussi nous demander des retouches mineures offertes après livraison : <a href="/suivi-et-retouches">consulter la charte de suivi</a>.</p></details>
 <details><summary>Quels frais reviennent après la création ?</summary><p>Le domaine, l’hébergement et éventuellement la messagerie restent à renouveler auprès des prestataires choisis. Aucun abonnement Numéryl n’est obligatoire pour conserver les fichiers et les droits remis selon le devis. L’entretien et les évolutions peuvent être proposés séparément avec un contenu précis.</p></details>
 <details><summary>Sous quel délai pouvez-vous livrer ?</summary><p>Le calendrier dépend du projet, de notre disponibilité et de la réception de vos informations. Il est confirmé avant le démarrage. Si vous avez une date impérative, indiquez-la dès le premier échange.</p></details>
 <details><summary>Je n’ai pas encore de logo ou de photos : comment avancer ?</summary><p>Nous pouvons définir une direction visuelle et organiser le contenu avec vous. La photographie et une identité de marque complète font l’objet d’un périmètre séparé. Nous utilisons des ressources dont les droits sont établis, sans inventer de photos de vos réalisations.</p></details>
@@ -556,7 +556,7 @@ function getQuestionsForService(serviceKey){
   const svc = (CONFIG && CONFIG.services && CONFIG.services[serviceKey]) || null;
   const svcQ = (svc && Array.isArray(svc.questions)) ? svc.questions : [];
   const common = (CONFIG && Array.isArray(CONFIG.questions_communes)) ? CONFIG.questions_communes : [];
-  return { svc, questions: svcQ.concat(common) };
+  return { svc, questions: svcQ.concat(common).filter(q=>!Array.isArray(q.visible_for)||q.visible_for.includes(QSTATE.reponses.type_prestation)) };
 }
 
 function renderQuestion(q){
@@ -867,6 +867,7 @@ window.soumettre = soumettre;
 
 /* Direct entry from the mobile header on secondary pages. */
 if(location.hash === "#questionnaire") ouvrirQuestionnaire();
+if(location.hash === "#questionnaire-pc") ouvrirQuestionnaire("montage_pc");
 
 /* Fermer modal avec Escape */
 document.addEventListener('keydown', (e) => {if(!document.getElementById('overlay')?.classList.contains('actif'))return;if(e.key==='Escape'){e.preventDefault();fermerQuestionnaire();return;}if(e.key!=='Tab')return;const fields=[...document.querySelectorAll('#modal button,#modal input,#modal textarea,#modal select,#modal a[href],[tabindex="0"]')].filter(el=>!el.disabled&&el.closest('#modal')&&el.getClientRects().length);if(!fields.length)return;const first=fields[0],last=fields[fields.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});

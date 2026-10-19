@@ -364,6 +364,11 @@ def portfolio():
                            contact_email_only=CONTACT_EMAIL_ONLY)
 
 
+@app.get("/suivi-et-retouches")
+def suivi_et_retouches():
+    return render_template("suivi.html", legal_page=True, contact_email_only=CONTACT_EMAIL_ONLY)
+
+
 @app.route("/healthz")
 def healthz():
     return jsonify({"status": "ok"})
@@ -393,7 +398,7 @@ def sitemap_xml():
     # Index the real studio pages, while fictive demos remain excluded.
     from xml.etree.ElementTree import Element, SubElement, tostring
     root = Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
-    for path in ("/", "/portfolio"):
+    for path in ("/", "/portfolio", "/suivi-et-retouches"):
         entry = SubElement(root, "url")
         SubElement(entry, "loc").text = PUBLIC_SITE_URL + path
     return Response(tostring(root, encoding="utf-8", xml_declaration=True), mimetype="application/xml")
