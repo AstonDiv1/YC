@@ -116,8 +116,7 @@ class AuditTests(unittest.TestCase):
 
     def test_pc_package_price_does_not_follow_hardware_budget(self):
         for label, price in (("Configuration commentée", "39 € TTC"),
-                             ("Accompagnement au montage", "69 € TTC"),
-                             ("Aide Windows", "29 € TTC")):
+                             ("Configuration et licence Windows", "39 € TTC")):
             for budget in ("Moins de 600 €", "Plus de 2 000 €"):
                 result = self.module.logic.compute_recommendation("montage_pc", {
                     "type_prestation": label, "budget_materiel": budget,
@@ -126,7 +125,7 @@ class AuditTests(unittest.TestCase):
                 self.assertIn("licence Windows séparés", result["fourchette_prix"])
 
     def test_pc_request_preserves_remote_scope_and_selected_offer(self):
-        answers = {"type_prestation": "Accompagnement au montage", "usage_pc": "Jeux vidéo",
+        answers = {"type_prestation": "Configuration commentée", "usage_pc": "Jeux vidéo",
                    "budget_materiel": "600 à 1 000 €", "windows_pc": "Je possède déjà une licence"}
         with patch.object(self.module.logic, "notify_new_booking"):
             response = self.client.post("/api/submit", json={"service":"montage_pc", "reponses":answers,
@@ -198,7 +197,7 @@ class AuditTests(unittest.TestCase):
         sitemap = self.client.get("/sitemap.xml", headers={"Host": "untrusted.example"})
         self.assertEqual(sitemap.status_code, 200)
         locations = ElementTree.fromstring(sitemap.data).findall(".//{*}loc")
-        self.assertEqual([node.text for node in locations], [origin + "/", origin + "/portfolio"])
+        self.assertEqual([node.text for node in locations], [origin + "/", origin + "/portfolio", origin + "/suivi-et-retouches"])
         robots = self.client.get("/robots.txt").get_data(as_text=True)
         self.assertIn("Sitemap: " + origin + "/sitemap.xml", robots)
         for path in ("/api/bookings", "/healthz", "/static/demos/artisan.html", "/static/demos/restaurant.html", "/static/demos/cobalt.html", "/not-found"):

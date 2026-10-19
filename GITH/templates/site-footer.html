@@ -23,12 +23,13 @@
         <ul>
           <li>{% if legal_page %}<a href="/#contact">Sites internet</a>{% else %}<button onclick="ouvrirQuestionnaire('site')">Sites internet</button>{% endif %}</li>
           <li>{% if legal_page %}<a href="/#contact">Outils web</a>{% else %}<button onclick="ouvrirQuestionnaire('application')">Outils web</button>{% endif %}</li>
-          <li><a href="/#conseil-pc">Conseil PC à distance</a></li>
+          <li>{% if legal_page %}<a href="/#questionnaire-pc">Configuration PC &amp; Windows</a>{% else %}<button type="button" data-pc-questionnaire>Configuration PC &amp; Windows</button>{% endif %}</li>
         </ul>
       </div>
       <div>
         <h4>Démarrer</h4>
         <ul>
+          <li><a href="/suivi-et-retouches">Suivi et petites retouches</a></li>
           <li>{% if legal_page %}<a href="/#contact">Demander un devis</a>{% else %}<button onclick="ouvrirQuestionnaire()">Demander un devis</button>{% endif %}</li>
           <li><a href="{% if legal_page %}/{% endif %}#contact">{% if contact_email_only %}Contact par e-mail{% else %}Formulaire de contact{% endif %}</a></li>
           <li><a href="mailto:{{ public_contact_email }}">{{ public_contact_email }}</a></li>
