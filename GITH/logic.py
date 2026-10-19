@@ -324,6 +324,16 @@ def get_public_config():
         if not svc.get("public", True):
             continue
         svc_copy = copy.deepcopy(svc)
+        if key == "montage_pc":
+            for question in svc_copy.get("questions", []):
+                if question["id"] == "type_prestation":
+                    question["description"] = "Tarifs de lancement TTC. Matériel et licence Windows séparés. Votre demande ne déclenche aucun paiement ni réservation."
+                    question["option_details"] = {
+                        offer["label"]: {"price": f"{offer['price']} € TTC", "duration": offer["duration"], "description": offer["detail"]}
+                        for offer in PC_OFFERS.values()
+                    }
+                elif question["id"] == "windows_pc":
+                    question["description"] = "Vous pouvez utiliser votre licence existante. Si vous demandez une licence, son prix, son édition et ses conditions seront précisés séparément après vérification auprès de notre fournisseur. Ne communiquez aucune clé produit. Les supports d’installation utilisés sont ceux de Microsoft."
         tail = COMMON_TAILS.get(key, COMMON_TAIL_WEB)
         svc_copy["questions"] = list(svc_copy.get("questions", [])) + copy.deepcopy(tail)
         services_out[key] = svc_copy

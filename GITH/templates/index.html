@@ -24,7 +24,7 @@
 
 <link rel="stylesheet" href="/static/css/site.css?v=20261019">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261019-studio"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261018"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261019-studio"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261019-questionnaire"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -165,11 +165,10 @@
       </article>
     </div>
     <div class="offer-running-costs reveal"><span class="icon" data-icon="file"></span><p><strong>Le coût complet avant accord.</strong> Domaine, hébergement, messagerie et entretien sont séparés du prix de conception. Un espace de gestion, une réservation ou une intégration spécifique se chiffre selon le besoin. Le montant final et la TVA applicable sont précisés avant tout engagement.</p></div>
+    {% include 'pc-advice.html' %}
     <div class="reveal demo-banner commercial-projects"><div><h3>Le travail du studio, à explorer.</h3><p>Une menuiserie, un restaurant et un outil de gestion : parcourez les interfaces, testez les interactions et découvrez les fonctions réellement présentes.</p><small>Projets originaux d’exploration · identités et données d’exemple.</small></div><a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a></div>
   </div>
 </section>
-
-{% include 'pc-advice.html' %}
 
 <!-- ============= PROCESS ============= -->
 <section class="section section-dark" id="fonctionnement">
@@ -565,6 +564,7 @@ function renderQuestion(q){
   const label = escapeHtml(q.label || q.id) + (q.required ? ' <span style="color:var(--accent)">*</span>' : '');
   let inner = '';
   const type = q.type || 'texte';
+  if(q.description) inner += `<p class="question-help">${escapeHtml(q.description)}</p>`;
 
   if((type === 'choix_unique' || type === 'choix') && Array.isArray(q.options)){
     inner += '<div class="options-list">';
@@ -572,7 +572,9 @@ function renderQuestion(q){
       const v = typeof opt === 'string' ? opt : (opt.value || opt.label);
       const l = typeof opt === 'string' ? opt : (opt.label || opt.value);
       const sel = val === v;
-      inner += `<label class="option-item${sel?' selected':''}"><input type="radio" name="q_${escapeHtml(q.id)}" value="${escapeHtml(v)}" ${sel?'checked':''} onchange="setReponse('${q.id}', this.value)"> ${escapeHtml(l)}</label>`;
+      const detail = q.option_details && q.option_details[v];
+      const copy = detail ? `<span class="option-copy"><span class="option-title">${escapeHtml(l)}<strong>${escapeHtml(detail.price)}</strong></span><span class="option-duration">${escapeHtml(detail.duration || '')}</span><span class="option-description">${escapeHtml(detail.description || '')}</span></span>` : escapeHtml(l);
+      inner += `<label class="option-item${detail?' option-detailed':''}${sel?' selected':''}"><input type="radio" name="q_${escapeHtml(q.id)}" value="${escapeHtml(v)}" ${sel?'checked':''} onchange="setReponse('${q.id}', this.value)"> ${copy}</label>`;
     });
     inner += '</div>';
   } else if(type === 'choix_multiple' && Array.isArray(q.options)){
