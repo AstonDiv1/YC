@@ -1,21 +1,5 @@
-<section class="section pc-advice" id="conseil-pc" aria-labelledby="pc-title">
-  <div class="container">
-    <div class="service-heading"><h2 id="pc-title">Votre prochain PC,<br>des choix expliqués.</h2><p>Choisir les composants, comprendre le montage ou préparer Windows : un accompagnement à distance, adapté à votre niveau. Vous gardez la main sur vos achats et sur votre matériel.</p></div>
-    <div class="pc-advice-grid">
-      <div class="pc-offers" aria-label="Les accompagnements PC">
-        {% for key, offer in pc_offers.items() %}
-        <article class="pc-offer"><div><h3>{{ offer.label }}</h3><p class="pc-duration">{{ offer.duration }}</p><details><summary>Ce qui est prévu</summary><p>{{ offer.detail }}</p></details><button class="link pc-offer-choice" type="button" data-pc-questionnaire data-pc-offer="{{ offer.label }}">Choisir cet accompagnement <span aria-hidden="true">↗</span></button></div><p class="pc-price">{{ offer.price }} €<small>TTC · lancement</small></p></article>
-        {% endfor %}
-        <p class="pc-scope">Matériel et licence Windows séparés. L’accompagnement au montage se fait en visio : vous manipulez les composants. Les montages complexes et les pannes matérielles nécessitent une étude distincte.</p>
-      </div>
-      <div class="pc-start" aria-labelledby="pc-start-title">
-        <h3 id="pc-start-title">Un conseil bien préparé.</h3>
-        <p>Le questionnaire réunit votre usage, les composants déjà prévus et les points à vérifier. Vous pouvez y joindre des photos ou des documents.</p>
-        <button class="btn btn-primary" type="button" data-pc-questionnaire>Préparer mon conseil PC <span aria-hidden="true">↗</span></button>
-        <small>Questions guidées, pièces jointes facultatives et récapitulatif. Aucun paiement sur cette page.</small>
-        <p id="pc-open-status" class="pc-feedback" role="status"></p>
-      </div>
-    </div>
-    <details class="pc-license"><summary>Windows : conseil, installation et licence</summary><p>Vous pouvez utiliser une licence que vous possédez déjà. Si vous souhaitez une proposition de licence, son prix, son édition et ses conditions d’utilisation seront précisés séparément après vérification auprès de notre fournisseur. Ne communiquez aucune clé produit dans le formulaire. L’assistance utilise les supports d’installation officiels de Microsoft.</p></details>
-  </div>
-</section>
+<div class="pc-service-entry">
+  <p>Un besoin pour votre ordinateur ?</p>
+  <button class="link" type="button" data-pc-questionnaire>Conseil PC à distance <span aria-hidden="true">↗</span></button>
+  <p id="pc-open-status" class="pc-feedback" role="status"></p>
+</div>

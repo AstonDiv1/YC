@@ -12,3 +12,18 @@
 .pc-start .pc-feedback:empty{display:none}.pc-offer-choice{font-size:.78rem;margin-top:8px;min-height:44px;text-align:left}
 @media(max-width:767px){.pc-start{padding:25px 22px}.pc-start h3{font-size:1.3rem}}
 @media(prefers-reduced-motion:reduce){.pc-advice *{scroll-behavior:auto}}
+
+/* PC offer details belong in the questionnaire, not the homepage. */
+.pc-service-entry{display:flex;align-items:center;flex-wrap:wrap;gap:8px 24px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+.pc-service-entry>p:first-child{font-size:.85rem;line-height:1.8;color:var(--ink-soft);margin:0}
+.pc-service-entry>.link{min-height:44px;font-size:.85rem;text-align:left;display:inline-flex;gap:10px;align-items:center}
+.pc-service-entry>.pc-feedback{flex-basis:100%;margin:0}.pc-service-entry>.pc-feedback:empty{display:none}
+.question-help{font-size:.86rem;line-height:1.8;color:var(--ink-soft);margin:0 0 18px;max-width:65ch}
+.option-item.option-detailed{align-items:flex-start;gap:12px;padding:18px}
+.option-detailed>input{flex:0 0 auto;margin-top:5px}
+.option-copy{display:grid;gap:8px;min-width:0;flex:1}
+.option-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;font-size:.94rem;line-height:1.5}
+.option-title>strong{font-size:.87rem;color:var(--ink);white-space:nowrap}
+.option-duration{font-size:.8rem;line-height:1.65;font-weight:500;color:var(--ink-soft)}
+.option-description{font-size:.8rem;line-height:1.75;font-weight:400;color:var(--ink-soft)}
+@media(max-width:767px){.pc-service-entry{gap:2px 18px}.option-item.option-detailed{padding:15px 13px}.option-title{font-size:.9rem}}
