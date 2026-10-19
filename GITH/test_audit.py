@@ -1,6 +1,8 @@
 """Regression tests run against temporary storage, never a live service."""
 import os
 import io
+import json
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -103,6 +105,13 @@ class AuditTests(unittest.TestCase):
         self.assertNotIn("a_domicile", ids)
         self.assertNotIn("budget", ids)
         self.assertNotIn("fichiers", ids)
+
+    def test_page_embeds_the_current_public_questionnaire_without_extra_fetch(self):
+        html = self.client.get("/").text
+        match = re.search(r"const FALLBACK_CONFIG = (\{[^\n]*\});", html)
+        self.assertIsNotNone(match)
+        self.assertEqual(json.loads(match.group(1)), self.client.get("/api/config").json)
+        self.assertNotIn("fetch('/api/config'", html)
 
     def test_pc_package_price_does_not_follow_hardware_budget(self):
         for label, price in (("Configuration commentée", "39 € TTC"),
