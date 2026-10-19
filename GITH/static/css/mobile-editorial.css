@@ -32,17 +32,18 @@
   .hero h1{font-size:clamp(2rem,8.9vw,3rem);line-height:1.1;letter-spacing:-.04em}
   .hero .lead{font-size:.94rem;line-height:1.75;margin-top:22px}
   .hero-actions{display:grid;gap:11px;margin-top:24px}
-  .hero-actions .btn{width:100%;justify-content:space-between;padding:15px 18px}
+  .hero-actions .btn{width:100%;justify-content:center;gap:12px;padding:15px 18px}
   .hero-meta{display:grid;gap:10px;margin-top:24px;font-size:.76rem;line-height:1.5}
   .proposal-visual{margin-top:10px}
   .proposal-caption{font-size:.72rem;line-height:1.65}
   .pillars,.process{display:grid;grid-template-columns:1fr;gap:0}
-  .pillar,.step{padding:23px 0;position:relative;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none;min-height:0}
+  .pillar,.step{padding:23px 0;position:relative;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none;min-height:0;text-align:left}
   .pillar .num,.svc .index{display:none}
-  .pillar .icon-pill,.step .icon-pill{width:34px;height:34px;position:absolute;top:22px;left:0;border-radius:9px}
-  .pillar h3,.step h3{font-size:1.12rem;margin:0 0 0 49px;padding:2px 0;line-height:1.4}
+  .pillar .icon-pill,.step .icon-pill{display:inline-flex;align-items:center;justify-content:center;margin:0;width:34px;height:34px;position:absolute;top:22px;left:0;border-radius:9px}
+  .step:first-child{padding:23px 0}
+  .pillar h3,.step h3{font-size:1.12rem;margin:0 0 0 49px;padding:2px 0;line-height:1.4;text-align:left}
   .pillar .mobile-detail,.step .mobile-detail{margin-left:49px;width:calc(100% - 49px)}
-  .pillar p,.step p{font-size:.89rem;line-height:1.8}
+  .pillar p,.step p{font-size:.89rem;line-height:1.8;margin-inline:0;max-width:none}
   .step .k{display:none}
   .section-dark .step{border-color:rgba(244,241,234,.2)}
   .services-grid{display:grid;grid-template-columns:1fr;gap:20px}
