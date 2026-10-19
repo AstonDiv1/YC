@@ -47,7 +47,7 @@ document.querySelectorAll('details.mobile-detail,#conseil-pc details').forEach(d
     running.onfinish=()=>{if(animation===running)settle()};
   });
   details.addEventListener('toggle',()=>{if(!animation){target=details.open;summary.setAttribute('aria-expanded',String(target))}});
-  mobile.addEventListener('change',settle);
+  mobile.addEventListener('change',()=>{if(details.classList.contains('mobile-detail'))target=!mobile.matches;settle()});
   reduced.addEventListener('change',()=>{if(reduced.matches)settle()});
 });
 
