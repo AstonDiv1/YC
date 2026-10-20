@@ -1,0 +1,5 @@
+:HL["/static/demos/plis/_next/static/css/14e574112d9f1937.css","style"]
+:HL["/static/demos/plis/film/poster-v5.webp","image",{"fetchPriority":"high","media":"(max-width: 767px)"}]
+:HL["/static/demos/plis/images/hero-1440.webp","image",{"fetchPriority":"high","imageSrcSet":"/static/demos/plis/images/hero-720.webp 720w, /static/demos/plis/images/hero-1440.webp 1440w, /static/demos/plis/images/hero-1920.webp 1920w","imageSizes":"53vw","media":"(min-width: 768px)"}]
+1:[["children",{"s":"__PAGE__","h":160}]]
+0:{"b":"XGyVXMhrfeSgVZTeRc4R4","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
