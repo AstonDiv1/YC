@@ -1,0 +1,4 @@
+PLIS : concept original fictif du studio Numéryl. Aucun produit commercialisé.
+Images générées par IA, film composé localement à partir de ces images.
+La fiche projet est créée sur l’appareil du visiteur, sans transmission ni commande.
+Interface construite avec Next.js, React, GSAP, Phosphor et Manrope.
