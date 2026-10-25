@@ -1,0 +1,5 @@
+/* The exported landing keeps its original interactions; only the opening composition changes. */
+.hero-image{object-position:center center}
+@media(max-width:767px){
+  .hero-image{aspect-ratio:1/1;object-fit:cover;object-position:center center;border-radius:18px}
+}

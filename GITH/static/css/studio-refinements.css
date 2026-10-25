@@ -36,3 +36,14 @@
   .founder-note small{font-size:.87rem;line-height:1.8;letter-spacing:0}
 }
 @media(prefers-reduced-motion:reduce){.founder .avatar,.founder h4{transition:none!important}.founder:not(.founder-note):hover .avatar{transform:none}}
+
+/* Keep the mobile reading order explicit, without changing the studio's visual identity. */
+@media(max-width:767px){
+  .portfolio-toolbar{align-items:stretch;flex-direction:column;gap:12px}
+  .portfolio-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .portfolio-filters button{min-width:0;min-height:44px;padding:10px 7px;font-size:.7rem;line-height:1.4}
+  #portfolio-filter-status{margin:0;text-align:center}
+  .portfolio-page .plis-visual + .portfolio-copy h2{font-size:clamp(1.65rem,7.5vw,2.15rem);text-wrap:balance}
+  .plis-visual + .portfolio-copy .mobile-detail{margin:18px 0}
+  .plis-visual + .portfolio-copy .mobile-detail>summary{border-top:1px solid var(--line);padding:12px 0}
+}
