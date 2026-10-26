@@ -353,6 +353,11 @@ def get_public_config():
                     question["description"] = "Si vous possédez déjà une licence adaptée, vous pouvez la conserver. Une nouvelle licence est proposée après vérification de sa provenance, de son édition, de son type et de ses conditions. Aucun prix de licence n’est fixé ici. Ne transmettez aucune clé produit. Nous ne proposons pas d’installation ou d’assistance."
         tail = COMMON_TAILS.get(key, COMMON_TAIL_WEB)
         svc_copy["questions"] = list(svc_copy.get("questions", [])) + copy.deepcopy(tail)
+        if key == "site_web":
+            for question in svc_copy["questions"]:
+                if question["id"] == "delai":
+                    question["description"] = "Un site internet prend en moyenne deux à trois semaines, avec un minimum d’une semaine. En cas d’urgence, précisez votre date souhaitée dans le contexte du projet. Le calendrier est confirmé avant le démarrage."
+                    question["options"] = ["Environ 2 à 3 semaines", "Plus tard / date à préciser", "Urgence à préciser", "Pas de contrainte particulière"]
         if key == "montage_pc":
             for question in svc_copy["questions"]:
                 if question["id"] in {"usage_pc", "composants_deja_achetes", "composants_pc", "budget_materiel", "esthetique_pc"}:
@@ -379,6 +384,7 @@ BUDGET_SCORE = {
 }
 
 DELAI_URGENCE = {
+    "Urgence à préciser": True,
     "Urgent — dès que possible": True,
     "Sous 1 à 2 semaines": False,
     "Sous 2 à 3 semaines": False,
@@ -430,10 +436,15 @@ def compute_recommendation(service: str, reponses: dict) -> dict:
         else:
             profil = "Vitrine essentielle"
             fourchette = "490 € HT pour une page, rédaction accompagnée ; frais de fonctionnement séparés"
+    delai_estime = "à définir en priorité avec vous" if urgent else "confirmé au devis selon le périmètre, les contenus et notre disponibilité"
+    if service == "site_web":
+        delai_estime = "En moyenne deux à trois semaines, avec un minimum d’une semaine ; calendrier confirmé au devis."
+        if urgent:
+            delai_estime += " Urgence à préciser avec la date souhaitée, selon notre disponibilité."
     return {
         "profil": profil,
         "fourchette_prix": fourchette,
-        "delai_estime": "à définir en priorité avec vous" if urgent else "confirmé au devis selon le périmètre, les contenus et notre disponibilité",
+        "delai_estime": delai_estime,
         "urgent": urgent,
         "message": {
             "site_web": "Merci pour ces précisions sur votre site internet.",
