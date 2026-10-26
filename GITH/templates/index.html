@@ -24,7 +24,7 @@
 
 <link rel="stylesheet" href="/static/css/site.css?v=20261019">
 <link rel="stylesheet" href="/static/css/commercial.css?v=20261013">
-<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261026-prestations"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261019-mobile"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"><link rel="stylesheet" href="/static/css/studio-motion.css?v=20261026"><script type="module" src="/static/js/studio-motion.mjs?v=20261026"></script></head>
+<link rel="stylesheet" href="/static/demos/demo-motion.css"><script type="module">import {enhanceDisclosures} from "/static/demos/demo-motion.mjs";enhanceDisclosures(document.querySelector("#faq"));</script><link rel="stylesheet" href="/static/css/mobile-editorial.css?v=20261019"><script type="module" src="/static/js/mobile-editorial.mjs?v=20261026-organisation"></script><link rel="stylesheet" href="/static/css/service-paths.css?v=20261019-mobile"><script type="module" src="/static/js/pc-questionnaire.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/mobile-motion.css?v=20261019"><script type="module" src="/static/js/mobile-motion.mjs?v=20261019"></script><link rel="stylesheet" href="/static/css/studio-refinements.css?v=20261019"><link rel="stylesheet" href="/static/css/studio-motion.css?v=20261026"><script type="module" src="/static/js/studio-motion.mjs?v=20261026"></script><link rel="stylesheet" href="/static/css/site-organisation.css?v=20261026"></head>
 <body>
 
 <!-- ============= HEADER ============= -->
@@ -44,11 +44,12 @@
         Nous vous aidons à écrire et à organiser votre contenu, puis construisons
         une interface adaptée à votre activité. Pour une tâche métier, nous concevons aussi des outils web sur mesure.
       </p>
-      <div class="hero-actions reveal reveal-delay-3">
+      <div class="hero-actions org-accueil reveal reveal-delay-3">
+        <p class="org-action-note">Un besoin en tête ? Écrivez-nous. Vous hésitez ? Explorez les démonstrations.</p>
         <a href="#contact" class="btn btn-primary">
-          Parler de mon projet <span class="icon" data-icon="arrow-right"></span>
+          Parler de mon besoin <span class="icon" data-icon="arrow-right"></span>
         </a>
-        <a class="btn btn-outline" href="/portfolio">Explorer les projets <span class="icon" data-icon="arrow-right"></span></a>
+        <a class="btn btn-outline" href="/portfolio">Tester les démonstrations <span class="icon" data-icon="arrow-right"></span></a>
       </div>
       <div class="hero-meta reveal reveal-delay-3">
         <div><span class="icon" data-icon="check"></span> Réponse sous 48h ouvrées</div>
@@ -120,48 +121,54 @@
       <div><div class="eyebrow">Les offres du studio</div><h2 style="margin-top:14px;">Une vitrine claire.<br>Un projet bien défini.</h2></div>
       <p class="side">Des tarifs de lancement pour les indépendants et petites entreprises. Vous fournissez vos textes ou nous les rédigeons avec vous. Les pages et les fonctionnalités définissent le périmètre.</p>
     </div>
-    <div class="services-grid">
+    <div class="services-grid org-offres">
       <article class="svc reveal">
-        <span class="index">01</span><span class="offer-kicker">Une première présence professionnelle</span>
+        <span class="index">01</span><span class="offer-kicker">1 page · l’essentiel</span>
         <span class="icon-pill"><span class="icon" data-icon="globe"></span></span>
         <h3>Vitrine essentielle</h3>
         <p class="desc">Une page pour expliquer votre activité, montrer vos réalisations et faciliter la prise de contact.</p>
-        <ul>
+        <ul class="org-visible-includes">
           <li><span class="icon" data-icon="check"></span> Une page adaptée à l’ordinateur et au mobile</li>
           <li><span class="icon" data-icon="check"></span> Textes fournis ou rédigés avec vous</li>
+        </ul>
+        <ul class="offer-more-includes">
           <li><span class="icon" data-icon="check"></span> Photos, prestations et formulaire de contact</li>
           <li><span class="icon" data-icon="check"></span> Titres, descriptions et deux séries de retours</li>
           <li><span class="icon" data-icon="check"></span> Sources et fiche de prise en main</li>
         </ul>
-        <div class="foot"><span class="price">490 € HT<small>Conception · tarif de lancement</small></span><button class="link" onclick="ouvrirQuestionnaire('site','essential')">Parler de mon site <span class="icon" data-icon="arrow-right"></span></button></div>
+        <div class="foot"><span class="price">490 € HT<small>Conception · tarif de lancement</small></span><button class="link" onclick="ouvrirQuestionnaire('site','essential')">Choisir une page <span class="icon" data-icon="arrow-right"></span></button></div>
       </article>
       <article class="svc reveal reveal-delay-1">
-        <span class="index">02</span><span class="offer-kicker">Des prestations à développer</span>
+        <span class="index">02</span><span class="offer-kicker">3 pages · plus de contenu</span>
         <span class="icon-pill"><span class="icon" data-icon="file"></span></span>
         <h3>Vitrine structurée</h3>
         <p class="desc">Trois pages pour donner leur place à vos prestations, à vos projets et aux informations utiles.</p>
-        <ul>
+        <ul class="org-visible-includes">
           <li><span class="icon" data-icon="check"></span> Trois pages de contenu définies ensemble</li>
           <li><span class="icon" data-icon="check"></span> Rédaction accompagnée et organisation du contenu</li>
+        </ul>
+        <ul class="offer-more-includes">
           <li><span class="icon" data-icon="check"></span> Réalisations, navigation et contact</li>
           <li><span class="icon" data-icon="check"></span> Affichage mobile et deux séries de retours</li>
           <li><span class="icon" data-icon="check"></span> Sources et accompagnement à la livraison</li>
         </ul>
-        <div class="foot"><span class="price">dès 790 € HT<small>Conception · tarif de lancement</small></span><button class="link" onclick="ouvrirQuestionnaire('site','structured')">Décrire mon projet <span class="icon" data-icon="arrow-right"></span></button></div>
+        <div class="foot"><span class="price">dès 790 € HT<small>Conception · tarif de lancement</small></span><button class="link" onclick="ouvrirQuestionnaire('site','structured')">Choisir trois pages <span class="icon" data-icon="arrow-right"></span></button></div>
       </article>
       <article class="svc reveal reveal-delay-2">
-        <span class="index">03</span><span class="offer-kicker">Une tâche métier à simplifier</span>
+        <span class="index">03</span><span class="offer-kicker">Un outil · une tâche métier</span>
         <span class="icon-pill"><span class="icon" data-icon="app"></span></span>
         <h3>Outils web sur mesure</h3>
         <p class="desc">Un outil construit autour de votre façon de travailler : demandes, suivi, documents et accès partagés. Nous définissons les fonctions utiles avec vous.</p>
-        <ul>
+        <ul class="org-visible-includes">
           <li><span class="icon" data-icon="check"></span> Formulaires et parcours de collecte</li>
           <li><span class="icon" data-icon="check"></span> Tableaux de bord et suivi de tâches</li>
+        </ul>
+        <ul class="offer-more-includes">
           <li><span class="icon" data-icon="check"></span> Imports, exports et documents</li>
           <li><span class="icon" data-icon="check"></span> Connexions à vos outils après étude</li>
           <li><span class="icon" data-icon="check"></span> Périmètre et fonctionnement définis au devis</li>
         </ul>
-        <div class="foot"><span class="price">Sur devis<small>Après étude de votre organisation</small></span><button class="link" onclick="ouvrirQuestionnaire('application')">Décrire la tâche <span class="icon" data-icon="arrow-right"></span></button></div>
+        <div class="foot"><span class="price">Sur devis<small>Après étude de votre organisation</small></span><button class="link" onclick="ouvrirQuestionnaire('application')">Décrire mon outil <span class="icon" data-icon="arrow-right"></span></button></div>
       </article>
     </div>
     <article class="mobile-service" aria-labelledby="mobile-service-title">
@@ -218,20 +225,11 @@
 </section>
 
 <!-- ============= OUTILS SUR MESURE ============= -->
-<section class="section tools-detail" id="outils-sur-mesure"><div class="container">
-  <div class="service-heading"><h2>Votre organisation.<br>Votre outil web.</h2><p>Un formulaire, un tableur et des messages peuvent finir par disperser le travail. Nous pouvons réunir une tâche précise dans une interface accessible depuis le navigateur.</p></div>
-  <div class="tools-examples"><article><span class="service-label">Réunir les demandes</span><h3>Les bonnes informations,<br>au bon endroit.</h3><p>Questions conditionnelles, documents à prévoir, récapitulatif et historique : le parcours suit les informations réellement utiles à votre métier.</p><a class="link" href="/static/demos/dossier-atelier.html">Tester la demande guidée <span aria-hidden="true">↗</span></a></article><article><span class="service-label">Suivre le travail</span><h3>Des étapes lisibles,<br>des actions concrètes.</h3><p>Suivi des dossiers, recherche, filtres, tableaux de bord ou exports. Les accès, sauvegardes et connexions à vos services se définissent au cadrage.</p><a class="link" href="/static/demos/cobalt.html">Explorer l’outil de gestion <span aria-hidden="true">↗</span></a></article></div>
-  <div class="tools-scope"><p><strong>Un périmètre précis avant de développer.</strong> Nous commençons par votre tâche, ses utilisateurs et ses données. Vous validez les fonctions, un premier écran et les coûts de fonctionnement. Les démonstrations du portfolio restent fictives et leurs limites sont indiquées.</p><button class="btn btn-primary" onclick="ouvrirQuestionnaire('application')">Décrire mon besoin métier <span class="icon" data-icon="arrow-right"></span></button></div>
+<section class="section tools-detail org-outils" id="outils-sur-mesure"><div class="container">
+  <div class="service-heading"><h2>Votre outil, à partir d’un besoin précis.</h2><p>Réunir les demandes, suivre les dossiers ou retrouver les documents : commencez par la tâche qui vous prend du temps.</p></div>
+  <div class="tools-examples org-tool-grid"><article><span class="service-label">Réunir les demandes</span><h3>Préparer les demandes</h3><p>Besoin, photos et repères dans un dossier guidé avant le premier échange.</p><a class="link" href="/static/demos/dossier-atelier.html">Tester le dossier atelier <span aria-hidden="true">↗</span></a></article><article><span class="service-label">Suivre le travail</span><h3>Suivre le travail</h3><p>Tâches, dossiers, recherche et exports dans une interface adaptée.</p><a class="link" href="/static/demos/cobalt.html">Tester Cobalt <span aria-hidden="true">↗</span></a></article></div>
+  <div class="tools-scope"><p><strong>Un périmètre précis avant de développer.</strong> Nous commençons par votre tâche, ses utilisateurs et ses données. Vous validez les fonctions, un premier écran et les coûts de fonctionnement. Les démonstrations du portfolio restent fictives et leurs limites sont indiquées.</p><button class="btn btn-primary" onclick="ouvrirQuestionnaire('application')">Décrire la tâche à simplifier <span class="icon" data-icon="arrow-right"></span></button></div>
 </div></section>
-<!-- ============= PARCOURS METIER ============= -->
-<section class="section"><div class="container">
-  <div class="section-head reveal"><div><div class="eyebrow">Au-delà d’une vitrine</div><h2 style="margin-top:14px;">Des demandes de devis<br>mieux préparées.</h2></div><p class="side">Pour un atelier de menuiserie ou d’agencement, le site peut guider une demande : réunir le besoin, les repères et les choix, puis montrer ce qui manque avant le premier échange.</p></div>
-  <div class="workflow-grid">
-    <article class="workflow-card reveal"><span class="eyebrow">01 · Préparer</span><h3>Préparer une demande de devis.</h3><p>Décrivez un projet de menuiserie, ajoutez des repères, puis consultez le récapitulatif côté artisan. Un exemple fictif pour comprendre le parcours, sans envoyer de demande réelle.</p><a class="link" href="/static/demos/dossier-atelier.html">Essayer la demande guidée ↗</a></article>
-    <article class="workflow-card reveal reveal-delay-1"><span class="eyebrow">02 · Organiser</span><h3>Une tâche, un outil adapté.</h3><p>Le prototype permet d’examiner un parcours. Un outil réel se définit ensuite avec vous : accès, données, sauvegardes, échanges et coûts. Il est sur devis, séparément des offres vitrine.</p><button class="link" onclick="ouvrirQuestionnaire('application')">Parler de mon organisation ↗</button></article>
-  </div>
-</div></section>
-
 <!-- ============= HISTOIRE ============= -->
 <section class="section section-alt" id="histoire">
   <div class="container histoire">
@@ -269,60 +267,40 @@
 
 <!-- ============= FAQ ============= -->
 <section class="section" id="faq"><div class="container" style="max-width:900px;"><div class="section-head stack reveal"><div class="eyebrow">Questions fréquentes</div><h2>Quelques questions avant de commencer.</h2></div><div class="faq reveal">
+<div class="org-faq-group"><h3>Budget et contenu</h3>
 <details><summary>Combien coûte un site chez Numéryl ?</summary><p>La Vitrine essentielle est proposée à 490 € HT pour une page. La Vitrine structurée commence à 790 € HT pour trois pages de contenu. Ces tarifs de lancement concernent la conception ; le devis définit les livrables, les options, les coûts de fonctionnement et la TVA applicable. Les outils web et les fonctions spécifiques se chiffrent après étude.</p></details>
 <details><summary>Les textes sont-ils inclus ?</summary><p>Vous pouvez fournir les textes que vous souhaitez utiliser. Nous pouvons aussi les rédiger avec vous à partir de vos informations, puis les organiser pour le site. Il n’y a pas de facturation au mot. Vous validez les faits ; nous définissons les pages et les fonctionnalités avant de commencer. L’ajout de pages ou d’une nouvelle prestation se discute dans le périmètre du projet.</p></details>
 <details><summary>Que comprend la Vitrine essentielle ?</summary><p>Une page avec votre activité, vos prestations, vos réalisations et un formulaire de contact ; l’affichage sur ordinateur et mobile ; les titres et descriptions ; deux séries de retours regroupés ; la mise en ligne sur l’hébergement convenu, les sources et une fiche de prise en main. Domaine, hébergement, messagerie et entretien sont chiffrés séparément.</p></details>
-<details><summary>Puis-je modifier moi-même mon site ?</summary><p>Les offres de base ne comprennent pas d’éditeur de contenu. Si vous souhaitez changer régulièrement vos photos, textes ou actualités, nous définissons un espace de gestion adapté et le chiffrons avant accord. Vous connaissez ainsi les possibilités de modification et les coûts associés. Sans éditeur, vous pouvez aussi nous demander des retouches mineures offertes après livraison : <a href="/suivi-et-retouches">consulter la charte de suivi</a>.</p></details>
 <details><summary>Quels frais reviennent après la création ?</summary><p>Le domaine, l’hébergement et éventuellement la messagerie restent à renouveler auprès des prestataires choisis. Aucun abonnement Numéryl n’est obligatoire pour conserver les fichiers et les droits remis selon le devis. L’entretien et les évolutions peuvent être proposés séparément avec un contenu précis.</p></details>
-<details><summary>Sous quel délai pouvez-vous livrer ?</summary><p>La réalisation d’un site internet prend en moyenne deux à trois semaines, avec un délai minimum d’une semaine. Si votre demande est urgente, précisez-le dès le premier échange avec la date souhaitée. Le calendrier est confirmé avant le démarrage selon le projet, les contenus disponibles et notre disponibilité.</p></details>
 <details><summary>Je n’ai pas encore de logo ou de photos : comment avancer ?</summary><p>Nous pouvons définir une direction visuelle et organiser le contenu avec vous. La photographie et une identité de marque complète font l’objet d’un périmètre séparé. Nous utilisons des ressources dont les droits sont établis, sans inventer de photos de vos réalisations.</p></details>
+</div>
+<div class="org-faq-group"><h3>Projet et livraison</h3>
+<details><summary>Sous quel délai pouvez-vous livrer ?</summary><p>La réalisation d’un site internet prend en moyenne deux à trois semaines, avec un délai minimum d’une semaine. Si votre demande est urgente, précisez-le dès le premier échange avec la date souhaitée. Le calendrier est confirmé avant le démarrage selon le projet, les contenus disponibles et notre disponibilité.</p></details>
 <details><summary>Que montrent les projets du portfolio ?</summary><p>Ce sont des projets originaux créés par le studio pour explorer des sites et des outils web. Les identités et les données sont fictives. Chaque projet explique ses interactions, ses fonctions simulées et ses limites ; il ne constitue pas une référence de commande client.</p></details>
 <details><summary>Comment commencer un projet ?</summary><p>Décrivez votre activité et votre objectif en quelques lignes. Le premier échange est sans engagement. Numéryl est le nom commercial de Flavio CORET, entrepreneur individuel (EI), immatriculé au RNE sous le numéro SIREN 131 700 585. Un devis et les conditions de la prestation sont définis avant votre accord. <a href="/conditions-utilisation#s01">Consulter nos mentions légales</a>.</p></details>
+</div>
+<div class="org-faq-group"><h3>Après la livraison</h3>
+<details><summary>Puis-je modifier moi-même mon site ?</summary><p>Les offres de base ne comprennent pas d’éditeur de contenu. Si vous souhaitez changer régulièrement vos photos, textes ou actualités, nous définissons un espace de gestion adapté et le chiffrons avant accord. Vous connaissez ainsi les possibilités de modification et les coûts associés. Sans éditeur, vous pouvez aussi nous demander des retouches mineures offertes après livraison : <a href="/suivi-et-retouches">consulter la charte de suivi</a>.</p></details>
+</div>
 </div></div></section>
 
 <!-- ============= CONTACT ============= -->
-<section class="section section-alt" id="contact">
+<section class="section section-alt org-contact" id="contact">
   <div class="container">
     <div class="section-head reveal">
       <div>
         <div class="eyebrow">Contact</div>
-        <h2 style="margin-top:14px;">Parlons de votre projet.</h2>
+        <h2 style="margin-top:14px;">Commencez par quelques lignes.</h2>
       </div>
       <p class="side">
-        Décrivez votre activité et ce que vous voulez améliorer en quelques lignes.
-        {% if not contact_email_only %}Vous pouvez aussi remplir le questionnaire pour préciser votre besoin. {% endif %}Réponse sous 48h ouvrées.
+        Votre activité, votre besoin et une date si vous avez une urgence. Réponse sous 48h ouvrées.
       </p>
     </div>
 
     <div class="contact">
-      <div class="contact-info reveal">
-        <div class="contact-item">
-          <span class="icon-pill"><span class="icon" data-icon="mail"></span></span>
-          <div><h4>E-mail</h4><p><a href="mailto:{{ public_contact_email }}">{{ public_contact_email }}</a></p></div>
-        </div>
-        <div class="contact-item">
-          <span class="icon-pill"><span class="icon" data-icon="map"></span></span>
-          <div><h4>Zone d'intervention</h4><p>France entière · échanges à distance</p></div>
-        </div>
-        <div class="contact-item">
-          <span class="icon-pill"><span class="icon" data-icon="instagram"></span></span>
-          <div><h4>Instagram</h4><p><a href="https://instagram.com/numeryl.studio" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;">@numeryl.studio</a></p></div>
-        </div>
-        <div class="contact-item" style="background: var(--ink); color: var(--paper); border-color: var(--ink);">
-          <span class="icon-pill on-dark"><span class="icon" data-icon="sparkles"></span></span>
-          <div style="flex:1;">
-            <h4 style="color:var(--paper);">Votre projet, simplement</h4>
-            <p style="color: rgba(244,241,234,0.72); margin-bottom: 12px;">{% if contact_email_only %}Envoyez votre objectif par e-mail : nous vous aidons à définir les prochaines étapes.{% else %}Votre projet est déjà défini ? Précisez les fonctionnalités pour préparer le devis. Questions guidées, photos et documents facultatifs.{% endif %}</p>
-            <button class="btn btn-outline" style="border-color: var(--paper); color: var(--paper);" onclick="ouvrirQuestionnaire()">
-              {% if contact_email_only %}Parler de mon projet{% else %}Lancer le questionnaire{% endif %} <span class="icon" data-icon="arrow-right"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <form class="contact-form reveal reveal-delay-2" id="contactForm" onsubmit="envoyerContact(event)">
-        <h3>Parlons de votre besoin</h3>
-        <p class="sub">Nom, e-mail, objectif : commencez simplement, sans engagement.</p>
+        <h3>Un premier message</h3>
+        <p class="sub">Pas besoin d’avoir déjà un cahier des charges.</p>
         <div class="form-row">
           <label for="c_nom">Nom complet</label>
           <input type="text" id="c_nom" required autocomplete="name">
@@ -344,6 +322,33 @@
         </button>
         <div class="form-msg" id="contactMsg" style="display:none;"></div>
       </form>
+
+      <div class="contact-info reveal">
+        <div class="contact-item">
+          <span class="icon-pill"><span class="icon" data-icon="mail"></span></span>
+          <div><h4>E-mail</h4><p><a href="mailto:{{ public_contact_email }}">{{ public_contact_email }}</a></p></div>
+        </div>
+        <div class="contact-item">
+          <span class="icon-pill"><span class="icon" data-icon="map"></span></span>
+          <div><h4>Zone d'intervention</h4><p>France entière · échanges à distance</p></div>
+        </div>
+        <div class="contact-item">
+          <span class="icon-pill"><span class="icon" data-icon="instagram"></span></span>
+          <div><h4>Instagram</h4><p><a href="https://instagram.com/numeryl.studio" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;">@numeryl.studio</a></p></div>
+        </div>
+        <div class="contact-item" style="background: var(--ink); color: var(--paper); border-color: var(--ink);">
+          <span class="icon-pill on-dark"><span class="icon" data-icon="sparkles"></span></span>
+          <div style="flex:1;">
+            <h4 style="color:var(--paper);">Votre projet est déjà détaillé ?</h4>
+            <p style="color: rgba(244,241,234,0.72); margin-bottom: 12px;">{% if contact_email_only %}Envoyez votre objectif par e-mail : nous vous aidons à définir les prochaines étapes.{% else %}Le questionnaire guidé permet de préciser les fonctions et de joindre vos documents.{% endif %}</p>
+            <button class="btn btn-outline" style="border-color: var(--paper); color: var(--paper);" onclick="ouvrirQuestionnaire()">
+              {% if contact_email_only %}Parler de mon projet{% else %}Préciser mon projet{% endif %} <span class="icon" data-icon="arrow-right"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </section>

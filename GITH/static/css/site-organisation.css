@@ -1,0 +1,36 @@
+/* Six organisation choices approved by the founder on 26 October 2026. */
+.org-menu-label{font:10px/1.6 var(--font-mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 6px}
+.org-navigation{padding:22px;max-height:calc(100dvh - var(--header-h));overflow-y:auto}
+.org-navigation strong,.org-navigation small{display:block}
+.org-navigation strong{font:600 15px/1.5 var(--font-body)}
+.org-navigation small{font:11px/1.6 var(--font-body);color:var(--muted);margin-top:3px}
+.org-navigation a{padding:12px 0;border-bottom:1px solid var(--line)}
+.org-accueil{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fffdf880}
+.org-accueil .org-action-note{font:12px/1.7 var(--font-body);color:var(--muted);margin:0;flex-basis:100%}
+.org-accueil .btn{min-height:48px}
+.org-offres .offer-kicker{color:var(--accent-ink);font-weight:600}
+.org-offres .org-visible-includes{padding-left:0;list-style:none;margin:15px 0 0}
+.org-offres .offer-more-includes{margin-top:0}
+.org-outils h2{max-width:22ch}
+.org-outils article h3{font-size:clamp(24px,3vw,30px)}
+.org-outils .org-tool-grid article{padding:24px;border:1px solid var(--line);border-radius:17px;background:#fffdf8}
+.org-outils article a{display:inline-flex;align-items:center;min-height:44px}
+.org-faq-group{margin-bottom:26px}
+.org-faq-group h3{font:600 11px/1.7 var(--font-body);text-transform:uppercase;letter-spacing:.1em;color:var(--accent-ink);padding:12px 0;border-bottom:1px solid #cbd5e4}
+.org-contact .contact{align-items:start}
+.org-contact .contact-form,.org-contact .contact-info{min-width:0}
+@media(max-width:767px){
+  .org-accueil{display:flex;flex-direction:column;align-items:stretch}
+  .org-accueil .org-action-note{text-align:left}
+  .org-offres .svc{padding:25px}
+  .org-offres .org-visible-includes{margin-bottom:15px}
+  .org-offres .org-visible-includes li{font-size:12px;line-height:1.7;margin:7px 0}
+  .org-offres .mobile-detail{margin:10px 0}
+  .org-outils{padding-block:35px}
+  .org-contact .contact{display:flex;flex-direction:column;gap:24px}
+  .org-contact .contact-form,.org-contact .contact-info{width:100%}
+  .org-contact .contact-info{order:2}
+  .org-contact .contact-form{order:1}
+  .org-contact .section-head{margin-bottom:24px}
+  .org-faq-group>details summary{font-size:14px}
+}

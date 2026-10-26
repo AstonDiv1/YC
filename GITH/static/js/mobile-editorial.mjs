@@ -21,7 +21,8 @@ document.querySelectorAll('.pillars .pillar, .process .step').forEach(card => {
   fold(card, [...card.querySelectorAll(':scope > p:not(.mobile-preview)')], 'Voir le détail');
 });
 document.querySelectorAll('.services-grid .svc').forEach(card => {
-  fold(card, [card.querySelector(':scope > ul')], 'Voir ce qui est inclus');
+  const remaining = card.querySelector(':scope > .offer-more-includes');
+  fold(card, [remaining || card.querySelector(':scope > ul')], remaining ? 'Les autres éléments inclus' : 'Voir ce qui est inclus');
 });
 const story = document.querySelector('#histoire .histoire > div:first-child');
 if (story) fold(story, [...story.querySelectorAll(':scope > p')].slice(1), 'Notre façon de travailler');
