@@ -29,7 +29,7 @@ document.querySelectorAll('.portfolio-card').forEach(card => {
   const list = card.querySelector('ul');
   if (list) fold(list.parentElement, [list], 'Explorer les fonctionnalités');
 });
-document.querySelectorAll('.portfolio-depth article, .portfolio-method article').forEach(card => {
+document.querySelectorAll('.portfolio-method article').forEach(card => {
   fold(card, [...card.querySelectorAll(':scope > p')], 'Voir le détail');
 });
 const sync = () => disclosures.forEach(details => { details.open = !media.matches; });
