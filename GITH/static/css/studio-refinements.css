@@ -47,3 +47,18 @@
   .plis-visual + .portfolio-copy .mobile-detail{margin:18px 0}
   .plis-visual + .portfolio-copy .mobile-detail>summary{border-top:1px solid var(--line);padding:12px 0}
 }
+
+/* Mobile portfolio: cartes structurées et actions de même largeur. */
+@media(max-width:767px){
+  .portfolio-depth{padding:32px 20px;scroll-margin-top:92px}
+  .portfolio-depth .depth-heading{text-align:center;margin-bottom:26px}
+  .portfolio-depth .depth-heading .eyebrow{font-size:10px;letter-spacing:.12em;line-height:1.7;margin-bottom:15px}
+  .portfolio-depth .depth-heading h2{font-size:30px;line-height:1.18;letter-spacing:-.035em;margin:0 0 16px}
+  .portfolio-depth .depth-heading>p:last-child{font-size:13px;line-height:1.8;margin:0}
+  .portfolio-depth .depth-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+  .portfolio-depth .depth-grid article{padding:22px;border:1px solid #d8dfeb;border-radius:18px;background:#fffdf8;min-width:0}
+  .portfolio-depth .depth-grid article>span{display:inline-block;padding:5px 9px;border-radius:6px;background:#edf1f8;color:#244e90;font-size:9px;letter-spacing:.08em}
+  .portfolio-depth .depth-grid h3{font-size:24px;line-height:1.25;margin:14px 0 12px;letter-spacing:-.025em}
+  .portfolio-depth .depth-grid p{font-size:13px;line-height:1.8;margin:0 0 18px;color:#657185}
+  .portfolio-depth .depth-grid a{display:flex;justify-content:center;align-items:center;min-height:44px;padding:10px;border:1px solid #c9d3e2;border-radius:9px;background:#f3f6fb;font-size:11px;line-height:1.5;color:#244e90;text-align:center}
+}

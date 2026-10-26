@@ -1,0 +1,28 @@
+/* Content stays readable before JavaScript; movement uses opacity and transforms. */
+html.studio-motion .reveal,
+html.studio-motion .reveal.pending,
+html.studio-motion .reveal.visible{opacity:1;transform:none;transition:background .25s,border-color .25s,box-shadow .3s}
+html.studio-motion .btn,
+html.studio-motion .portfolio-copy>a,
+html.studio-motion .portfolio-filters button{transition:background .22s,color .22s,border-color .22s,transform .22s cubic-bezier(.22,1,.36,1),box-shadow .25s}
+html.studio-motion .btn .icon,
+html.studio-motion .link .icon{transition:transform .28s cubic-bezier(.22,1,.36,1)}
+html.studio-motion .portfolio-visual{overflow:hidden}
+html.studio-motion .portfolio-visual img{transition:transform .65s cubic-bezier(.22,1,.36,1)}
+html.studio-motion .btn:active,
+html.studio-motion .portfolio-filters button:active{transform:scale(.985)}
+@media(hover:hover) and (pointer:fine){
+  html.studio-motion .btn:hover{transform:translateY(-2px)}
+  html.studio-motion .btn:hover .icon{transform:translateX(4px)}
+  html.studio-motion .portfolio-card{transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .25s}
+  html.studio-motion .portfolio-card:hover{transform:translateY(-2px)}
+  html.studio-motion .portfolio-visual:hover img{transform:scale(1.018)}
+  html.studio-motion .portfolio-copy>a:hover{transform:translateX(3px)}
+}
+html.studio-motion .btn:focus-visible,
+html.studio-motion .portfolio-filters button:focus-visible{outline:3px solid #6288bd;outline-offset:4px}
+@media(prefers-reduced-motion:reduce){
+  html.studio-motion{scroll-behavior:auto!important}
+  html.studio-motion *,html.studio-motion *:before,html.studio-motion *:after{animation:none!important;transition:none!important}
+  html.studio-motion .reveal{transform:none!important;opacity:1!important}
+}
