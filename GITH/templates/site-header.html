@@ -4,11 +4,11 @@
       {% with brand_inverse=false %}{% include 'brand-logo.html' %}{% endwith %}
     </a>
     <nav class="nav-links" aria-label="Navigation principale">
-      <a href="{% if legal_page %}/{% endif %}#services">Services</a>
-      <a href="/portfolio"{% if portfolio_page %} aria-current="page"{% endif %}>Portfolio</a>
-      <a href="{% if legal_page %}/{% endif %}#fonctionnement">Méthode</a>
+      <a href="{% if legal_page %}/{% endif %}#services">Offres</a>
+      <a href="/portfolio"{% if portfolio_page %} aria-current="page"{% endif %}>Projets</a>
+      <a href="{% if legal_page %}/{% endif %}#fonctionnement">Étapes</a>
       <a href="{% if legal_page %}/{% endif %}#histoire">Studio</a>
-      <a href="{% if legal_page %}/{% endif %}#faq">FAQ</a>
+      <a href="{% if legal_page %}/{% endif %}#faq">Questions</a>
       <a href="{% if legal_page %}/{% endif %}#contact">Contact</a>
     </nav>
     <div class="nav-cta">
@@ -23,12 +23,13 @@
       </button>
     </div>
   </div>
-  <div class="mobile-nav" id="mobileNav">
-    <a href="{% if legal_page %}/{% endif %}#services" onclick="toggleMobileNav()">Services</a>
-    <a href="/portfolio" onclick="toggleMobileNav()">Portfolio</a>
-    <a href="{% if legal_page %}/{% endif %}#fonctionnement" onclick="toggleMobileNav()">Méthode</a>
-    <a href="{% if legal_page %}/{% endif %}#histoire" onclick="toggleMobileNav()">Studio</a>
-    <a href="{% if legal_page %}/{% endif %}#faq" onclick="toggleMobileNav()">FAQ</a>
-    <a href="{% if legal_page %}/{% endif %}#contact" onclick="toggleMobileNav()">Contact</a>
+  <div class="mobile-nav org-navigation" id="mobileNav">
+    <p class="org-menu-label">Découvrir Numéryl</p>
+    <a href="{% if legal_page %}/{% endif %}#services" onclick="toggleMobileNav()"><strong>Les offres</strong><small>Sites, outils et tarifs de départ</small></a>
+    <a href="/portfolio" onclick="toggleMobileNav()"><strong>Les projets</strong><small>Parcourir les démonstrations</small></a>
+    <a href="{% if legal_page %}/{% endif %}#fonctionnement" onclick="toggleMobileNav()"><strong>Comment ça marche</strong><small>Les étapes de votre projet</small></a>
+    <a href="{% if legal_page %}/{% endif %}#histoire" onclick="toggleMobileNav()"><strong>Le studio</strong><small>Qui vous accompagne</small></a>
+    <a href="{% if legal_page %}/{% endif %}#faq" onclick="toggleMobileNav()"><strong>Questions fréquentes</strong><small>Budget, délais et suivi</small></a>
+    <a href="{% if legal_page %}/{% endif %}#contact" onclick="toggleMobileNav()"><strong>Nous contacter</strong><small>Décrire votre besoin</small></a>
   </div>
 </header>
